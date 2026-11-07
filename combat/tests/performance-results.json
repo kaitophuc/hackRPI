@@ -1,0 +1,88 @@
+{
+  "environment": "Windows .NET Framework 4.x; CPU software renderer; 640x400; complexity 18; HUD disabled; 4 warmups then 25 frames per pose",
+  "before": {
+    "backend": "desktop-software/v1 (not RasterIX)",
+    "frames_per_pose": 25,
+    "poses": [
+      {
+        "frame_ms": 39.1436,
+        "geometry_ms": 2.2612,
+        "name": "pose-0",
+        "raster_ms": 36.576100000000004,
+        "triangles": 16486,
+        "vertices": 49458
+      },
+      {
+        "frame_ms": 31.0532,
+        "geometry_ms": 1.828,
+        "name": "pose-1",
+        "raster_ms": 29.305300000000003,
+        "triangles": 12366,
+        "vertices": 37098
+      },
+      {
+        "frame_ms": 36.9243,
+        "geometry_ms": 0.7156,
+        "name": "pose-2",
+        "raster_ms": 36.2333,
+        "triangles": 5292,
+        "vertices": 15876
+      },
+      {
+        "frame_ms": 32.638,
+        "geometry_ms": 2.1271,
+        "name": "pose-3",
+        "raster_ms": 30.343400000000003,
+        "triangles": 16320,
+        "vertices": 48960
+      }
+    ]
+  },
+  "after": {
+    "backend": "desktop-software/v1 (not RasterIX)",
+    "frames_per_pose": 25,
+    "poses": [
+      {
+        "frame_ms": 19.7715,
+        "geometry_ms": 2.1382000000000003,
+        "name": "pose-0",
+        "raster_ms": 17.473200000000002,
+        "triangles": 15398,
+        "vertices": 28528
+      },
+      {
+        "frame_ms": 15.3269,
+        "geometry_ms": 1.2247000000000001,
+        "name": "pose-1",
+        "raster_ms": 13.8885,
+        "triangles": 10474,
+        "vertices": 19632
+      },
+      {
+        "frame_ms": 10.727300000000001,
+        "geometry_ms": 0.5302,
+        "name": "pose-2",
+        "raster_ms": 10.2231,
+        "triangles": 3864,
+        "vertices": 7999
+      },
+      {
+        "frame_ms": 18.808400000000002,
+        "geometry_ms": 1.782,
+        "name": "pose-3",
+        "raster_ms": 16.994500000000002,
+        "triangles": 15066,
+        "vertices": 27926
+      }
+    ]
+  },
+  "mean_of_pose_medians_ms": {
+    "before": 34.939775,
+    "after": 16.158525
+  },
+  "frame_time_reduction_percent": 53.75320819896522,
+  "submitted_vertex_reduction_percent": 44.45875607693934,
+  "submitted_triangle_reduction_percent": 11.219879518072288,
+  "gpu_power_measurement": "Not measured; this running backend renders on the CPU",
+  "renderer_equivalence": "7 original scene captures and 96 varied triangle frames matched byte-for-byte"
+}

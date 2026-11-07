@@ -1,0 +1,41 @@
+{
+  "backend": "desktop-software/v1 (not RasterIX)",
+  "frames_per_pose": 25,
+  "poses": [
+    {
+      "frame_ms": 17.665,
+      "geometry_ms": 1.5027000000000001,
+      "name": "route-0m",
+      "raster_ms": 16.1337,
+      "triangles": 15178,
+      "vertices": 28109
+    },
+    {
+      "frame_ms": 12.6888,
+      "geometry_ms": 0.9147000000000001,
+      "name": "route-495m",
+      "raster_ms": 11.7271,
+      "triangles": 9374,
+      "vertices": 17952
+    },
+    {
+      "frame_ms": 5.8862000000000005,
+      "geometry_ms": 0.3534,
+      "name": "route-990m",
+      "raster_ms": 5.4739,
+      "triangles": 4902,
+      "vertices": 9523
+    },
+    {
+      "frame_ms": 10.6669,
+      "geometry_ms": 1.1760000000000002,
+      "name": "route-1485m",
+      "raster_ms": 9.5157,
+      "triangles": 11712,
+      "vertices": 21787
+    }
+  ],
+  "mode": "Format-6 endless forward run; fixed camera; nine cached 220 m source sections; eleven recycled slots",
+  "environment": "Windows .NET Framework CPU software renderer; 640x400; complexity 18; HUD disabled; 4 warmups and 25 samples per route position",
+  "mean_frame_ms": 11.726725
+}

@@ -1,5 +1,26 @@
 # AERO — Escape Run
 
+## Plane combat with the Arduino accelerometer (Windows)
+
+The desktop plane-combat game now lives in `combat/` inside this repository. The original Temp folder is not used at runtime. To play with the MMA7660:
+
+```powershell
+python -m pip install -r requirements.txt
+python play_combat.py
+```
+
+You can also double-click **Start Combat.cmd**. The launcher builds the game using the installed .NET Framework compiler, starts or reuses this repository's local USB server, and opens the combat game. To select the Arduino explicitly, use `python play_combat.py --serial COM3`.
+
+Hold the sensor in your natural grip and click the large **CALIBRATE & PLAY** button at the top of the game. Hold that grip for **1.8 seconds** while the button says **KEEP STILL...**. Calibration tolerates coarse readings and normal hand movement. When **PLAYING** appears, the plane flies forward automatically through an endless corridor. Tilt left/right and up/down to dodge within the camera view; returning to your normal grip stops that sideways/vertical movement. The **C** shortcut is also available. Use **Reverse L/R** or **Reverse U/D** if an axis feels reversed.
+
+Hold **F** or the **left mouse button** to fire. **WASD** or the **arrow keys** also dodge left/right/up/down. **Page Up/Down** adjusts forward speed, **Space/Shift** brakes/boosts, **P** pauses/resumes, and **Enter** restarts after game over. After switching away from the game, click back and press **P** to resume. Sensor loss pauses play, clears firing, and requires calibration again when data returns. The game never takes over the COM port itself; `server.py` owns the USB connection.
+
+The existing browser Escape Run is still available with `python server.py` at **http://127.0.0.1:8765**. Closing combat stops a sensor server created by its launcher; a previously running server stays open.
+
+The combat game now plays as an endless forward run. The plane stays near a fixed camera while an 11-slot pool scrolls and recycles nine cached Hanoi sections ahead. Tilt moves the plane across the corridor; it does not turn the route. A distance counter tracks progress. Hidden chunks are culled; rendering slows to 5 frames/second while paused and 2 while unfocused. Simulation remains 60 ticks/second. The current renderer runs on the CPU. See [combat/docs/PERFORMANCE.md](combat/docs/PERFORMANCE.md) for measurements.
+
+Build and test the combat source with `powershell -NoProfile -ExecutionPolicy Bypass -File combat/build.ps1 -Test`. See [combat/README.md](combat/README.md) for the desktop game's other modes and diagnostics.
+
 Ứng dụng cục bộ để dùng Grove MMA7660 trên Arduino UNO R4 WiFi làm tay lái máy bay 2D. Chạy trên Windows, macOS hoặc Linux với Python 3.9+; Windows cần pyserial, macOS/Linux chỉ dùng thư viện chuẩn. Không nạp lại firmware và không gửi lệnh tới board.
 
 ## Chơi Escape Run

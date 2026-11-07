@@ -1,0 +1,26 @@
+{
+  "checks": [
+    "PASS: 363 checks (flight, combat, HP, shooting, restart, replay, input, rendering and captures)\nTest artifacts: C:\\Users\\AD\\AppData\\Local\\Temp\\flighting-tests-851dad8f2b0a4c47bcd25ea5ca9cf574",
+    "PASS: desktop movement, keyboard/mouse fire and release, focus safety, game-over UI, letterboxed replay click and keyboard restart. Saved D:\\Work\\hackRPI\\combat\\captures\\validation\\desktop.png",
+    "PASS: 600-tick black-box record/replay image and state SHA256 identity",
+    "PASS: combat replay HP, kills, projectiles, RNG and wave summary identity",
+    "PASS: existing format-2 flight replay retains flight trajectory, full HP and no combat",
+    "PASS: format 6 is an endless run; formats 1-5 retain legacy free-flight environments and controls",
+    "PASS: frame JSON independently reproduces reference image",
+    "PASS: zero-tolerance image comparator",
+    "PASS: different scene/resolution/complexity leaves aircraft state unchanged",
+    "PASS: software wireframe frame renders",
+    "PASS: missing RasterIX bridge fails explicitly, without desktop fallback",
+    "PASS: unsupported backend and invalid resolution rejected",
+    "PASS: playable fire/dodge replay survives 1200 ticks, 4 kills, 35 HP; combat state repeatable",
+    "PASS: actual enemy fire drains 100 HP and freezes idle flight at tick 1257",
+    "PASS: real loopback UDP, 500ms watchdog pause, fresh-input resume, 60 completed ticks"
+  ],
+  "udp": "PASS: real loopback UDP, 500ms watchdog pause, fresh-input resume, 60 completed ticks",
+  "executable_sha256": "8edb1441d56c0f825335957c39646de888f49c12697de508280f7ea92d686956",
+  "replay_sha256": "3ce9307fc9cd0c580ab8c146c40716752c66f87ac874f9fb1d891926998d2acb",
+  "aircraft_state": "-11.075110716705844,54.478160454601138,130,0,-0.00040507393246786073,0.029053931368655056,45.158633840189452,0.65,600,0",
+  "combat_summary": "1200,35,4,4,0,23,150,8,0,788718036",
+  "board": "UNTESTED",
+  "rasterix": "UNTESTED; missing bridge failure verified"
+}
