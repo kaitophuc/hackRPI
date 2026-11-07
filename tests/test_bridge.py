@@ -1,6 +1,7 @@
 import json
 import os
-import pty
+if os.name == 'posix':
+    import pty
 import threading
 import time
 import unittest
@@ -19,6 +20,7 @@ def wait_for(fn, timeout=3):
     raise AssertionError("Condition did not become true")
 
 
+@unittest.skipUnless(os.name == 'posix', 'Pseudo-terminal tests require macOS/Linux')
 class BridgeTest(unittest.TestCase):
     def setUp(self):
         self.master, self.slave = pty.openpty()

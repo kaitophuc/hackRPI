@@ -1,6 +1,6 @@
 # AERO — Escape Run
 
-Ứng dụng cục bộ để dùng Grove MMA7660 trên Arduino UNO R4 WiFi làm tay lái máy bay 2D. Chạy trên macOS hoặc Linux với Python 3.9+; không cần cài thư viện, npm hay dịch vụ mạng. Không nạp lại firmware và không gửi lệnh tới board.
+Ứng dụng cục bộ để dùng Grove MMA7660 trên Arduino UNO R4 WiFi làm tay lái máy bay 2D. Chạy trên Windows, macOS hoặc Linux với Python 3.9+; Windows cần pyserial, macOS/Linux chỉ dùng thư viện chuẩn. Không nạp lại firmware và không gửi lệnh tới board.
 
 ## Chơi Escape Run
 
@@ -25,11 +25,20 @@ Từ thư mục chứa `server.py`, chạy:
 python3 server.py
 ```
 
-Yêu cầu: Python 3.9+ trên macOS hoặc Linux, trình duyệt có Canvas và EventSource. Không cần cài Python package hay chạy `npm install`. Node.js 18+ chỉ cần khi chạy kiểm tra thuật toán.
+Trên Windows, cài thư viện một lần rồi chạy:
+
+```powershell
+python -m pip install -r requirements.txt
+python server.py
+```
+
+Arduino được tự tìm qua cổng COM. Có thể chọn COM3 trong giao diện hoặc chạy `python server.py --serial COM3`. Giữ yên sensor, bấm **Đặt tư thế cân bằng**, đợi 1,8 giây rồi bắt đầu chơi. Windows bật DTR/RTS để firmware xuất dữ liệu USB.
+
+Yêu cầu: Python 3.9+, trình duyệt có Canvas và EventSource. Không cần chạy `npm install`. Node.js 18+ chỉ cần khi chạy kiểm tra thuật toán.
 
 Mở **http://127.0.0.1:8765** trong trình duyệt. Trên Mac có thể chạy `Start Motion Lab.command`. Giữ cửa sổ Terminal mở; nhấn Ctrl+C để dừng. Nếu cổng 8765 đang bận, dùng `python3 server.py --port 8766` rồi mở địa chỉ tương ứng.
 
-Sensor phải cắm vào một cổng **I²C** của Grove shield. Arduino nối USB với Mac. Đóng Serial Monitor của Arduino IDE hoặc chương trình khác đang giữ cổng USB trước khi chạy.
+Sensor phải cắm vào một cổng **I²C** của Grove shield. Arduino nối USB với máy tính. Đóng Serial Monitor của Arduino IDE hoặc chương trình khác đang giữ cổng USB trước khi chạy.
 
 Repo chứa ứng dụng trên máy tính; firmware Arduino hiện có trên board không nằm trong repo. Để dùng board khác, cần firmware xuất JSON qua serial theo định dạng bên dưới. Có thể bấm **Thử demo** để thử giao diện và game mà không cần board hoặc sensor.
 
@@ -65,7 +74,7 @@ Nếu không nhận frame gia tốc mới trong 2 giây, hoặc mất kết nố
 
 ## Cấu trúc
 
-- `server.py`: cầu nối USB, trạng thái kết nối, HTTP và SSE; chỉ dùng thư viện chuẩn Python.
+- `server.py`: cầu nối USB, trạng thái kết nối, HTTP và SSE; dùng pyserial trên Windows, thư viện chuẩn Python trên macOS/Linux.
 - `web/index.html`, `web/style.css`: giao diện responsive.
 - `web/app.mjs`: kết nối, hiệu chỉnh, đồ thị và vẽ máy bay bằng Canvas 2D.
 - `web/control.mjs`: phép tính hướng trọng lực, bộ lọc, góc nghiêng và vùng cân bằng.

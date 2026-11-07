@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local, dependency-free Arduino serial → browser bridge (macOS / Linux)."""
+"""Local Arduino serial to browser bridge (Windows / macOS / Linux)."""
 import argparse
 import collections
 import glob
@@ -11,15 +11,29 @@ import select
 import signal
 import threading
 import time
-import termios
-import fcntl
+if os.name == "posix":
+    import termios
+    import fcntl
+else:
+    try:
+        import serial
+        from serial.tools import list_ports
+    except ImportError:
+        serial = None
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parent / "web"
+SERIAL_ERRORS = (OSError, termios.error) if os.name == "posix" else (OSError,)
 
 
 def serial_ports():
+    if os.name != "posix":
+        if serial is None:
+            return []
+        # Prefer Arduino boards when other COM devices are also connected.
+        ports = sorted(list_ports.comports(), key=lambda p: (p.vid != 0x2341, p.device))
+        return [p.device for p in ports]
     return sorted(set(p for pattern in ("/dev/cu.usbmodem*", "/dev/cu.usbserial*",
                                         "/dev/ttyACM*", "/dev/ttyUSB*")
                       for p in glob.glob(pattern)))
@@ -93,6 +107,11 @@ class BoardBroker:
             if not enabled:
                 self.stop.wait(.1)
                 continue
+            if os.name != "posix" and serial is None:
+                with self.lock:
+                    self.error = "Windows USB support needs pyserial: python -m pip install -r requirements.txt"
+                self.stop.wait(1)
+                continue
             if not port:
                 ports = serial_ports()
                 port = ports[0] if ports else None
@@ -101,19 +120,27 @@ class BoardBroker:
                     self.error = "Chưa tìm thấy Arduino. Kiểm tra cáp USB."
                 self.stop.wait(1)
                 continue
-            fd, original = None, None
+            fd, original, connection = None, None, None
             try:
-                fd = os.open(port, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
-                # Cooperative lock: avoid two instances of this bridge sharing a port.
-                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                original = termios.tcgetattr(fd)
-                attrs = termios.tcgetattr(fd)
-                attrs[0] = attrs[1] = attrs[3] = 0
-                attrs[2] = (attrs[2] & ~(termios.CSIZE | termios.PARENB | termios.CSTOPB
-                                        | getattr(termios, "CRTSCTS", 0))) | termios.CS8 | termios.CLOCAL | termios.CREAD
-                attrs[4] = attrs[5] = termios.B115200
-                attrs[6][termios.VMIN] = attrs[6][termios.VTIME] = 0
-                termios.tcsetattr(fd, termios.TCSANOW, attrs)
+                if os.name == "posix":
+                    fd = os.open(port, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+                    # Cooperative lock: avoid two instances of this bridge sharing a port.
+                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    original = termios.tcgetattr(fd)
+                    attrs = termios.tcgetattr(fd)
+                    attrs[0] = attrs[1] = attrs[3] = 0
+                    attrs[2] = (attrs[2] & ~(termios.CSIZE | termios.PARENB | termios.CSTOPB
+                                            | getattr(termios, "CRTSCTS", 0))) | termios.CS8 | termios.CLOCAL | termios.CREAD
+                    attrs[4] = attrs[5] = termios.B115200
+                    attrs[6][termios.VMIN] = attrs[6][termios.VTIME] = 0
+                    termios.tcsetattr(fd, termios.TCSANOW, attrs)
+                else:
+                    connection = serial.Serial(port=None, baudrate=115200, timeout=.15)
+                    # The UNO R4 USB firmware only streams with DTR asserted.
+                    connection.dtr = True
+                    connection.rts = True
+                    connection.port = port
+                    connection.open()
                 with self.lock:
                     self.connected, self.error, self.port = True, "", port
                     self.frame, self.info, self.last_frame = None, {}, 0
@@ -123,29 +150,39 @@ class BoardBroker:
                     with self.lock:
                         if self.generation != generation or not self.desired:
                             break
-                    if not select.select([fd], [], [], .15)[0]:
-                        continue
-                    try:
-                        data = os.read(fd, 8192)
-                    except BlockingIOError:
-                        continue
-                    if not data:
-                        raise OSError("Arduino đã ngắt kết nối.")
+                    if connection is not None:
+                        data = connection.read(min(connection.in_waiting or 1, 8192))
+                        if not data:  # A serial read timeout is not a disconnect.
+                            continue
+                    else:
+                        if not select.select([fd], [], [], .15)[0]:
+                            continue
+                        try:
+                            data = os.read(fd, 8192)
+                        except BlockingIOError:
+                            continue
+                        if not data:
+                            raise OSError("Arduino đã ngắt kết nối.")
                     pending += data
                     while b"\n" in pending:
                         line, pending = pending.split(b"\n", 1)
                         self.consume(line)
                     if len(pending) > 65536:
                         pending = b""
-            except (OSError, termios.error) as exc:
+            except SERIAL_ERRORS as exc:
                 with self.lock:
                     self.error = f"Không đọc được cổng USB: {exc}"
             finally:
+                if connection is not None:
+                    try:
+                        connection.close()
+                    except OSError:
+                        pass
                 if fd is not None:
                     try:
                         if original is not None:
                             termios.tcsetattr(fd, termios.TCSANOW, original)
-                    except (OSError, termios.error):
+                    except SERIAL_ERRORS:
                         pass
                     os.close(fd)
                 with self.lock:
@@ -246,8 +283,8 @@ def main():
     def stop(*_):
         raise KeyboardInterrupt
     signal.signal(signal.SIGTERM, stop)
-    print(f"AERO Escape Run → http://127.0.0.1:{server.server_port}", flush=True)
-    print("USB 115200 baud · Ctrl+C để dừng", flush=True)
+    print(f"AERO Escape Run -> http://127.0.0.1:{server.server_port}", flush=True)
+    print("USB 115200 baud | Ctrl+C to stop", flush=True)
     try:
         server.serve_forever(poll_interval=.2)
     except KeyboardInterrupt:
