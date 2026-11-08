@@ -142,3 +142,25 @@ it is an experimental image rather than a replacement for that recovery tag.
 `candidate-manifest.json` records the image, generated RTL and runtime hashes.
 `evidence/visible-fps.json` contains the complete browser capture, including
 the selected active samples and excluded paused intervals.
+
+## CPU storage recheck with the faster image
+
+The isolated direct-vertex prototype was rechecked after the RTL change.
+It again passed 360 board pixel comparisons. Controlled preparation packing
+fell from 3.098/3.213 ms in the surrounding baseline runs to 0.291 ms.
+Moving scripted completion throughput was 29.500/29.911/29.314 FPS for
+baseline/prototype/baseline, without the web server or Arduino reader.
+
+With the real web server, Arduino reader and one hidden browser, the identical
+paused 3,642-triangle scene measured 20.030/20.612/20.093 completed FPS.
+Sensor cadence remained about 4.9 samples/s. These are controlled diagnostic
+results, not displayed or active-play FPS. The approximately 2.7% combined-load
+gain does not justify integrating the storage change; selected software was
+restored and its hashes verified. The prototype remains isolated.
+
+Reproduce the isolated gate/sample using `profile_vertex_on_candidate.py` on
+the board after building the existing vertex candidate and restoring the 28
+golden frames. It restores normal services in `finally`. The existing
+`test_vertex_live_load.py` supports `FLIGHTING_PROFILE_DIR` for a separate
+combined-load output directory. Results are saved in
+`evidence/vertex-{on,load-on}-pipelined-rtl.json`.

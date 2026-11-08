@@ -1,0 +1,60 @@
+{
+  "production_restored": true,
+  "runs": [
+    {
+      "triangle_counts": [
+        3642
+      ],
+      "seconds": 20.469709760000114,
+      "completed_fps": 20.029595182691917,
+      "ticks": [
+        0
+      ],
+      "sensor_samples_per_second": 4.982972460084331,
+      "game_cpu_percent": 142.52455465172332,
+      "all_paused": true,
+      "browser_counts": [
+        1
+      ],
+      "label": "vertex-load-before",
+      "collected_fps": 19.78533182680543
+    },
+    {
+      "triangle_counts": [
+        3642
+      ],
+      "seconds": 20.32823602999997,
+      "completed_fps": 20.61172446943497,
+      "ticks": [
+        0
+      ],
+      "sensor_samples_per_second": 4.919265983158704,
+      "game_cpu_percent": 143.19691945090227,
+      "all_paused": true,
+      "browser_counts": [
+        1
+      ],
+      "label": "vertex-load-direct",
+      "collected_fps": 20.562531809603385
+    },
+    {
+      "triangle_counts": [
+        3642
+      ],
+      "seconds": 20.006493669999827,
+      "completed_fps": 20.093475979891856,
+      "ticks": [
+        0
+      ],
+      "sensor_samples_per_second": 4.8984095672373185,
+      "game_cpu_percent": 142.7175790838795,
+      "all_paused": true,
+      "browser_counts": [
+        1
+      ],
+      "label": "vertex-load-after",
+      "collected_fps": 19.893540895514825
+    }
+  ],
+  "paused_scene_only": true
+}

@@ -1,7 +1,7 @@
 """Bounded moving full-game pipeline benchmark on the board, no web client."""
 from __future__ import print_function
 import json,os,shutil,struct,subprocess,sys,time
-name=sys.argv[1];root='/root/hackrpi';folder=root+'/build/software-profile';frame='/dev/shm/hackrpi-profile-'+name+'.bin'
+name=sys.argv[1];root='/root/hackrpi';folder=os.environ.get('FLIGHTING_PROFILE_DIR',root+'/build/software-profile');frame='/dev/shm/hackrpi-profile-'+name+'.bin'
 ticks=int(os.environ.get('FLIGHTING_PROFILE_TICKS','600'))
 if ticks<120 or ticks>1800:raise RuntimeError('Profile ticks must be 120..1800')
 try:os.unlink(frame)

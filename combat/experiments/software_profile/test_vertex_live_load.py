@@ -8,7 +8,7 @@ from urllib2 import urlopen
 sys.path.insert(0,'/root/hackrpi/fpga/software')
 from legacy_host import monotonic
 
-os.chdir('/root/hackrpi');folder='build/software-profile';exe='combat/dist/Flighting.Headless.exe';probe='/dev/shm/hackrpi-vertex-candidate'
+os.chdir('/root/hackrpi');folder=os.environ.get('FLIGHTING_PROFILE_DIR','build/software-profile');exe='combat/dist/Flighting.Headless.exe';probe='/dev/shm/hackrpi-vertex-candidate'
 def metrics():
     response=urlopen('http://127.0.0.1:8081/metrics',timeout=3)
     try:return json.load(response)

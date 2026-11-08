@@ -1,0 +1,248 @@
+{
+  "runs": [
+    {
+      "prepare_ms": {
+        "median": 15.272,
+        "maximum": 29.593,
+        "p95": 18.207
+      },
+      "ready_wait_ms": {
+        "median": 10.678,
+        "maximum": 22.643,
+        "p95": 20.78
+      },
+      "first_tick": 61,
+      "drain_ms": {
+        "median": 0.034,
+        "maximum": 0.187,
+        "p95": 0.056
+      },
+      "owner_cpu_ms": {
+        "median": 21.957,
+        "maximum": 27.02,
+        "p95": 25.64
+      },
+      "geometry_ms": {
+        "median": 11.492,
+        "maximum": 23.832,
+        "p95": 17.208
+      },
+      "completed_fps": 29.499928383672064,
+      "previous_submit_ms": {
+        "median": 22.949,
+        "maximum": 49.036,
+        "p95": 36.89
+      },
+      "seconds": 17.932246923446655,
+      "copy_seconds": {
+        "median": 6.37607,
+        "maximum": 19.123060000000002,
+        "p95": 9.504230000000002
+      },
+      "slot_wait_ms": {
+        "median": 0.008,
+        "maximum": 0.453,
+        "p95": 0.022
+      },
+      "previous_publish_ms": {
+        "median": 1.336,
+        "maximum": 15.32,
+        "p95": 1.834
+      },
+      "affinity_applied": false,
+      "geometry_cpu_ms": {
+        "median": 10.576,
+        "maximum": 19.077,
+        "p95": 16.779
+      },
+      "scene_wait_ms": {
+        "median": 0.002,
+        "maximum": 0.089,
+        "p95": 0.002
+      },
+      "prepare_cpu_ms": {
+        "median": 13.964,
+        "maximum": 23.924,
+        "p95": 17.508
+      },
+      "frames": 530,
+      "command_submit_ms": {
+        "median": 22.647,
+        "maximum": 48.877,
+        "p95": 36.731
+      },
+      "host_submit_ms": {
+        "median": 22.703,
+        "maximum": 48.904,
+        "p95": 36.768
+      },
+      "last_tick": 1140,
+      "name": "pipeline-before"
+    },
+    {
+      "prepare_ms": {
+        "median": 13.094,
+        "maximum": 19.798,
+        "p95": 16.142
+      },
+      "ready_wait_ms": {
+        "median": 11.797,
+        "maximum": 25.158,
+        "p95": 21.064
+      },
+      "first_tick": 60,
+      "drain_ms": {
+        "median": 0.034,
+        "maximum": 0.335,
+        "p95": 0.046
+      },
+      "owner_cpu_ms": {
+        "median": 21.253,
+        "maximum": 27.445,
+        "p95": 26.534
+      },
+      "geometry_ms": {
+        "median": 11.532,
+        "maximum": 23.934,
+        "p95": 18.511
+      },
+      "completed_fps": 29.911312159987993,
+      "previous_submit_ms": {
+        "median": 21.64,
+        "maximum": 38.65,
+        "p95": 34.509
+      },
+      "seconds": 17.953073978424072,
+      "copy_seconds": {
+        "median": 6.88035,
+        "maximum": 22.161440000000002,
+        "p95": 11.0202
+      },
+      "slot_wait_ms": {
+        "median": 0.008,
+        "maximum": 0.693,
+        "p95": 0.016
+      },
+      "previous_publish_ms": {
+        "median": 1.322,
+        "maximum": 11.467,
+        "p95": 1.9
+      },
+      "affinity_applied": false,
+      "geometry_cpu_ms": {
+        "median": 10.35,
+        "maximum": 18.472,
+        "p95": 15.762
+      },
+      "scene_wait_ms": {
+        "median": 0.001,
+        "maximum": 0.215,
+        "p95": 0.002
+      },
+      "prepare_cpu_ms": {
+        "median": 11.911,
+        "maximum": 15.233,
+        "p95": 14.168
+      },
+      "frames": 538,
+      "command_submit_ms": {
+        "median": 21.435,
+        "maximum": 38.46,
+        "p95": 34.346
+      },
+      "host_submit_ms": {
+        "median": 21.472,
+        "maximum": 38.493,
+        "p95": 34.373
+      },
+      "last_tick": 1140,
+      "name": "pipeline-direct"
+    },
+    {
+      "prepare_ms": {
+        "median": 15.632,
+        "maximum": 34.659,
+        "p95": 19.901
+      },
+      "ready_wait_ms": {
+        "median": 11.03,
+        "maximum": 24.04,
+        "p95": 20.678
+      },
+      "first_tick": 60,
+      "drain_ms": {
+        "median": 0.038,
+        "maximum": 1.205,
+        "p95": 0.065
+      },
+      "owner_cpu_ms": {
+        "median": 21.826,
+        "maximum": 26.326,
+        "p95": 25.546
+      },
+      "geometry_ms": {
+        "median": 11.391,
+        "maximum": 26.334,
+        "p95": 18.306
+      },
+      "completed_fps": 29.313881840418496,
+      "previous_submit_ms": {
+        "median": 23.083,
+        "maximum": 63.992,
+        "p95": 30.656
+      },
+      "seconds": 17.943717002868652,
+      "copy_seconds": {
+        "median": 7.124639999999999,
+        "maximum": 22.632659999999998,
+        "p95": 8.44359
+      },
+      "slot_wait_ms": {
+        "median": 0.008,
+        "maximum": 0.479,
+        "p95": 0.019
+      },
+      "previous_publish_ms": {
+        "median": 1.429,
+        "maximum": 13.557,
+        "p95": 1.839
+      },
+      "affinity_applied": false,
+      "geometry_cpu_ms": {
+        "median": 10.612,
+        "maximum": 19.825,
+        "p95": 15.811
+      },
+      "scene_wait_ms": {
+        "median": 0.002,
+        "maximum": 2.058,
+        "p95": 0.002
+      },
+      "prepare_cpu_ms": {
+        "median": 14.398,
+        "maximum": 25.395,
+        "p95": 17.424
+      },
+      "frames": 527,
+      "command_submit_ms": {
+        "median": 22.751,
+        "maximum": 63.845,
+        "p95": 30.008
+      },
+      "host_submit_ms": {
+        "median": 22.792,
+        "maximum": 63.873,
+        "p95": 30.037
+      },
+      "last_tick": 1139,
+      "name": "pipeline-after"
+    }
+  ],
+  "production_unchanged": true,
+  "hashes": {
+    "combat/dist/libflighting_spinal_bridge.so": "515618d24ac54cc0ca10aca2df7a1d75574b7f7c2653a740764d1360e1b75dbd",
+    "combat/dist/Flighting.Headless.exe": "c42205b3a28856372f6bc0f3540fbdc4862421353b24075a5808fc38b0b9a502",
+    "combat/native/spinal_pipeline.c": "d137871ffc4e598d6a947fdadf814b754a99c57e98cf9bf420f9384d2223dc14"
+  },
+  "not_displayed_fps": true
+}
