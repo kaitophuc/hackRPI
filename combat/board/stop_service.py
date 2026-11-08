@@ -1,6 +1,6 @@
 from __future__ import print_function
 import os,signal,time
-ROOT='/root/hackrpi'
+ROOT=os.path.realpath(os.path.join(os.path.dirname(__file__),'../..'))
 def inspect(path,fragment):
     if not os.path.exists(path):return None
     pid=int(open(path).read());assert pid>1

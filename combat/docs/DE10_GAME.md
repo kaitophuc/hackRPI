@@ -69,7 +69,10 @@ extracting. The tested Glide source/static library is copied inside
 `/root/hackrpi/fpga/build/spinal-native-src/emu/glide`; runtime/build no longer
 requires the old project path. The matching prepared source is also copied
 under the computer's `fpga/build/spinal-native-src`. Generated sources and
-accepted SOF are kept locally, excluded from git build output.
+accepted build outputs remain ignored in their working directories. A complete
+accepted SOF/runtime/source copy is tracked separately under `recovery/`; follow
+the [fresh-clone recovery guide](../../recovery/README.md) to restore it without
+the old computer workspace or external package downloads.
 
 For a new checkout, the upstream repository/version and FPGA sources are
 pinned in `fpga/dependencies.lock.json` and `fpga/platform.lock.json`.

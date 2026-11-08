@@ -7,3 +7,5 @@ fpga/patches/** -text -whitespace
 fpga/licenses/** -text -whitespace
 fpga/experiments/rtl_profile/*.patch -whitespace
 fpga/experiments/rtl_profile/evidence/*.tar.gz binary
+recovery/known-good-16fps/*.sof binary
+recovery/known-good-16fps/*.tar.gz binary
