@@ -1,0 +1,78 @@
+{
+  "passed": true,
+  "files": {
+    "SpinalStandardCore.v": {
+      "original_sha256": "ad6c1e56cfce54eaecc1640af998be6315689a0db272447da900982440b4e331",
+      "reproduced_sha256": "8e128dc359ee4c8c2be7ce01f8f5fdb95debb8b945d7ca188431932c8e4be52f",
+      "bytes_identical": false,
+      "logic_identical_excluding_git_comment": true
+    },
+    "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_dither_3_romB.bin": {
+      "original_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+      "reproduced_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+      "bytes_identical": true,
+      "logic_identical_excluding_git_comment": true
+    },
+    "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_dither_3_romG.bin": {
+      "original_sha256": "3ec7b08d09f3107c99c201b46f3dee4a3fe8cc7a2639f7a4e9a98850d45be803",
+      "reproduced_sha256": "3ec7b08d09f3107c99c201b46f3dee4a3fe8cc7a2639f7a4e9a98850d45be803",
+      "bytes_identical": true,
+      "logic_identical_excluding_git_comment": true
+    },
+    "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_dither_3_romR.bin": {
+      "original_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+      "reproduced_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+      "bytes_identical": true,
+      "logic_identical_excluding_git_comment": true
+    },
+    "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_fastfillWriter_dither0_romB.bin": {
+      "original_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+      "reproduced_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+      "bytes_identical": true,
+      "logic_identical_excluding_git_comment": true
+    },
+    "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_fastfillWriter_dither0_romG.bin": {
+      "original_sha256": "3ec7b08d09f3107c99c201b46f3dee4a3fe8cc7a2639f7a4e9a98850d45be803",
+      "reproduced_sha256": "3ec7b08d09f3107c99c201b46f3dee4a3fe8cc7a2639f7a4e9a98850d45be803",
+      "bytes_identical": true,
+      "logic_identical_excluding_git_comment": true
+    },
+    "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_fastfillWriter_dither0_romR.bin": {
+      "original_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+      "reproduced_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+      "bytes_identical": true,
+      "logic_identical_excluding_git_comment": true
+    },
+    "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_fastfillWriter_dither1_romB.bin": {
+      "original_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+      "reproduced_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+      "bytes_identical": true,
+      "logic_identical_excluding_git_comment": true
+    },
+    "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_fastfillWriter_dither1_romG.bin": {
+      "original_sha256": "3ec7b08d09f3107c99c201b46f3dee4a3fe8cc7a2639f7a4e9a98850d45be803",
+      "reproduced_sha256": "3ec7b08d09f3107c99c201b46f3dee4a3fe8cc7a2639f7a4e9a98850d45be803",
+      "bytes_identical": true,
+      "logic_identical_excluding_git_comment": true
+    },
+    "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_fastfillWriter_dither1_romR.bin": {
+      "original_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+      "reproduced_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+      "bytes_identical": true,
+      "logic_identical_excluding_git_comment": true
+    },
+    "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_tmu_1_lookupTables_logTable.bin": {
+      "original_sha256": "736b3692db0672cef4599468d1f8e0c046687f8560f7c2ee4538079954db8d11",
+      "reproduced_sha256": "736b3692db0672cef4599468d1f8e0c046687f8560f7c2ee4538079954db8d11",
+      "bytes_identical": true,
+      "logic_identical_excluding_git_comment": true
+    },
+    "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_tmu_1_lookupTables_recipTable.bin": {
+      "original_sha256": "1e4495b65f4a2b4178c584584dcc4c2d7f28f39796ee37e937e81a2f144bf52b",
+      "reproduced_sha256": "1e4495b65f4a2b4178c584584dcc4c2d7f28f39796ee37e937e81a2f144bf52b",
+      "bytes_identical": true,
+      "logic_identical_excluding_git_comment": true
+    }
+  },
+  "metadata_difference": "Only the generator Git-hash comment differs in the core; all eleven ROMs are byte-identical."
+}

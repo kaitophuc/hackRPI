@@ -1,0 +1,24 @@
+{
+  "upstream_archive_sha256": "648a3b242e9157d54ee799b4184c780004778c4be42b5b8cd60a350dc50603ba",
+  "patch_sha256": "48439e86aec901a41dae34ed3c04784460df02e58be30cfd70c0851665885865",
+  "changed_files_lf_sha256": {
+    "src/voodoo/bus/PciFifo.scala": "ede2a90a18eaa8983688d760d214890d0c0ccf0d85470d6675a2e2bffbd04016",
+    "src/voodoo/core/FramebufferMemSubsystem.scala": "213f4a5e35f378e5cebeb0f8d4af949f58bc79a934dd855f8c38d3edbe690c8c",
+    "src/voodoo/core/PixelPipeline.scala": "e122235e5d0a8db9753487a01b803bcc9ccb00d7b2337ef2ccf28e4e5a4fcd37",
+    "src/voodoo/core/TextureMemSubsystem.scala": "e4a23a69805a0cd9ee35bf877fa82566ed2e9f068f3c05d3ee0003d4a7af1ea8",
+    "src/voodoo/Core.scala": "8c44ca81f278a0860f3dac433839014952270a3a6f5f97ff533078d9da0baa52",
+    "src/voodoo/de10/CoreDe10.scala": "432c3020d1b338f76377387ab81e9381c84ef29b40e198fb9ed36f0ce30824f3",
+    "src/voodoo/de10/De10MemBackend.scala": "f9b4ac85b4122db2031426732cc1307678cfbca67741f6044ebf3b139301a3fc",
+    "src/voodoo/de10/De10PipelinedWordReader.scala": "39fed2236638d6fdc9dbeb7bd54b0c4e9beebf372eccc7d6dc5b298e8cba13f6",
+    "src/voodoo/framebuffer/FramebufferPlanePairReader.scala": "21f9b7e7e71e5c90048845f1f2f49cc234e853a3a290351e5e400d2ac570f139",
+    "src/voodoo/pixel/FramebufferAccess.scala": "2eef35715aaf25af54ac652d42a9e368e473f200221e8759488e75f868a73b72",
+    "src/voodoo/texture/TextureMem.scala": "cd058a0a77270c6cf9030bfb48b6605955a11ad0d59d2e1a9e9cb96b0ce5e040",
+    "src/voodoo/texture/TmuTextureCache.scala": "1347a5abb5167df6af94c4e26fe8ad5310dab952a459564cadaa63a6e7588324"
+  },
+  "applied_source_matches": true,
+  "baseline_core_sha256": "2f3d411cf012c127a523243746bd1b4591d67bf81ab0c584282261d335002a94",
+  "baseline_sof_sha256": "1af55209f870b807422caf18b2966a65745adcf6e22eef640f6de7b3260ab767",
+  "candidate_core_sha256": "ad6c1e56cfce54eaecc1640af998be6315689a0db272447da900982440b4e331",
+  "status": "Simulation validated; synthesis in progress; not programmed",
+  "displayed_fps": null
+}

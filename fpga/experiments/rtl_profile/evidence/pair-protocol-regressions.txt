@@ -1,0 +1,693 @@
+scala-cli.exe : D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:18: warning:
+reflective access of structural type member value pipelineBusy should be enabled
+At line:2 char:373
++ ... +$env:PATH; & 'D:/GPU_proj/tools/spinal/scala-cli-1.9.1/scala-cli.exe ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (D:\GPU_proj\hac...ould be enabled:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+by making the implicit value scala.language.reflectiveCalls visible.
+This can be achieved by adding the import clause 'import scala.language.reflectiveCalls'
+or by setting the compiler option -language:reflectiveCalls.
+See the Scaladoc for value scala.language.reflectiveCalls for a discussion
+why the feature should be explicitly enabled.
+      dut.io.pipelineBusy #= false
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:19: warning: reflective access
+of structural type member value commandReady should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.commandReady.foreach(_ #= true)
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:20: warning: reflective access
+of structural type member value wasEnqueuedAddr should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.wasEnqueuedAddr #= 0x80
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:21: warning: reflective access
+of structural type member value cpuSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.cpuSide.cmd.valid #= false
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:22: warning: reflective access
+of structural type member value cpuSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.cpuSide.cmd.last #= true
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:23: warning: reflective access
+of structural type member value cpuSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.cpuSide.cmd.source #= 0
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:24: warning: reflective access
+of structural type member value cpuSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.cpuSide.cmd.opcode #= 1
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:25: warning: reflective access
+of structural type member value cpuSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.cpuSide.cmd.address #= 0
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:26: warning: reflective access
+of structural type member value cpuSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.cpuSide.cmd.length #= 3
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:27: warning: reflective access
+of structural type member value cpuSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.cpuSide.cmd.data #= 0
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:28: warning: reflective access
+of structural type member value cpuSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.cpuSide.cmd.mask #= 15
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:29: warning: reflective access
+of structural type member value cpuSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.cpuSide.rsp.ready #= true
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:30: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.regSide.cmd.ready #= false
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:31: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.regSide.rsp.valid #= false
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:32: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.regSide.rsp.last #= true
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:33: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.regSide.rsp.source #= 0
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:34: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.regSide.rsp.opcode #= 0
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:35: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.regSide.rsp.data #= 0
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:36: warning: reflective access
+of structural type member value texWrite should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.texWrite.valid #= false
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:37: warning: reflective access
+of structural type member value texWrite should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.texWrite.pciAddr #= 0
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:38: warning: reflective access
+of structural type member value texWrite should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.texWrite.data #= 0
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:39: warning: reflective access
+of structural type member value texWrite should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.texWrite.mask #= 0
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:40: warning: reflective access
+of structural type member value texDrain should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.texDrain.ready #= true
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:45: warning: reflective access
+of structural type member value cpuSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        dut.io.cpuSide.cmd.address #= address
+               ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:46: warning: reflective access
+of structural type member value cpuSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        dut.io.cpuSide.cmd.data #= data
+               ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:47: warning: reflective access
+of structural type member value cpuSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        dut.io.cpuSide.cmd.valid #= true
+               ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:50: warning: reflective access
+of structural type member value cpuSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        while(!dut.io.cpuSide.cmd.ready.toBoolean && waits < 40) {
+                      ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:55: warning: reflective access
+of structural type member value cpuSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        dut.io.cpuSide.cmd.valid #= false
+               ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:60: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(dut.io.regSide.cmd.valid.toBoolean)
+                    ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:61: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(dut.io.regSide.cmd.address.toInt == 0x80)
+                    ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:63: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.regSide.cmd.ready #= true
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:66: warning: reflective access
+of structural type member value pipelineBusy should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.pipelineBusy #= true // command reaches the registered render input
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:69: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        assert(!dut.io.regSide.cmd.valid.toBoolean,
+                       ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:74: warning: reflective access
+of structural type member value pipelineBusy should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.pipelineBusy #= false
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:76: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(dut.io.regSide.cmd.valid.toBoolean)
+                    ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:77: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(dut.io.regSide.cmd.address.toInt == 0x144)
+                    ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:78: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(dut.io.regSide.cmd.data.toLong == 0xffL)
+                    ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:81: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(!dut.io.regSide.cmd.valid.toBoolean)
+                     ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:85: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.regSide.cmd.ready #= false
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:88: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(dut.io.regSide.cmd.valid.toBoolean)
+                    ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:90: warning: reflective access
+of structural type member value commandReady should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.commandReady(0) #= false
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:91: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.regSide.cmd.ready #= true
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:94: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        assert(!dut.io.regSide.cmd.valid.toBoolean,
+                       ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:99: warning: reflective access
+of structural type member value commandReady should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      dut.io.commandReady(0) #= true
+             ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:101: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(dut.io.regSide.cmd.valid.toBoolean)
+                    ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:102: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(dut.io.regSide.cmd.address.toInt == 0x80)
+                    ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:103: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(dut.io.regSide.cmd.data.toLong == 1)
+                    ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\FifoSyncRegression.test.scala:106: warning: reflective access
+of structural type member value regSide should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(!dut.io.regSide.cmd.valid.toBoolean)
+                     ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:15: warning:
+reflective access of structural type member value fbMemWrite should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      val inputs = Seq(dut.io.fbMemWrite, dut.io.fbColorWriteMem, dut.io.fbAuxWriteMem,
+                              ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:15: warning:
+reflective access of structural type member value fbColorWriteMem should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      val inputs = Seq(dut.io.fbMemWrite, dut.io.fbColorWriteMem, dut.io.fbAuxWriteMem,
+                                                 ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:15: warning:
+reflective access of structural type member value fbAuxWriteMem should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      val inputs = Seq(dut.io.fbMemWrite, dut.io.fbColorWriteMem, dut.io.fbAuxWriteMem,
+                                                                         ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:16: warning:
+reflective access of structural type member value fbColorReadMem should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        dut.io.fbColorReadMem, dut.io.fbAuxReadMem, dut.io.texMem)
+               ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:16: warning:
+reflective access of structural type member value fbAuxReadMem should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        dut.io.fbColorReadMem, dut.io.fbAuxReadMem, dut.io.texMem)
+                                      ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:16: warning:
+reflective access of structural type member value texMem should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        dut.io.fbColorReadMem, dut.io.fbAuxReadMem, dut.io.texMem)
+                                                           ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:28: warning:
+reflective access of structural type member value memFbWrite should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      val outputs = Seq(dut.io.memFbWrite, dut.io.memFbColorWrite, dut.io.memFbAuxWrite,
+                               ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:28: warning:
+reflective access of structural type member value memFbColorWrite should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      val outputs = Seq(dut.io.memFbWrite, dut.io.memFbColorWrite, dut.io.memFbAuxWrite,
+                                                  ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:28: warning:
+reflective access of structural type member value memFbAuxWrite should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      val outputs = Seq(dut.io.memFbWrite, dut.io.memFbColorWrite, dut.io.memFbAuxWrite,
+                                                                          ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:29: warning:
+reflective access of structural type member value memFbColorRead should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        dut.io.memFbColorRead, dut.io.memFbAuxRead, dut.io.memTex)
+               ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:29: warning:
+reflective access of structural type member value memFbAuxRead should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        dut.io.memFbColorRead, dut.io.memFbAuxRead, dut.io.memTex)
+                                      ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:29: warning:
+reflective access of structural type member value memTex should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        dut.io.memFbColorRead, dut.io.memFbAuxRead, dut.io.memTex)
+                                                           ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:35: warning:
+reflective access of structural type member value texMem should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      val command = dut.io.texMem.cmd
+                           ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:36: warning:
+reflective access of structural type member value texMem should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      val response = dut.io.texMem.rsp
+                            ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:37: warning:
+reflective access of structural type member value memTex should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      val memory = dut.io.memTex
+                          ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:41: warning:
+reflective access of structural type member value publicationBusy should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(!dut.io.publicationBusy.toBoolean)
+                     ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:66: warning:
+reflective access of structural type member value publicationBusy should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(dut.io.publicationBusy.toBoolean)
+                    ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:80: warning:
+reflective access of structural type member value publicationBusy should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        assert(dut.io.publicationBusy.toBoolean, "registered but unaccepted command is outstanding")
+                      ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:102: warning:
+reflective access of structural type member value publicationBusy should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(dut.io.publicationBusy.toBoolean, "held BMB response must block publication")
+                    ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:107: warning:
+reflective access of structural type member value publicationBusy should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        assert(dut.io.publicationBusy.toBoolean)
+                      ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:125: warning:
+reflective access of structural type member value publicationBusy should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(!dut.io.publicationBusy.toBoolean, "publication may clear only after responses drain")
+                     ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:148: warning:
+reflective access of structural type member value publicationBusy should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        assert(dut.io.publicationBusy.toBoolean)
+                      ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:159: warning:
+reflective access of structural type member value publicationBusy should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        assert(dut.io.publicationBusy.toBoolean)
+                      ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:175: warning:
+reflective access of structural type member value publicationBusy should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+        assert(dut.io.publicationBusy.toBoolean)
+                      ^
+D:\GPU_proj\hackRPI-rtl-profile\fpga\verification\spinal\TextureBackendPipelineRegression.test.scala:184: warning:
+reflective access of structural type member value publicationBusy should be enabled
+by making the implicit value scala.language.reflectiveCalls visible.
+      assert(!dut.io.publicationBusy.toBoolean)
+                     ^
+73 warnings found
+[hint] .\project.scala:5:21
+[hint] "scalatest is outdated, update to 3.2.20"
+[hint]      scalatest 3.2.18 -> org.scalatest::scalatest:3.2.20
+[hint] //> using test.dep "org.scalatest::scalatest:3.2.18"
+[hint]                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[hint] .\project.scala:6:21
+[hint] "spinalhdl-tester is outdated, update to 1.15.1"
+[hint]      spinalhdl-tester 1.13.0 -> com.github.spinalhdl::spinalhdl-tester:1.15.1
+[hint] //> using test.dep "com.github.spinalhdl::spinalhdl-tester:1.13.0"
+[hint]                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[hint] .\project.scala:2:16
+[hint] "spinalhdl-core is outdated, update to 1.15.1"
+[hint]      spinalhdl-core 1.13.0 -> com.github.spinalhdl::spinalhdl-core:1.15.1
+[hint] //> using dep "com.github.spinalhdl::spinalhdl-core:1.13.0"
+[hint]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[hint] .\project.scala:3:16
+[hint] "spinalhdl-lib is outdated, update to 1.15.1"
+[hint]      spinalhdl-lib 1.13.0 -> com.github.spinalhdl::spinalhdl-lib:1.15.1
+[hint] //> using dep "com.github.spinalhdl::spinalhdl-lib:1.13.0"
+[hint]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[hint] .\project.scala:7:16
+[hint] "scodec-core is outdated, update to 1.11.11"
+[hint]      scodec-core 1.11.10 -> org.scodec::scodec-core:1.11.11
+[hint] //> using dep "org.scodec::scodec-core:1.11.10"
+[hint]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[hint] .\project.scala:8:16
+[hint] "scodec-bits is outdated, update to 1.2.5"
+[hint]      scodec-bits 1.1.38 -> org.scodec::scodec-bits:1.2.5
+[hint] //> using dep "org.scodec::scodec-bits:1.1.38"
+[hint]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BridgeReadRegression:
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:22
+[Progress] at 0.000 : Elaborate components
+[Progress] at 0.547 : Checks and transforms
+[Progress] at 0.769 : Generate Verilog to ./simWorkspace/tmp/job_1
+[Warning] 5 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 0.956
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\De10BmbToAvalonMm
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 96.361 ms
+[Progress] Start De10BmbToAvalonMm test simulation with seed 1666962115
+Shared memory key : SpinalHDL_0_1_883089676_-1142571386_1794148823326_2729488528267147229
+Start of simulation
+End of simulation
+[Done] Simulation done in 42.637 ms
+- queued burst read asserts and holds before ready, then returns every beat under BMB stalls
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:23
+[Progress] at 1.314 : Elaborate components
+[Progress] at 1.331 : Checks and transforms
+[Progress] at 1.363 : Generate Verilog to ./simWorkspace/tmp/job_2
+[Warning] 5 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 1.436
+[Info] Workspace 'De10BmbToAvalonMm' was reallocated as 'De10BmbToAvalonMm_1' to avoid collision
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\De10BmbToAvalonMm_1
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 85.517 ms
+[Progress] Start De10BmbToAvalonMm test simulation with seed 1202938337
+Shared memory key : SpinalHDL_0_2_1655860207_-1142571386_1794148823756_1933999636878721621
+Start of simulation
+End of simulation
+[Done] Simulation done in 13.137 ms
+- write request and payload hold before ready and produce one acknowledgement
+DepthPairReaderRegression:
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:23
+[Progress] at 1.705 : Elaborate components
+[Progress] at 1.732 : Checks and transforms
+[Progress] at 1.756 : Generate Verilog to ./simWorkspace/tmp/job_3
+[Warning] 14 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 1.831
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\FramebufferPlanePairReader
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 91.872 ms
+[Progress] Start FramebufferPlanePairReader test simulation with seed 132926647
+PASS pair reader: pixels=120 words=84 merged=36 cycles=248 latency=16
+Shared memory key : SpinalHDL_0_3_1905790887_-1142571386_1794148824163_-617389110265630413
+Start of simulation
+End of simulation
+[Done] Simulation done in 187.340 ms
+- adjacent halfwords combine before issue, retaining order through both kinds of stalls
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:24
+[Progress] at 2.283 : Elaborate components
+[Progress] at 2.298 : Checks and transforms
+[Progress] at 2.319 : Generate Verilog to ./simWorkspace/tmp/job_4
+[Warning] 14 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 2.390
+[Info] Workspace 'FramebufferPlanePairReader' was reallocated as 'FramebufferPlanePairReader_1' to avoid collision
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\FramebufferPlanePairReader_1
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 83.934 ms
+[Progress] Start FramebufferPlanePairReader test simulation with seed 1763823878
+PASS pair reader: pixels=120 words=120 merged=0 cycles=363 latency=0
+Shared memory key : SpinalHDL_0_4_179202515_-1142571386_1794148824704_7497500439863218692
+Start of simulation
+End of simulation
+[Done] Simulation done in 150.079 ms
+- a later halfword never reuses an already-issued word
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:24
+[Progress] at 2.789 : Elaborate components
+[Progress] at 2.803 : Checks and transforms
+[Progress] at 2.821 : Generate Verilog to ./simWorkspace/tmp/job_5
+[Warning] 14 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 2.888
+[Info] Workspace 'FramebufferPlanePairReader' was reallocated as 'FramebufferPlanePairReader_2' to avoid collision
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\FramebufferPlanePairReader_2
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 85.482 ms
+[Progress] Start FramebufferPlanePairReader test simulation with seed 1031931206
+PASS pair reader: pixels=120 words=84 merged=36 cycles=184 latency=0
+Shared memory key : SpinalHDL_0_5_1254568293_-1142571386_1794148825202_-6462128660988224606
+Start of simulation
+End of simulation
+[Done] Simulation done in 63.255 ms
+- continuous forward and reverse pairs work with immediate-ready memory
+DepthReadPipelineRegression:
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:25
+[Progress] at 3.209 : Elaborate components
+[Progress] at 3.229 : Checks and transforms
+[Progress] at 3.251 : Generate Verilog to ./simWorkspace/tmp/job_6
+[Warning] 21 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 3.326
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\De10PipelinedWordReader
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 82.701 ms
+[Progress] Start De10PipelinedWordReader test simulation with seed 2011797591
+PASS depth reader contexts=5 latency=16: 64 ordered responses, cycles=201, maxDDRPending=8
+Shared memory key : SpinalHDL_0_6_960583233_-1142571386_1794148825640_8866618577914007943
+Start of simulation
+End of simulation
+[Done] Simulation done in 94.655 ms
+- multiple depth reads retain ordered contexts through memory and consumer stalls
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:25
+[Progress] at 3.666 : Elaborate components
+[Progress] at 3.680 : Checks and transforms
+[Progress] at 3.695 : Generate Verilog to ./simWorkspace/tmp/job_7
+[Warning] 24 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 3.760
+[Info] Workspace 'De10PipelinedWordReader' was reallocated as 'De10PipelinedWordReader_1' to avoid collision
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\De10PipelinedWordReader_1
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 82.705 ms
+[Progress] Start De10PipelinedWordReader test simulation with seed 1297228914
+PASS depth reader contexts=0 latency=0: 64 ordered responses, cycles=115, maxDDRPending=0
+Shared memory key : SpinalHDL_0_7_827144688_-1142571386_1794148826076_4683314290105608582
+Start of simulation
+End of simulation
+[Done] Simulation done in 46.431 ms
+- context-free reads and immediate Avalon responses remain ordered
+FifoSyncRegression:
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:26
+[Progress] at 4.054 : Elaborate components
+[PciFifo] Registered categories: 2 entries
+  0x080: fifoBypass=false, syncRequired=false
+  0x144: fifoBypass=false, syncRequired=true
+[PciFifo] FIFO queue addresses: 0x080, 0x144
+[PciFifo] Sync addresses: 0x144
+[PciFifo] Command stream addresses: 0x080
+[Progress] at 4.155 : Checks and transforms
+[Warning] Name of (toplevel/floatConvert_converter/n0__shift :  SInt[10 bits]) is invalid in VHDL because it contains a double underscore.
+[Progress] at 4.230 : Generate Verilog to ./simWorkspace/tmp/job_8
+[Warning] 15 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 4.324
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\PciFifo
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 88.773 ms
+[Progress] Start PciFifo test simulation with seed 924604804
+Shared memory key : SpinalHDL_0_8_2051308637_-1142571386_1794148826651_5188170609929641825
+Start of simulation
+End of simulation
+[Done] Simulation done in 13.935 ms
+- sync color write rechecks busy after the registered issue stage
+FramebufferFlushRegression:
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:26
+[Progress] at 4.605 : Elaborate components
+[Progress] at 4.716 : Checks and transforms
+[Progress] at 4.817 : Generate Verilog to ./simWorkspace/tmp/job_9
+[Warning] 107 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 4.947
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\BufferWithBackend
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 92.272 ms
+[Progress] Start BufferWithBackend test simulation with seed 690042239
+Shared memory key : SpinalHDL_0_9_971478057_-1142571386_1794148827312_-6240799626870549141
+Start of simulation
+End of simulation
+[Done] Simulation done in 18.005 ms
+- one partial final word requires flush and reaches backing memory
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:27
+[Progress] at 5.277 : Elaborate components
+[Progress] at 5.311 : Checks and transforms
+[Progress] at 5.373 : Generate Verilog to ./simWorkspace/tmp/job_10
+[Warning] 107 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 5.490
+[Info] Workspace 'BufferWithBackend' was reallocated as 'BufferWithBackend_1' to avoid collision
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\BufferWithBackend_1
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 116.263 ms
+[Progress] Start BufferWithBackend test simulation with seed 940188217
+Shared memory key : SpinalHDL_0_10_57923694_-1142571386_1794148827894_-2099146528746553140
+Start of simulation
+End of simulation
+[Done] Simulation done in 12.171 ms
+- masked same-word merge and partial run survive randomized memory backpressure
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:27
+[Progress] at 5.857 : Elaborate components
+[Progress] at 5.887 : Checks and transforms
+[Progress] at 5.945 : Generate Verilog to ./simWorkspace/tmp/job_11
+[Warning] 107 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 6.044
+[Info] Workspace 'BufferWithBackend' was reallocated as 'BufferWithBackend_2' to avoid collision
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\BufferWithBackend_2
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 105.574 ms
+[Progress] Start BufferWithBackend test simulation with seed 134652426
+Shared memory key : SpinalHDL_0_11_1549192045_-1142571386_1794148828438_-3337346645346539588
+Start of simulation
+End of simulation
+[Done] Simulation done in 26.821 ms
+- full runs and final partial run preserve every word under backpressure
+TextureBackendPipelineRegression:
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:28
+[Progress] at 6.418 : Elaborate components
+[Progress] at 6.471 : Checks and transforms
+[Progress] at 6.543 : Generate Verilog to ./simWorkspace/tmp/job_12
+[Warning] 30 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 6.676
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\De10MemBackend
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 90.958 ms
+[Progress] Start De10MemBackend test simulation with seed 911061123
+Shared memory key : SpinalHDL_0_12_820113416_-1142571386_1794148829039_-330032174447921758
+Start of simulation
+End of simulation
+[Done] Simulation done in 29.296 ms
+- texture commands register before Avalon, retain payload under stalls and stay busy until responses drain
+TextureDownloadBusyRegression:
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:29
+[Progress] at 7.035 : Elaborate components
+[Progress] at 7.057 : Checks and transforms
+[Progress] at 7.071 : Generate Verilog to ./simWorkspace/tmp/job_13
+[Warning] 8 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 7.135
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\TextureDownloadBusyHarness
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 90.786 ms
+[Progress] Start TextureDownloadBusyHarness test simulation with seed 377629632
+Shared memory key : SpinalHDL_0_13_1083296962_-1142571386_1794148829465_3300399566711985642
+Start of simulation
+End of simulation
+[Done] Simulation done in 8.240 ms
+- download busy covers first preparation stage and held output, packed=true
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:29
+[Progress] at 7.405 : Elaborate components
+[Progress] at 7.410 : Checks and transforms
+[Progress] at 7.413 : Generate Verilog to ./simWorkspace/tmp/job_14
+[Warning] 4 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 7.477
+[Info] Workspace 'TextureDownloadBusyHarness' was reallocated as 'TextureDownloadBusyHarness_1' to avoid collision
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\TextureDownloadBusyHarness_1
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 78.427 ms
+[Progress] Start TextureDownloadBusyHarness test simulation with seed 1914565020
+Shared memory key : SpinalHDL_0_14_540338460_-1142571386_1794148829787_3731985423506071547
+Start of simulation
+End of simulation
+[Done] Simulation done in 8.114 ms
+- download busy covers first preparation stage and held output, packed=false
+TextureMissRegression:
+[Runtime] SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
+[Runtime] JVM max memory : 5996.0MiB
+[Runtime] Current date : 2026.11.08 09:40:29
+[Progress] at 7.730 : Elaborate components
+[Progress] at 7.862 : Checks and transforms
+[Progress] at 8.143 : Generate Verilog to ./simWorkspace/tmp/job_15
+[Warning] 140 signals were pruned. You can call printPruned on the backend report to get more informations.
+[Done] at 8.317
+[Progress] Simulation workspace in D:\GPU_proj\hackRPI-rtl-profile\build\rtl-profile\pair-src\.\simWorkspace\TmuTextureCache
+[Progress] IVerilog compilation started
+[Progress] IVerilog compilation done in 105.379 ms
+[Progress] Start TmuTextureCache test simulation with seed 1557181428
+Shared memory key : SpinalHDL_0_15_1343361145_-1142571386_1794148830849_-8761369079007627427
+Start of simulation
+End of simulation
+[Done] Simulation done in 67.285 ms
+- point cold miss returns current fill texel under memory/output stalls and agrees with later hit
+Run completed in 9 seconds, 367 milliseconds.
+Total number of tests run: 15
+Suites: completed 8, aborted 0
+Tests: succeeded 15, failed 0, canceled 0, ignored 0, pending 0
+All tests passed.

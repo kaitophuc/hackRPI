@@ -164,3 +164,39 @@ golden frames. It restores normal services in `finally`. The existing
 `test_vertex_live_load.py` supports `FLIGHTING_PROFILE_DIR` for a separate
 combined-load output directory. Results are saved in
 `evidence/vertex-{on,load-on}-pipelined-rtl.json`.
+
+## Follow-up depth-pair sample: synthesis in progress
+
+`FramebufferPlanePairReader.scala` combines consecutive opposite halfwords of
+the same word only while the first word command is still unaccepted. It never
+reuses an issued or completed read. The ordered response remains held until
+both requested halfwords are delivered. Accepted-pixel accounting keeps busy
+asserted through FIFO prefetch bubbles and consumer stalls.
+
+Only the direct auxiliary reader selects it. The color reader and cached-reader
+configurations retain their previous paths. The framebuffer in-flight counter
+is widened to cover the combined metadata and fetched queues as more pixels
+can now be outstanding; the external debug field keeps its original width.
+
+Against the tested eight-read candidate, the 4,096-pixel depth sample improved
+from 12,438 to 7,042 cycles. Actual depth-word commands fell from 4,096 to 2,112,
+and request-backpressure cycles from 7,610 to 2,152. All 4 MB of captured memory
+are identical. All 14 full-core cases pass, including blending and both buffers.
+The 15-test protocol suite covers stalls, same-cycle memory responses, reverse
+lanes, repeated same-lane requests, and later requests to an already-issued word.
+This is simulation evidence, not a board FPS result.
+
+Prepare a separate source tree with `prepare_pair_candidate.py --baseline
+build/rtl-profile/candidate-src --output build/rtl-profile/pair-src`, then use
+the same generator and matrix commands above with the pair directories.
+`create_pair_patch.py --verify-dir build/rtl-profile/pair-patch-check` builds a
+complete patch from the saved upstream archive and verifies every Scala source.
+Regeneration from that fresh patched source produced identical logic and all
+eleven byte-identical ROMs; only the generator's Git-hash comment differs.
+
+`pair_hardware_gate.py prepare` preserves the tested image/reports, checks
+ports and ROMs, and prepares only the two generated core copies for compilation.
+After the Quartus build, `pair_hardware_gate.py verify` checks timing, all 342
+compiled signal pins, DDR pins, inherited unconstrained counts, and unchanged
+board/constraint/memory inputs. The pair candidate is not programmed yet.
+The tested 25.22 FPS image remains the current board configuration.
