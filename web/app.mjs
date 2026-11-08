@@ -40,7 +40,7 @@ function showSettings() {
   const s = settings();
   ui['sensitivity-value'].textContent = `${s.sensitivity.toFixed(1)}×`;
   ui['deadzone-value'].textContent = `${s.deadzone}°`;
-  ui['smoothing-value'].textContent = s.smoothing < 25 ? 'Nhanh' : s.smoothing < 70 ? 'Vừa' : 'Êm';
+  ui['smoothing-value'].textContent = s.smoothing < 25 ? 'Fast' : s.smoothing < 70 ? 'Medium' : 'Smooth';
   const d = Math.max(3, s.deadzone/(38/s.sensitivity)*74);
   ui['deadzone-ring'].style.width = `${d}%`; ui['deadzone-ring'].style.height = `${d}%`;
 }
@@ -56,22 +56,22 @@ ui['reset-settings'].onclick = () => {
   ui.sensitivity.value = 1; ui.deadzone.value = 2; ui.smoothing.value = 45;
   for (const id of ['invert-x','invert-y','swap']) ui[id].checked = false;
   try { localStorage.removeItem('aero-settings-v2'); } catch {}
-  showSettings(); toast('Đã đặt lại cảm giác lái.');
+  showSettings(); toast('Control settings reset.');
 };
 showSettings();
 function clearSource() {
-  game.pause('Nguồn điều khiển đã thay đổi. Hiệu chỉnh lại rồi tiếp tục.');
+  game.pause('The input source changed. Calibrate again before resuming.');
   if(demo && game.status==='paused')runIsDemo=true;
   raw = null; sampleAt = 0; lastCount = -1; history = [];
   neutral = basis([0,0,1]); calibrated = false; calibration = null; referenceMagnitude = 0;
   angles = [0,0]; input = [0,0]; controller.reset();
-  ui['calibration-note'].textContent = 'Giữ yên sensor rồi đặt tư thế cân bằng.';
+  ui['calibration-note'].textContent = 'Hold the sensor still, then set the neutral position.';
 }
 async function requestConnection(enabled) {
   const response = await fetch('/api/connection', {method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({enabled,port:ui.port.value})});
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || 'Không thay đổi được kết nối.');
+  if (!response.ok) throw new Error(data.error || 'Could not change the connection.');
   state = data;
 }
 async function ports() {
@@ -79,9 +79,9 @@ async function ports() {
     const response = await fetch('/api/ports');
     if (!response.ok) throw new Error();
     const values = await response.json(), selected = ui.port.value;
-    ui.port.replaceChildren(new Option('Tự tìm Arduino',''), ...values.map(p => new Option(p.replace('/dev/',''),p)));
+    ui.port.replaceChildren(new Option('Find Arduino automatically',''), ...values.map(p => new Option(p.replace('/dev/',''),p)));
     if (values.includes(selected)) ui.port.value = selected;
-  } catch { toast('Không lấy được cổng USB. Kiểm tra chương trình server.'); }
+  } catch { toast('Could not list USB ports. Check the server.'); }
 }
 ui.refresh.onclick = ports;
 ui.connect.onclick = async () => {
@@ -90,7 +90,7 @@ ui.connect.onclick = async () => {
     const enabled = demo || !state.enabled;
     await requestConnection(enabled);
     demo = false; clearSource();
-    toast(enabled ? 'Đang kết nối Arduino…' : 'Đã ngắt kết nối USB.');
+    toast(enabled ? 'Connecting to Arduino…' : 'USB disconnected.');
   } catch (e) { toast(e.message); }
   finally { ui.connect.disabled = false; }
 };
@@ -106,19 +106,19 @@ ui.demo.onclick = async () => {
       await requestConnection(true); demo = false; clearSource();
     } else {
       await requestConnection(false); demo = true; demoTime = performance.now(); clearSource();
-      toast('Demo dùng dữ liệu mô phỏng. Bấm “Về USB” để dùng sensor thật.');
+      toast('Demo uses simulated data. Select “Back to USB” to use the real sensor.');
     }
   } catch(e) { toast(e.message); }
   finally { ui.demo.disabled = false; }
 };
-ui.recenter.onclick = () => { controller.center(); toast('Đã đưa máy bay về giữa.'); };
+ui.recenter.onclick = () => { controller.center(); toast('Aircraft centered.'); };
 ui.fullscreen.onclick=async()=>{
   try{if(document.fullscreenElement)await document.exitFullscreen();else await ui.viewport.closest('.flight-panel').requestFullscreen();}
-  catch{toast('Trình duyệt chưa hỗ trợ toàn màn hình cho chế độ này.');}
+  catch{toast('This browser does not support fullscreen in this mode.');}
 };
 function renderLeaderboard(){
   ui.leaderboard.replaceChildren();
-  if(!leaderboard.length){const li=document.createElement('li');li.className='muted';li.textContent='Chưa có chuyến bay. Lấy vị trí đầu tiên!';ui.leaderboard.append(li);return;}
+  if(!leaderboard.length){const li=document.createElement('li');li.className='muted';li.textContent='No flights yet. Take the top spot!';ui.leaderboard.append(li);return;}
   for(const item of leaderboard){
     const li=document.createElement('li'),name=document.createElement('span'),score=document.createElement('strong');
     name.textContent=item.name;score.textContent=String(item.score);li.append(name,score);ui.leaderboard.append(li);
@@ -136,28 +136,28 @@ function pauseOrResume(){
   if(game.status==='paused'){
     if(!isFresh() || !calibrated || calibration)return;
     gameView.unlock();game.resume();
-  }else game.pause('Giữ sensor cân bằng rồi tiếp tục chuyến bay.');
+  }else game.pause('Hold the sensor steady, then resume your flight.');
 }
 ui['pause-game'].onclick=pauseOrResume;ui.resume.onclick=pauseOrResume;
 ui.sound.onclick=()=>{
   gameView.muted=!gameView.muted;
   if(!gameView.muted)gameView.unlock();
-  ui.sound.textContent=`Âm thanh: ${gameView.muted?'tắt':'bật'}`;
+  ui.sound.textContent=`Sound: ${gameView.muted?'off':'on'}`;
   ui.sound.setAttribute('aria-pressed',String(gameView.muted));
 };
 ui['save-score'].onclick=()=>{
   if(game.status!=='finished' || scoreSaved || runIsDemo)return;
-  const name=ui['pilot-name'].value.trim().slice(0,20)||'Phi công';
+  const name=ui['pilot-name'].value.trim().slice(0,20)||'Pilot';
   leaderboard=[...leaderboard,{name,score:game.score}].sort((a,b)=>b.score-a.score).slice(0,5);
-  try{localStorage.setItem('aero-leaderboard-dodge-v1',JSON.stringify(leaderboard));scoreSaved=true;renderLeaderboard();toast('Đã lưu điểm vào bảng xếp hạng.');}
-  catch{toast('Trình duyệt không cho lưu điểm. Điểm vẫn hiển thị ở màn hình kết quả.');}
+  try{localStorage.setItem('aero-leaderboard-dodge-v1',JSON.stringify(leaderboard));scoreSaved=true;renderLeaderboard();toast('Score saved to the leaderboard.');}
+  catch{toast('The browser could not save your score. It remains visible on the results screen.');}
 };
 document.addEventListener('keydown',event=>{
   if(event.code!=='Space' || event.repeat || /INPUT|TEXTAREA|SELECT|BUTTON/.test(document.activeElement?.tagName))return;
   event.preventDefault();
   if(['ready','finished'].includes(game.status))startGame();else pauseOrResume();
 });
-document.addEventListener('visibilitychange',()=>{if(document.hidden)game.pause('Đã chuyển khỏi màn hình chơi. Sẵn sàng thì tiếp tục.');});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)game.pause('You left the game screen. Resume when ready.');});
 function updateGameUI(fresh){
   const available=fresh && calibrated && !calibration;
   const busy=['playing','countdown'].includes(game.status);
@@ -166,14 +166,14 @@ function updateGameUI(fresh){
   ui['game-time'].classList.toggle('urgent',game.time>=48);
   ui['game-health'].textContent=Array.from({length:3},(_,i)=>i<game.health?'◆':'◇').join(' ');
   ui['game-combo'].textContent=`${game.combo} ×${game.multiplier}`;
-  ui['game-hint'].textContent=game.status==='playing'?`${game.stage} · Né vật cản màu cam, bay vào khoảng trống.`:
-    game.status==='paused'?'Lượt chơi đã dừng. Bấm tiếp tục khi sensor sẵn sàng.':
-    available?'Nghiêng nhẹ để thử. Space để bắt đầu / tạm dừng.':'Hiệu chỉnh sensor để bắt đầu. Có thể thử bằng demo.';
+  ui['game-hint'].textContent=game.status==='playing'?`${game.stage} · Dodge orange obstacles and fly toward a clear path.`:
+    game.status==='paused'?'The run is paused. Resume when the sensor is ready.':
+    available?'Tilt gently to try the controls. Press Space to start / pause.':'Calibrate the sensor to begin, or try demo mode.';
   ui['start-game'].disabled=!available || busy;
-  ui['start-game'].textContent=game.status==='finished'?'Bay lại · 60 giây ↗':game.status==='paused'?'Chơi lượt mới ↗':'Bắt đầu · 60 giây ↗';
+  ui['start-game'].textContent=game.status==='finished'?'Fly again · 60 seconds ↗':game.status==='paused'?'Start a new run ↗':'Start · 60 seconds ↗';
   ui['pause-game'].disabled=!busy && game.status!=='paused';
   if(game.status==='paused' && !available)ui['pause-game'].disabled=true;
-  ui['pause-game'].textContent=game.status==='paused'?'Tiếp tục':'Tạm dừng';
+  ui['pause-game'].textContent=game.status==='paused'?'Resume':'Pause';
   ui.resume.disabled=!available;
   ui.launch.disabled=ui.retry.disabled=!available;
   ui.recenter.disabled=game.status!=='ready' && game.status!=='finished';
@@ -187,16 +187,16 @@ function updateGameUI(fresh){
   ui['game-countdown'].textContent=String(Math.max(1,Math.ceil(game.countdown)));
   ui['pause-reason'].textContent=game.pauseReason;
   if(game.status==='finished'){
-    ui['result-heading'].textContent=runIsDemo?'KẾT QUẢ DEMO · DỮ LIỆU MÔ PHỎNG':'KẾT QUẢ CHUYẾN BAY';
-    ui['result-title'].textContent=game.won?'Thoát vòng vây!':'Thử lại một chuyến nữa.';
+    ui['result-heading'].textContent=runIsDemo?'DEMO RESULTS · SIMULATED DATA':'FLIGHT RESULTS';
+    ui['result-title'].textContent=game.won?'Escaped!':'Try another flight.';
     ui['result-score'].textContent=String(game.score);
     ui['result-passed'].textContent=String(game.passed);
     ui['result-combo'].textContent=String(game.bestCombo);
     ui['result-near'].textContent=String(game.near);
-    ui['result-note'].textContent=runIsDemo?'Demo không ghi bảng xếp hạng. Kết nối sensor để tranh điểm.':
-      game.won?`Thưởng về đích: ${game.health*200} điểm. Lưu tên phi công để tranh hạng.`:'Nhìn vật cản từ xa rồi nghiêng nhẹ để bay sang khoảng trống.';
+    ui['result-note'].textContent=runIsDemo?'Demo scores are not saved. Connect the sensor to compete.':
+      game.won?`Finish bonus: ${game.health*200} points. Save your pilot name to join the leaderboard.`:'Watch for obstacles ahead, then tilt gently toward a clear path.';
     ui['save-score'].disabled=scoreSaved || runIsDemo;
-    ui['save-score'].textContent=scoreSaved?'Đã lưu điểm':'Lưu điểm';
+    ui['save-score'].textContent=scoreSaved?'Score saved':'Save score';
   }
 }
 function isFresh(now=performance.now()) {
@@ -226,51 +226,51 @@ events.onerror = () => { transport = false; };
 window.addEventListener('pagehide', () => events.close());
 ui.calibrate.onclick = () => {
   if (!isFresh() || !raw || calibration) return;
-  game.pause('Đang hiệu chỉnh sensor. Giữ tay cân bằng rồi tiếp tục.');
+  game.pause('Calibrating the sensor. Hold steady before resuming.');
   calibration = {start:performance.now(),samples:[]};
-  ui['calibration-note'].textContent = 'Giữ yên… đang lấy mẫu trong 1,8 giây.';
+  ui['calibration-note'].textContent = 'Hold still… collecting samples for 1.8 seconds.';
 };
 function finishCalibration(now) {
   if (!calibration) return;
   if (!isFresh(now)) {
-    calibration = null; ui['calibration-note'].textContent = 'Mất dữ liệu. Kết nối lại rồi hiệu chỉnh.'; return;
+    calibration = null; ui['calibration-note'].textContent = 'Sensor data lost. Reconnect and calibrate again.'; return;
   }
   const elapsed = now-calibration.start;
-  ui.calibrate.textContent = `Giữ yên… ${Math.max(0,1.8-elapsed/1000).toFixed(1)}s`;
+  ui.calibrate.textContent = `Hold still… ${Math.max(0,1.8-elapsed/1000).toFixed(1)}s`;
   if (elapsed < 1800) return;
   try {
     const result = calibrate(calibration.samples);
     neutral = result.basis; referenceMagnitude = result.magnitude; calibrated = true;
     controller.reset();
-    ui['calibration-note'].textContent = 'Đã đặt điểm giữa. Nghiêng nhẹ để thử điều khiển.';
-    toast('Đã đặt tư thế cân bằng. Sẵn sàng bay.');
+    ui['calibration-note'].textContent = 'Neutral position set. Tilt gently to try the controls.';
+    toast('Neutral position set. Ready to fly.');
   } catch(e) { ui['calibration-note'].textContent = e.message; toast(e.message); }
   calibration = null;
 }
 function updateUI(now, fresh) {
   const live = fresh && !demo;
-  let label = demo ? 'Chế độ demo' : !transport ? 'Mất kết nối ứng dụng' : live ? 'Sensor đang hoạt động' :
-    !state.enabled ? 'Đã ngắt kết nối' : state.connected ? 'Đang chờ dữ liệu' : 'Đang tìm Arduino';
+  let label = demo ? 'Demo mode' : !transport ? 'Application disconnected' : live ? 'Sensor active' :
+    !state.enabled ? 'Disconnected' : state.connected ? 'Waiting for data' : 'Searching for Arduino';
   ui.status.className = `status ${live?'live':demo?'demo':''}`;
   ui.status.querySelector('span').textContent = label;
   ui['source-label'].textContent = demo ? 'SIMULATED / DEMO' : 'USB / LIVE';
-  ui['device-tag'].textContent = demo ? 'DỮ LIỆU MÔ PHỎNG' : `${state.info?.acc || 'ARDUINO'} · USB`;
-  ui['connection-detail'].textContent = demo ? 'Đang mô phỏng. Dữ liệu này không đến từ sensor.' :
-    !transport ? 'Server chưa phản hồi. Chạy lại server.py nếu cần.' : state.error ||
-    (!state.enabled ? 'Bấm kết nối để đọc lại sensor.' : state.connected ?
-      `${state.port || 'USB'} · 115200 baud${state.info?.acc ? ' · '+state.info.acc : ''}` : 'Đang tìm Arduino qua USB…');
-  ui.connect.textContent = demo || !state.enabled ? 'Kết nối USB' : 'Ngắt kết nối';
-  ui.demo.textContent = demo ? 'Về USB' : 'Thử demo'; ui.demo.classList.toggle('active',demo);
+  ui['device-tag'].textContent = demo ? 'SIMULATED DATA' : `${state.info?.acc || 'ARDUINO'} · USB`;
+  ui['connection-detail'].textContent = demo ? 'Simulation active. This data is not from the sensor.' :
+    !transport ? 'The server is not responding. Restart server.py if needed.' : state.error ||
+    (!state.enabled ? 'Select Connect to resume reading the sensor.' : state.connected ?
+      `${state.port || 'USB'} · 115200 baud${state.info?.acc ? ' · '+state.info.acc : ''}` : 'Searching for Arduino over USB…');
+  ui.connect.textContent = demo || !state.enabled ? 'Connect USB' : 'Disconnect';
+  ui.demo.textContent = demo ? 'Back to USB' : 'Try demo'; ui.demo.classList.toggle('active',demo);
   ui.calibrate.disabled = !fresh || !!calibration;
-  if (!calibration) ui.calibrate.innerHTML = '<span>◎</span> Đặt tư thế cân bằng';
-  ui['calibration-tag'].textContent = calibrated ? 'ĐÃ ĐẶT' : 'CHƯA ĐẶT';
+  if (!calibration) ui.calibrate.innerHTML = '<span>◎</span> Set neutral position';
+  ui['calibration-tag'].textContent = calibrated ? 'SET' : 'NOT SET';
   ui['calibration-tag'].classList.toggle('ready',calibrated);
   ui['flight-message'].hidden = fresh && calibrated;
-  ui['message-title'].textContent = calibration ? 'Giữ yên sensor' : fresh ? 'Đặt tư thế cân bằng' : label;
-  ui['message-detail'].textContent = calibration ? 'Đang xác định tư thế cầm tự nhiên của mày.' :
-    fresh ? 'Cầm thoải mái rồi bấm “Đặt tư thế cân bằng” bên phải.' :
-    !state.enabled && !demo ? 'Bấm “Kết nối USB” để tiếp tục.' :
-    state.connected ? 'Board đã nối USB. Đang chờ dữ liệu gia tốc ax, ay, az.' : 'Kiểm tra USB và cắm sensor vào cổng I²C. Có thể thử demo trước.';
+  ui['message-title'].textContent = calibration ? 'Hold the sensor still' : fresh ? 'Set neutral position' : label;
+  ui['message-detail'].textContent = calibration ? 'Finding your natural grip position.' :
+    fresh ? 'Hold the sensor comfortably, then select “Set neutral position” on the right.' :
+    !state.enabled && !demo ? 'Select “Connect USB” to continue.' :
+    state.connected ? 'Board connected over USB. Waiting for ax, ay, az acceleration data.' : 'Check the USB connection and connect the sensor to the I²C port, or try demo mode.';
   ui['flight-state'].textContent = demo ? 'DEMO · SIMULATED' : fresh && calibrated ? 'CONTROL ACTIVE' : fresh ? 'CALIBRATE TO START' : 'STANDBY';
   const signed = n => `${n>=0?'+':''}${n.toFixed(1)}°`;
   ui['hud-roll'].textContent = signed(plane.roll);
@@ -278,17 +278,17 @@ function updateUI(now, fresh) {
   ui['roll-value'].textContent = signed(angles[0]);
   ui['pitch-value'].textContent = signed(angles[1]);
   ui['hud-speed'].textContent = `INPUT ${Math.round(Math.max(...input.map(Math.abs))*100)}%`;
-  ui['motion-note'].textContent = !fresh ? 'Không có dữ liệu mới. Điều khiển đã dừng.' : !calibrated ?
-    'Đặt điểm cân bằng để bắt đầu điều khiển.' : now < motionUntil ?
-    'Đang có gia tốc mạnh. Góc nghiêng có thể lệch tạm thời.' :
-    Math.max(...input.map(Math.abs)) < .01 ? 'Đang trong vùng cân bằng.' : 'Nghiêng càng nhiều, di chuyển càng nhanh.';
+  ui['motion-note'].textContent = !fresh ? 'No fresh data. Controls stopped.' : !calibrated ?
+    'Set the neutral position to enable controls.' : now < motionUntil ?
+    'Strong acceleration detected. Tilt readings may be temporarily inaccurate.' :
+    Math.max(...input.map(Math.abs)) < .01 ? 'Within the neutral deadzone.' : 'Tilt further to move faster.';
   for (const [i,k] of ['x','y','z'].entries()) {
     ui[`a${k}`].textContent = fresh && raw ? Math.round(raw[i]).toString() : '—';
     const percent = fresh && raw ? clamp(raw[i]/1600,-1,1)*50 : 0;
     ui[`bar-${k}`].style.left = `${percent<0?50+percent:50}%`;
     ui[`bar-${k}`].style.width = `${Math.abs(percent)}%`;
   }
-  ui['sample-rate'].textContent = demo ? '20.0 mẫu/s · DEMO' : `${fresh?(state.rate||0).toFixed(1):'0.0'} mẫu/s`;
+  ui['sample-rate'].textContent = demo ? '20.0 samples/s · DEMO' : `${fresh?(state.rate||0).toFixed(1):'0.0'} samples/s`;
   ui['input-dot'].style.left = `${50+input[0]*37}%`;
   ui['input-dot'].style.top = `${50+input[1]*37}%`;
 }

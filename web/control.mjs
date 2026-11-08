@@ -7,7 +7,7 @@ export function unit(v) {
 }
 export function basis(gravity) {
   const n = unit(gravity);
-  if (!n) throw new Error('Không xác định được hướng trọng lực.');
+  if (!n) throw new Error('Could not determine the gravity direction.');
   const ref = Math.abs(n[0]) < .9 ? [1,0,0] : [0,1,0];
   const x = unit(ref.map((v,i) => v-dot(ref,n)*n[i]));
   return {n, x, y: cross(n,x)};
@@ -85,10 +85,10 @@ export class AnalogFlight {
   }
 }
 export function calibrate(samples) {
-  if (samples.length < 5) throw new Error('Chưa đủ mẫu. Giữ yên sensor rồi thử lại.');
+  if (samples.length < 5) throw new Error('Not enough samples. Hold the sensor still and try again.');
   const mean = [0,1,2].map(i => samples.reduce((s,v) => s+v[i],0)/samples.length);
   const norm = Math.hypot(...mean);
   const spread = Math.sqrt(samples.reduce((s,v) => s+v.reduce((t,x,i) => t+(x-mean[i])**2,0),0)/samples.length);
-  if (norm < 1e-6 || spread/norm > .08) throw new Error('Sensor đang chuyển động. Giữ yên rồi hiệu chỉnh lại.');
+  if (norm < 1e-6 || spread/norm > .08) throw new Error('The sensor is moving. Hold still and calibrate again.');
   return {basis:basis(mean), magnitude:norm};
 }

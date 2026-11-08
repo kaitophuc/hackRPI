@@ -78,7 +78,7 @@ export class GameView{
       }
       if(wave===game.next && progress>.3){
         ctx.fillStyle=progress>.85?'#ffd3af':'#c4ab9e';ctx.font='12px ui-monospace,monospace';ctx.textAlign='center';
-        ctx.fillText(`VẬT CẢN TỚI SAU ${Math.max(0,wave.at-game.time).toFixed(1)}s`,500,148);
+        ctx.fillText(`OBSTACLE IN ${Math.max(0,wave.at-game.time).toFixed(1)}s`,500,148);
       }
     }
     // A compact fuselage hitbox makes passing close to rocks forgiving.
@@ -106,7 +106,7 @@ export class GameView{
     }
     if(game.status==='playing'){
       ctx.fillStyle='#c3dad9';ctx.font='12px ui-monospace,monospace';ctx.textAlign='center';
-      ctx.fillText('NÉ VẬT CẢN MÀU CAM · BAY VÀO KHOẢNG TRỐNG',500,584);
+      ctx.fillText('DODGE ORANGE OBSTACLES · FIND A CLEAR PATH',500,584);
     }
     ctx.restore();
   }

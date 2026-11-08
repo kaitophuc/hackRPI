@@ -117,7 +117,7 @@ class BoardBroker:
                 port = ports[0] if ports else None
             if not port:
                 with self.lock:
-                    self.error = "Chưa tìm thấy Arduino. Kiểm tra cáp USB."
+                    self.error = "Arduino not found. Check the USB cable."
                 self.stop.wait(1)
                 continue
             fd, original, connection = None, None, None
@@ -162,7 +162,7 @@ class BoardBroker:
                         except BlockingIOError:
                             continue
                         if not data:
-                            raise OSError("Arduino đã ngắt kết nối.")
+                            raise OSError("Arduino disconnected.")
                     pending += data
                     while b"\n" in pending:
                         line, pending = pending.split(b"\n", 1)
@@ -171,7 +171,7 @@ class BoardBroker:
                         pending = b""
             except SERIAL_ERRORS as exc:
                 with self.lock:
-                    self.error = f"Không đọc được cổng USB: {exc}"
+                    self.error = f"Could not read the USB port: {exc}"
             finally:
                 if connection is not None:
                     try:
@@ -247,23 +247,23 @@ class Handler(BaseHTTPRequestHandler):
         # Only same-origin browser controls may operate the local USB bridge.
         origin = self.headers.get("Origin")
         if origin and origin != f"http://{self.headers.get('Host')}":
-            return self.reply(403, {"error": "Origin không hợp lệ."})
+            return self.reply(403, {"error": "Invalid origin."})
         if urlparse(self.path).path != "/api/connection":
             return self.reply(404, {"error": "Not found"})
         try:
             length = int(self.headers.get("Content-Length", "0"))
             if not 0 < length < 2048:
-                raise ValueError("Yêu cầu không hợp lệ.")
+                raise ValueError("Invalid request.")
             obj = json.loads(self.rfile.read(length))
             if not isinstance(obj, dict) or not isinstance(obj.get("enabled"), bool):
-                raise ValueError("Thiếu trạng thái kết nối.")
+                raise ValueError("Missing connection state.")
             port = obj.get("port")
             if port is not None and (not isinstance(port, str) or (port and port not in serial_ports())):
-                raise ValueError("Hãy chọn một cổng USB trong danh sách.")
+                raise ValueError("Select a USB port from the list.")
             self.server.broker.configure(obj["enabled"], port)
             self.reply(200, self.server.broker.snapshot())
         except (ValueError, TypeError):
-            self.reply(400, {"error": "Yêu cầu không hợp lệ. Làm mới danh sách cổng USB."})
+            self.reply(400, {"error": "Invalid request. Refresh the USB port list."})
 
 
 def main():

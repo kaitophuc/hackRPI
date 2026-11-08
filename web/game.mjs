@@ -39,17 +39,17 @@ export class FlightGame {
     this.waves=createCourse();this.events=[];this.pauseReason='';this.resumeTo='playing';this.won=false;
   }
   start(){this.reset();this.status='countdown';this.resumeTo='playing';}
-  pause(reason='Đã tạm dừng'){
+  pause(reason='Paused'){
     if(!['playing','countdown'].includes(this.status))return;
     this.resumeTo='playing';this.status='paused';this.pauseReason=reason;
   }
   resume(){if(this.status==='paused'){this.status='countdown';this.countdown=3;}}
   get multiplier(){return Math.min(5,1+Math.floor(this.combo/3));}
   get next(){return this.waves.find(w=>!w.resolved)||null;}
-  get stage(){return this.time>=48?'VƯỢT VÒNG VÂY':this.time>=22?'ĐỔI HƯỚNG LIÊN TỤC':'LÀM QUEN ĐƯỜNG BAY';}
+  get stage(){return this.time>=48?'BREAK THROUGH':this.time>=22?'KEEP CHANGING COURSE':'LEARN THE ROUTE';}
   step(dt,pose,available=true){
     this.events=[];
-    if(!available){this.pause('Mất dữ liệu sensor. Kết nối lại rồi tiếp tục.');return;}
+    if(!available){this.pause('Sensor data lost. Reconnect before resuming.');return;}
     dt=clamp(dt,0,.1);
     if(this.status==='countdown'){
       this.countdown-=dt;
@@ -64,14 +64,14 @@ export class FlightGame {
       const result=assessWave(wave,pose);
       if(result.hit){
         this.health--;this.combo=0;
-        this.events.push({type:'hit',text:'VA CHẠM · MẤT 1 GIÁP',wave});
+        this.events.push({type:'hit',text:'HIT · 1 SHIELD LOST',wave});
         if(this.health<=0){this.finish(false);return;}
       }else{
         this.combo++;this.passed++;this.bestCombo=Math.max(this.bestCombo,this.combo);
         if(result.near)this.near++;
         const points=(100+(result.near?75:0))*this.multiplier;
         this.score+=points;
-        this.events.push({type:result.near?'near':'pass',text:`${result.near?'NÉ SÁT!':'NÉ ĐẸP!'} +${points}`,wave,points});
+        this.events.push({type:result.near?'near':'pass',text:`${result.near?'NEAR MISS!':'CLEAN DODGE!'} +${points}`,wave,points});
       }
     }
     if(this.time>=this.duration)this.finish(true);
@@ -79,6 +79,6 @@ export class FlightGame {
   finish(won){
     this.status='finished';this.won=won;
     if(won)this.score+=this.health*200;
-    this.events.push({type:'finish',text:won?'THOÁT VÒNG VÂY!':'THỬ LẠI MỘT CHUYẾN NỮA'});
+    this.events.push({type:'finish',text:won?'ESCAPED!':'TRY ANOTHER FLIGHT'});
   }
 }
