@@ -43,6 +43,12 @@ audits DDR ownership, enables the reviewed DDR ports, and starts the service.
 The native renderer is already built, so this path needs no driver compilation
 or downloads from Mono/SpinalVoodoo servers.
 
+The process-stop helper resolves the installation directory from its own path,
+so validation in a RAM directory can stop its own services correctly. Recovery
+uses this checked-in helper with the exact saved renderer and executable.
+The legacy diagnostic installation is optional; startup also works when that
+old directory and its PID file are absent.
+
 For the full CPU test suite on ARM, add `--self-test` to `install`. That suite
 takes several minutes on the board; it is optional during a quick recovery.
 

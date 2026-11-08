@@ -149,9 +149,11 @@ def generate_rtl(args):
     print('Generated RTL from the bundled source:', output, flush=True)
 
 
-def copy_archive(target, source, seen):
+def copy_archive(target, source, seen, skip=()):
     for member in source:
         safe_member(member)
+        if member.name in skip:
+            continue
         if member.name in seen:
             raise ValueError('Duplicate payload member: ' + member.name)
         seen.add(member.name)
@@ -166,7 +168,11 @@ def bundle(rebuild_native=False):
     with tarfile.open(output, 'w:gz') as target:
         with tarfile.open(BACKUP / 'selected-runtime.tar.gz') as selected:
             with tarfile.open(fileobj=io.BytesIO(selected.extractfile('game-deploy.tar.gz').read())) as game:
-                copy_archive(target, game, seen)
+                copy_archive(target, game, seen, skip=('combat/board/stop_service.py', 'combat/board/stop_diagnostics.py'))
+            # Recovery supports scratch directories as well as /root/hackrpi.
+            # Use the relocatable process-owner helper from this Git checkpoint.
+            target.add(ROOT / 'combat/board/stop_service.py', arcname='combat/board/stop_service.py')
+            target.add(ROOT / 'combat/board/stop_diagnostics.py', arcname='combat/board/stop_diagnostics.py')
             data = selected.extractfile('libflighting_spinal_bridge.so').read()
             member = tarfile.TarInfo('combat/dist/libflighting_spinal_bridge.so')
             member.size, member.mode = len(data), 0o755
