@@ -36,6 +36,15 @@ public sealed class SoftwareRenderer : IRenderer {
         return pixels;
     }
     public static void Validate(Frame f) {
+        ValidateResources(f);
+        foreach(Draw d in f.Draws) {
+            foreach(int i in d.Indices)if(i<0||i>=d.Vertices.Count)throw new ArgumentException("Invalid vertex index");
+            foreach(Vertex v in d.Vertices)if(!Finite(v.P.X)||!Finite(v.P.Y)||!Finite(v.P.Z)||!Finite(v.P.W)||!Finite(v.R)||!Finite(v.G)||!Finite(v.B)||!Finite(v.U)||!Finite(v.V))throw new ArgumentException("Nonfinite vertex");
+        }
+    }
+    // Native prepared rendering checks every vertex/index itself before any
+    // MMIO. Share resource/shape checks without a second managed geometry walk.
+    public static void ValidateResources(Frame f) {
         if(f.Width<64||f.Height<64||f.Width>1920||f.Height>1080)throw new ArgumentException("Resolution must be 64..1920 by 64..1080");
         if(f.Draws.Count>4096||f.Triangles>250000)throw Log.Unsupported("frame complexity exceeds contract budget");
         long bytes=0;
@@ -51,8 +60,6 @@ public sealed class SoftwareRenderer : IRenderer {
         foreach(Draw d in f.Draws) {
             if(d.Indices.Count%3!=0)throw new ArgumentException("Triangle indices must be multiples of three");
             if(d.Texture!=null&&!f.Textures.ContainsKey(d.Texture)) { Log.Write("RESOURCE UPLOAD FAILED: missing "+d.Texture);throw new ArgumentException("Missing texture"); }
-            foreach(int i in d.Indices)if(i<0||i>=d.Vertices.Count)throw new ArgumentException("Invalid vertex index");
-            foreach(Vertex v in d.Vertices)if(!Finite(v.P.X)||!Finite(v.P.Y)||!Finite(v.P.Z)||!Finite(v.P.W)||!Finite(v.R)||!Finite(v.G)||!Finite(v.B)||!Finite(v.U)||!Finite(v.V))throw new ArgumentException("Nonfinite vertex");
         }
     }
     static bool Finite(double v) {return !Double.IsNaN(v)&&!Double.IsInfinity(v);}

@@ -1,0 +1,92 @@
+{
+  "index_url": "https://download.mono-project.com/repo/debian/dists/stable-jessie/main/binary-armhf/Packages.gz",
+  "index_sha256": "fffd757ab822cfd642de5223d1746cd06fb73f8e127dff6456bcfd82770aff3e",
+  "version": "5.18.1.0-0xamarin4+debian8b1",
+  "packages": [
+    {
+      "name": "libmono-corlib4.5-cil",
+      "version": "5.18.1.0-0xamarin4+debian8b1",
+      "url": "https://download.mono-project.com/repo/debian/pool/main/m/mono/libmono-corlib4.5-cil_5.18.1.0-0xamarin4+debian8b1_all.deb",
+      "sha256": "03d3e1e86cb9b403be1e54e9651def02f0358d28a1083f838287d1ea16a00b34"
+    },
+    {
+      "name": "libmono-i18n-west4.0-cil",
+      "version": "5.18.1.0-0xamarin4+debian8b1",
+      "url": "https://download.mono-project.com/repo/debian/pool/main/m/mono/libmono-i18n-west4.0-cil_5.18.1.0-0xamarin4+debian8b1_all.deb",
+      "sha256": "d01a127f0c014beecdfc496fa926ae90ea534440ef79a00a5912d3cc4cf2b3b3"
+    },
+    {
+      "name": "libmono-i18n4.0-cil",
+      "version": "5.18.1.0-0xamarin4+debian8b1",
+      "url": "https://download.mono-project.com/repo/debian/pool/main/m/mono/libmono-i18n4.0-cil_5.18.1.0-0xamarin4+debian8b1_all.deb",
+      "sha256": "5e93b3b770ae137d5f832e80189d8c729b41abf6e6c5a7998e61354a5bc2b1d1"
+    },
+    {
+      "name": "libmono-security4.0-cil",
+      "version": "5.18.1.0-0xamarin4+debian8b1",
+      "url": "https://download.mono-project.com/repo/debian/pool/main/m/mono/libmono-security4.0-cil_5.18.1.0-0xamarin4+debian8b1_all.deb",
+      "sha256": "555d4474a347645560da2ae263c029c14076a755321a88755ce5e574afe7ed2b"
+    },
+    {
+      "name": "libmono-system-configuration4.0-cil",
+      "version": "5.18.1.0-0xamarin4+debian8b1",
+      "url": "https://download.mono-project.com/repo/debian/pool/main/m/mono/libmono-system-configuration4.0-cil_5.18.1.0-0xamarin4+debian8b1_all.deb",
+      "sha256": "25787ee1fa76bf2ab30d79fee056e2dd0c3dd7edbaba1cbc4082b8fe490f8788"
+    },
+    {
+      "name": "libmono-system-core4.0-cil",
+      "version": "5.18.1.0-0xamarin4+debian8b1",
+      "url": "https://download.mono-project.com/repo/debian/pool/main/m/mono/libmono-system-core4.0-cil_5.18.1.0-0xamarin4+debian8b1_all.deb",
+      "sha256": "8b81398d270dd05205178a56ded08e6b3bd6a410d024644945d820ae8f5a133f"
+    },
+    {
+      "name": "libmono-system-numerics4.0-cil",
+      "version": "5.18.1.0-0xamarin4+debian8b1",
+      "url": "https://download.mono-project.com/repo/debian/pool/main/m/mono/libmono-system-numerics4.0-cil_5.18.1.0-0xamarin4+debian8b1_all.deb",
+      "sha256": "586e6a380c2d428a20d4aeb7c9453aa5238b42feebca1b5a76a0f7ee01a4a156"
+    },
+    {
+      "name": "libmono-system-runtime-serialization4.0-cil",
+      "version": "5.18.1.0-0xamarin4+debian8b1",
+      "url": "https://download.mono-project.com/repo/debian/pool/main/m/mono/libmono-system-runtime-serialization4.0-cil_5.18.1.0-0xamarin4+debian8b1_all.deb",
+      "sha256": "ee1af37590cad30a76334d316696cd68cfcfe5307f9e7ff29991bde1d4da27f4"
+    },
+    {
+      "name": "libmono-system-security4.0-cil",
+      "version": "5.18.1.0-0xamarin4+debian8b1",
+      "url": "https://download.mono-project.com/repo/debian/pool/main/m/mono/libmono-system-security4.0-cil_5.18.1.0-0xamarin4+debian8b1_all.deb",
+      "sha256": "f02b4044ea3f39f50ad1df710c5eada3339550ecb0156e3f455ef94b91dba5a3"
+    },
+    {
+      "name": "libmono-system-servicemodel-internals0.0-cil",
+      "version": "5.18.1.0-0xamarin4+debian8b1",
+      "url": "https://download.mono-project.com/repo/debian/pool/main/m/mono/libmono-system-servicemodel-internals0.0-cil_5.18.1.0-0xamarin4+debian8b1_all.deb",
+      "sha256": "ebb4f2e6e4cd6530697ed03538145f86750c98b5310a0890c05692fd17b0c0d5"
+    },
+    {
+      "name": "libmono-system-xml4.0-cil",
+      "version": "5.18.1.0-0xamarin4+debian8b1",
+      "url": "https://download.mono-project.com/repo/debian/pool/main/m/mono/libmono-system-xml4.0-cil_5.18.1.0-0xamarin4+debian8b1_all.deb",
+      "sha256": "16051d4f6e1e8af734d3ce0a093dca14da1b4dffa5c1c5b2f9646e18cb15f290"
+    },
+    {
+      "name": "libmono-system4.0-cil",
+      "version": "5.18.1.0-0xamarin4+debian8b1",
+      "url": "https://download.mono-project.com/repo/debian/pool/main/m/mono/libmono-system4.0-cil_5.18.1.0-0xamarin4+debian8b1_all.deb",
+      "sha256": "0846f36fda530267c62fd3c60dc81353a4c61e9c92d0deb7a8f9b8f4f651c78d"
+    },
+    {
+      "name": "mono-runtime-common",
+      "version": "5.18.1.0-0xamarin4+debian8b1",
+      "url": "https://download.mono-project.com/repo/debian/pool/main/m/mono/mono-runtime-common_5.18.1.0-0xamarin4+debian8b1_armhf.deb",
+      "sha256": "c22d8f5e95e005d2e16a22fe04ca6d513f06eab50d2c5b138803ecbf5d813838"
+    },
+    {
+      "name": "mono-runtime-sgen",
+      "version": "5.18.1.0-0xamarin4+debian8b1",
+      "url": "https://download.mono-project.com/repo/debian/pool/main/m/mono/mono-runtime-sgen_5.18.1.0-0xamarin4+debian8b1_armhf.deb",
+      "sha256": "248dc30be564a438b3c6f23be391fef186903f975e536c259f97d53101a92535"
+    }
+  ],
+  "bundle_sha256": "454c6e0f605d0e470c34a58e2711846774787af4c554c73dfd3862fd5a16709f"
+}

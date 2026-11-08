@@ -1,0 +1,120 @@
+--- a/emu/glide/glide2x/sst1/glide/src/gx11present.c
++++ b/emu/glide/glide2x/sst1/glide/src/gx11present.c
+@@ -1,7 +1,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#if defined(__linux__)
++#if defined(__linux__) && !defined(DE10_HEADLESS)
+ #include <unistd.h>
+ #endif
+ #ifdef DE10_BACKEND
+@@ -10,7 +10,7 @@
+ #include <stdint.h>
+ #include <sys/mman.h>
+ #endif
+-#if defined(__linux__)
++#if defined(__linux__) && !defined(DE10_HEADLESS)
+ #include <X11/Xlib.h>
+ #include <X11/Xutil.h>
+ #include <X11/extensions/shape.h>
+@@ -26,7 +26,7 @@
+ #endif
+ #include "fxglide.h"
+ 
+-#if defined(__linux__)
++#if defined(__linux__) && !defined(DE10_HEADLESS)
+ static struct {
+   Display *display;
+   Window parent;
+@@ -103,7 +103,7 @@
+     if (fp) {
+       fprintf(fp, "%s\n", message);
+       fflush(fp);
+-#if defined(__linux__)
++#if defined(__linux__) && !defined(DE10_HEADLESS)
+       fsync(fileno(fp));
+ #endif
+       fclose(fp);
+--- a/emu/glide/glide2x/sst1/glide/src/Makefile.de10
++++ b/emu/glide/glide2x/sst1/glide/src/Makefile.de10
+@@ -22,7 +22,12 @@
+ endif
+ AR ?= ar
+ X11_CFLAGS ?=
++HEADLESS ?= 1
++ifeq ($(HEADLESS),1)
++X11_LIBS :=
++else
+ X11_LIBS ?= -lX11 -lXext
++endif
+ 
+ SYSROOT_FLAG =
+ ifneq ($(strip $(SYSROOT)),)
+@@ -31,6 +36,9 @@
+ 
+ CDEFS = -DINIT_LINUX
+ CDEFS += -DDE10_BACKEND
++ifeq ($(HEADLESS),1)
++CDEFS += -DDE10_HEADLESS
++endif
+ CDEFS += -DGLIDE_HARDWARE -DGLIDE_DEFAULT_GAMMA=1.3f -DGLIDE_LIB=1
+ CDEFS += -DSST1
+ CDEFS += -DGLIDE_USE_C_TRISETUP
+--- a/emu/glide/glide2x/sst1/init/initvg/video.c
++++ b/emu/glide/glide2x/sst1/init/initvg/video.c
+@@ -76,6 +76,21 @@
+         }
+     }
+ 
++#ifdef DE10_HEADLESS
++    /* The headless resolution is a real render-target layout, not just API
++     * bookkeeping. Round each RGB565 surface to the core's 4 KiB units.
++     */
++    {
++        FxU32 tiles = (sst1CurrentBoard->fbiVideoWidth + 63u) / 64u;
++        FxU32 surfaceBytes = tiles * 64u * sst1CurrentBoard->fbiVideoHeight * 2u;
++        FxU32 bufferOffset = (surfaceBytes + 4095u) / 4096u;
++        ISET(sst->fbiInit1, (IGET(sst->fbiInit1) & ~SST_VIDEO_TILES_IN_X) |
++             (tiles << SST_VIDEO_TILES_IN_X_SHIFT));
++        ISET(sst->fbiInit2, (IGET(sst->fbiInit2) & ~SST_VIDEO_BUFFER_OFFSET) |
++             (bufferOffset << SST_VIDEO_BUFFER_OFFSET_SHIFT));
++    }
++#endif
++
+     /* Set memory FIFO low-water mark (needed by Glide's FIFO management).
+      * Real hardware computes this from video timing; for sim, use a small
+      * value so most of the FIFO space is available. */
+@@ -92,7 +107,7 @@
+     sst1InitIdleFBINoNOP(sstbase);
+ #endif
+ 
+-#ifdef DE10_BACKEND
++#if defined(DE10_BACKEND) && !defined(DE10_HEADLESS)
+     if (!de10Adv7513InitOnce())
+         return(FXFALSE);
+ #endif
+--- a/emu/glide/glide2x/sst1/init/initvg/info.c
++++ b/emu/glide/glide2x/sst1/init/initvg/info.c
+@@ -411,6 +411,21 @@
+     fflush(stderr);
+ #endif
+ 
++#ifdef DE10_HEADLESS
++    /* GPU2 is a fixed one-TMU FPGA configuration. Legacy monitor/dither
++     * memory-discovery probes draw/read before a GPU2 completion fence.
++     * Describe the configured aperture, not a fabricated rendering result.
++     * The producer verifies GPU2 ID/ABI before calling this driver.
++     */
++    info->tmuConfig = 1;
++    info->tmuRevision = 1;
++    info->numberTmus = 1;
++    info->tmuMemSize[0] = 4;
++    info->tmuClkFixed = 0;
++    info->tmuMemSpeed = 0;
++    return FXTRUE;
++#endif
++
+     if(initSumTables(sstbase) == FXFALSE)
+ 	return(FXFALSE);
+ 

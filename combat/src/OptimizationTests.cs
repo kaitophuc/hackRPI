@@ -8,6 +8,21 @@ public static class OptimizationTests {
         assert(rejected,"invalid rendering profile is rejected");
     }
     public static void Run(Action<bool,string> assert) {
+        Random projectionRandom=new Random(317);bool exactProjection=true;
+        foreach(Camera camera in new[]{EndlessRun.Camera(320,240),new Camera{Eye=new V3(12,7,6),Target=new V3(3,-5,-30),Up=new V3(.1,1,.05),Aspect=1.7}}){
+            CameraProjection projection=camera.Prepare();
+            for(int i=0;i<1000;i++){
+                double x=(projectionRandom.NextDouble()-.5)*4000,y=(projectionRandom.NextDouble()-.5)*500,z=(projectionRandom.NextDouble()-.5)*2000;
+                V4 original=projection.Project(x,y,z),cached=projection.ProjectFromXY(projection.PrepareXY(x,y),z);
+                exactProjection&=BitConverter.DoubleToInt64Bits(original.X)==BitConverter.DoubleToInt64Bits(cached.X)&&BitConverter.DoubleToInt64Bits(original.Y)==BitConverter.DoubleToInt64Bits(cached.Y)&&BitConverter.DoubleToInt64Bits(original.Z)==BitConverter.DoubleToInt64Bits(cached.Z)&&BitConverter.DoubleToInt64Bits(original.W)==BitConverter.DoubleToInt64Bits(cached.W);
+            }
+        }
+        assert(exactProjection,"cached XY camera prefixes preserve every output bit across 2000 points and two camera orientations");
+        Camera xyCamera=EndlessRun.Camera(320,240);CameraProjection xyOriginal=xyCamera.Prepare();
+        xyCamera.Eye.Z+=100;xyCamera.Target.Z+=100;
+        assert(xyOriginal.SharesXY(xyCamera.Prepare()),"XY cache remains valid under camera translation along Z");
+        xyCamera.Eye.X+=1;xyCamera.Target.X+=1;
+        assert(!xyOriginal.SharesXY(xyCamera.Prepare()),"XY cache invalidates when the camera moves along X");
         Options defaults=Options.Parse(new string[0]);
         assert(defaults.Width==320&&defaults.Height==240&&defaults.Fps==30&&defaults.Quality=="low","native 320x240 low-detail defaults with 30 FPS rendering");
         Reject(()=>Options.Parse(new string[]{"--fps","0"}),assert);
@@ -62,6 +77,17 @@ public static class OptimizationTests {
             assert(low.World.City.CachedVariants==2&&low.World.City.BuildCount==2,"full and low scenery variants cache independently when toggled");
         }
         assert(Scenes.CompactReplayHit(160,161)&&!Scenes.CompactReplayHit(120,161)&&!Scenes.CompactReplayHit(199,161)&&!Scenes.CompactReplayHit(160,172),"compact replay button hit region matches its rendered bounds");
+        using(var renderer=new SoftwareRenderer()) {
+            Frame reference=new Frame{Width=320,Height=240},atlas=new Frame{Width=320,Height=240,TextureHud=true};
+            foreach(Frame f in new Frame[]{reference,atlas}) {
+                Hud hud=new Hud(f,320,240);hud.Rect(0,0,320,38,0x101d2d);
+                hud.SolidText(6,4,"ENDLESS FLIGHT 123",0x65d6c2,0x101d2d,1);
+                hud.SolidText(6,17,"HP 100 KILLS 0",0xe2eee9,0x101d2d,1);
+            }
+            int[] before=(int[])renderer.Render(reference).Clone(),after=renderer.Render(atlas);
+            assert(before.SequenceEqual(after),"opaque font atlas preserves exact HUD text pixels in reference rasterization");
+            assert(atlas.Triangles*4<reference.Triangles,"font atlas reduces HUD triangle submission by more than 75 percent");
+        }
     }
 }
 }

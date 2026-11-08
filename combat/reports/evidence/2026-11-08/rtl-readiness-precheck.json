@@ -1,0 +1,78 @@
+{
+  "read_only_precheck": true,
+  "quartus": "25.1std.0 build 1129",
+  "quartus_path": "D:/Quartus/quartus/bin64/quartus_sh.exe",
+  "jdk": "Temurin 17.0.16+8",
+  "jdk_path": "D:/GPU_proj/tools/spinal/jdk17/jdk-17.0.16+8",
+  "wsl_default": "Ubuntu / WSL2 (status only)",
+  "iverilog_path": "C:/Users/assis/iverilog/bin/iverilog.exe",
+  "repository_tool_cache_present": false,
+  "parent_tool_cache_present": true,
+  "files": [
+    {
+      "file": "fpga/hardware/spinal_standard/avalon_frame_fence.v",
+      "exists": true,
+      "sha256": "ec96798c63aa6cd430cf1be3b9e612af74e9c52bd14b46186ea71ebef9f9c700",
+      "accepted_sha256": "ec96798c63aa6cd430cf1be3b9e612af74e9c52bd14b46186ea71ebef9f9c700",
+      "matches_accepted": true
+    },
+    {
+      "file": "fpga/hardware/spinal_standard/DE10_Standard_GHRD.sdc",
+      "exists": true,
+      "sha256": "7565ce99923e479d12aaa905d4dcb7bc112882b4dd9955e10c2aabed20e8ff8d",
+      "accepted_sha256": "7565ce99923e479d12aaa905d4dcb7bc112882b4dd9955e10c2aabed20e8ff8d",
+      "matches_accepted": true
+    },
+    {
+      "file": "fpga/hardware/spinal_standard/gpu2_sidecar.v",
+      "exists": true,
+      "sha256": "cf3ef96127a9b937fb491fe82e9be3396734912c42aed3c5c380259a27197d99",
+      "accepted_sha256": "cf3ef96127a9b937fb491fe82e9be3396734912c42aed3c5c380259a27197d99",
+      "matches_accepted": true
+    },
+    {
+      "file": "fpga/hardware/spinal_standard/gpu_spinal_standard.v",
+      "exists": true,
+      "sha256": "63e4428143f9012991376b40e4aeaa1f3b0bb5b236c448c6e6aefbd0d378ee11",
+      "accepted_sha256": "63e4428143f9012991376b40e4aeaa1f3b0bb5b236c448c6e6aefbd0d378ee11",
+      "matches_accepted": true
+    },
+    {
+      "file": "fpga/hardware/spinal_standard/SpinalStandardGen.scala",
+      "exists": true,
+      "sha256": "b82afee5ff9f759058df4a6f63258da3a53bf9eccf19b36a04673b6a9bb220f3",
+      "accepted_sha256": "b82afee5ff9f759058df4a6f63258da3a53bf9eccf19b36a04673b6a9bb220f3",
+      "matches_accepted": true
+    },
+    {
+      "file": "fpga/hardware/spinal_standard/Spinal_Standard_GPU.qsf",
+      "exists": true,
+      "sha256": "b53c145a622db8a17945022d0b8013d570da697b0b9768e15057c9c4a88778a3",
+      "accepted_sha256": "b53c145a622db8a17945022d0b8013d570da697b0b9768e15057c9c4a88778a3",
+      "matches_accepted": true
+    },
+    {
+      "file": "fpga/hardware/spinal_standard/rtl/SpinalStandardCore.v",
+      "exists": true,
+      "sha256": "bb2d5d4e5aa997f451bdb373093f55594cc6f2344f71ba9cc90dd12f5f32954c",
+      "accepted_sha256": "bb2d5d4e5aa997f451bdb373093f55594cc6f2344f71ba9cc90dd12f5f32954c",
+      "matches_accepted": true
+    },
+    {
+      "file": "fpga/patches/spinal/hardware-headless-fence.patch",
+      "exists": true,
+      "sha256": "338b9f321e447aae38ed3c6a6590978007beeb285e3404311f1dd49da2b028f0",
+      "accepted_sha256": "338b9f321e447aae38ed3c6a6590978007beeb285e3404311f1dd49da2b028f0",
+      "matches_accepted": true
+    }
+  ],
+  "simulation_run": false,
+  "rtl_generated": false,
+  "fpga_programmed": false,
+  "pinned_spinal_commit": "92c56afa0e98763ccd794cd39512cad2822bd86e",
+  "repository_dependency_checkout_present": false,
+  "parent_dependency_checkout_present": true,
+  "parent_spinal_commit": "92c56afa0e98763ccd794cd39512cad2822bd86e",
+  "parent_dependency_matches_pin": true,
+  "all_checked_source_hashes_match_accepted": true
+}

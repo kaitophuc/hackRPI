@@ -144,6 +144,9 @@ public sealed class AccelerometerInput : IDisposable {
     readonly ManualResetEvent stop=new ManualResetEvent(false);
     readonly Thread worker;
     readonly Uri endpoint;
+    readonly string snapshotFile;
+    readonly DataContractJsonSerializer serializer=new DataContractJsonSerializer(typeof(SensorSnapshot));
+    DateTime lastSnapshotWrite=DateTime.MinValue;
     public static Uri ValidateAddress(string address) {
         Uri uri;
         if(!Uri.TryCreate(address,UriKind.Absolute,out uri)||uri.Scheme!="http"||!uri.IsLoopback||
@@ -151,20 +154,36 @@ public sealed class AccelerometerInput : IDisposable {
             throw new ArgumentException("Accelerometer URL must be a local HTTP server, e.g. http://127.0.0.1:8765/");
         return new Uri(uri,"api/status");
     }
-    public AccelerometerInput(string address) {
-        endpoint=ValidateAddress(address);worker=new Thread(Poll);worker.IsBackground=true;worker.Name="Arduino accelerometer";worker.Start();
+    public AccelerometerInput(string address):this(address,false) {}
+    public AccelerometerInput(string address,bool file) {
+        if(file)snapshotFile=Path.GetFullPath(address);else endpoint=ValidateAddress(address);
+        worker=new Thread(Poll);worker.IsBackground=true;worker.Name="Arduino accelerometer";worker.Start();
+    }
+    void AcceptStream(Stream stream) {
+        SensorSnapshot snapshot=(SensorSnapshot)serializer.ReadObject(stream);
+        lock(sync)controller.Accept(snapshot,clock.ElapsedMilliseconds);
     }
     void Poll() {
         while(!stop.WaitOne(0)) {
             try {
+                if(snapshotFile!=null) {
+                    DateTime modified=File.GetLastWriteTimeUtc(snapshotFile);
+                    if(modified!=lastSnapshotWrite) {
+                    using(var stream=new FileStream(snapshotFile,FileMode.Open,FileAccess.Read,FileShare.ReadWrite|FileShare.Delete)) {
+                        if(stream.Length>16384)throw new InvalidDataException("Oversized sensor snapshot");
+                        AcceptStream(stream);
+                        lastSnapshotWrite=modified;
+                    }
+                    }
+                } else {
                 HttpWebRequest request=(HttpWebRequest)WebRequest.Create(endpoint);
                 request.Timeout=500;request.ReadWriteTimeout=500;request.KeepAlive=false;request.Proxy=null;
                 using(WebResponse response=request.GetResponse()) {
                     if(response.ContentLength>16384)throw new InvalidDataException("Oversized sensor response");
                     using(Stream stream=response.GetResponseStream()) {
-                        SensorSnapshot snapshot=(SensorSnapshot)new DataContractJsonSerializer(typeof(SensorSnapshot)).ReadObject(stream);
-                        lock(sync)controller.Accept(snapshot,clock.ElapsedMilliseconds);
+                        AcceptStream(stream);
                     }
+                }
                 }
             } catch(Exception e) {
                 if(!(e is WebException)&&!(e is IOException)&&!(e is SerializationException)&&!(e is ArgumentException))throw;
@@ -180,6 +199,8 @@ public sealed class AccelerometerInput : IDisposable {
     public bool Fresh {get {lock(sync)return controller.Fresh(clock.ElapsedMilliseconds);}}
     public bool Calibrating {get {lock(sync)return controller.Calibrating;}}
     public long SampleCount {get {lock(sync)return controller.SampleCount;}}
+    public double RollDegrees {get {lock(sync)return controller.RollDegrees;}}
+    public double PitchDegrees {get {lock(sync)return controller.PitchDegrees;}}
     public InputState Read(InputState local,Aircraft aircraft,bool endless=false) {
         lock(sync)return controller.Read(local,clock.ElapsedMilliseconds,aircraft.Pitch,aircraft.Roll,endless);
     }

@@ -21,8 +21,8 @@ public static class Scenes {
     }
     static Vertex V(Camera c,V3 p,double r,double g,double b,double u=0,double v=0) { return new Vertex(c.Project(p),r,g,b,u,v); }
     static void Triangle(Draw d,Camera c,V3 a,V3 b,V3 z,double r,double g,double bl) { d.Tri(V(c,a,r,g,bl),V(c,b,r,g,bl),V(c,z,r,g,bl)); }
-    public static Frame Build(int scene,int w,int h,int complexity,World world,Aircraft aircraft,Telemetry metrics,bool paused,bool wire,bool hud,CombatState combat=null,bool lowDetail=false,Frame reuse=null) {
-        Frame frame=reuse??new Frame();frame.Reset();frame.Width=w;frame.Height=h;frame.Scene=scene;frame.Tick=aircraft.Tick;frame.Wireframe=wire;
+    public static Frame Build(int scene,int w,int h,int complexity,World world,Aircraft aircraft,Telemetry metrics,bool paused,bool wire,bool hud,CombatState combat=null,bool lowDetail=false,Frame reuse=null,bool textureHud=false) {
+        Frame frame=reuse??new Frame();frame.Reset();frame.Width=w;frame.Height=h;frame.Scene=scene;frame.Tick=aircraft.Tick;frame.Wireframe=wire;frame.TextureHud=textureHud;
         lowDetail=lowDetail&&world.Endless;
         Camera camera=new Camera {Eye=new V3(0,0,3),Target=new V3(0,0,0),Up=new V3(0,1,0),Aspect=(double)w/h};frame.Camera=camera;
         double t=aircraft.Tick/60.0;
@@ -109,7 +109,10 @@ public static class Scenes {
         }
         d.Cull=false;int offset=d.Vertices.Count;V3 right=a.Right,up=a.Up,forward=a.Forward;CameraProjection projection=c.Prepare();
         foreach(Vertex source in mesh.Vertices) {
-            Vertex v=source;v.P=projection.Project(a.Position+right*source.P.X+up*source.P.Y+forward*source.P.Z);d.Vertices.Add(v);
+            Vertex v=source;v.P=projection.Project(
+                ((a.Position.X+right.X*source.P.X)+up.X*source.P.Y)+forward.X*source.P.Z,
+                ((a.Position.Y+right.Y*source.P.X)+up.Y*source.P.Y)+forward.Y*source.P.Z,
+                ((a.Position.Z+right.Z*source.P.X)+up.Z*source.P.Y)+forward.Z*source.P.Z);d.Vertices.Add(v);
         }
         foreach(int index in mesh.Indices)d.Indices.Add(index+offset);
     }
@@ -322,17 +325,17 @@ public static class Scenes {
     public static bool CompactReplayHit(double x,double y) {return x>=121&&x<199&&y>=150&&y<172;}
     static void CompactOverlay(Frame frame,World world,Aircraft player,Telemetry metrics,bool paused,CombatState combat) {
         Hud h=new Hud(frame,320,240);
-        h.Rect(0,0,320,38,0x101d2d);h.Text(6,4,"ENDLESS FLIGHT",0x65d6c2,1);
-        h.Text(174,4,((long)world.ScrollDistance)+" M",0xb8cbd3,1);
-        h.Text(6,17,"HP "+player.Health,player.Health>30?0x65d6c2:0xff7764,1);
+        h.Rect(0,0,320,38,0x101d2d);h.SolidText(6,4,"ENDLESS FLIGHT",0x65d6c2,0x101d2d,1);
+        h.SolidText(174,4,((long)world.ScrollDistance)+" M",0xb8cbd3,0x101d2d,1);
+        h.SolidText(6,17,"HP "+player.Health,player.Health>30?0x65d6c2:0xff7764,0x101d2d,1);
         h.Rect(6,29,90,3,0x30444f);if(player.Health>0)h.Rect(6,29,90*player.Health/100.0,3,0x65d6c2);
-        h.Text(110,17,"KILLS "+(combat==null?0:combat.Kills),0xe2eee9,1);
-        h.Text(210,17,"HOSTILES "+(combat==null?0:combat.Enemies.Count),0xffb586,1);
+        h.SolidText(110,17,"KILLS "+(combat==null?0:combat.Kills),0xe2eee9,0x101d2d,1);
+        h.SolidText(210,17,"HOSTILES "+(combat==null?0:combat.Enemies.Count),0xffb586,0x101d2d,1);
         h.Rect(0,219,320,21,0x101d2d);
-        h.Text(6,223,"TILT/WASD DODGE  F/MOUSE FIRE  P PAUSE",0xb8cbd3,1);
+        h.SolidText(6,223,"TILT/WASD DODGE  F/MOUSE FIRE  P PAUSE",0xb8cbd3,0x101d2d,1);
         if(paused&&(combat==null||!combat.GameOver)) {
             string message=metrics.Status=="CLICK CALIBRATE / PLAY"?"CLICK CALIBRATE / PLAY":"PAUSED - P TO RESUME";
-            h.Rect(55,44,210,15,0x152a39);h.Text(160-message.Length*3,48,message,0xffcb75,1);
+            h.Rect(55,44,210,15,0x152a39);h.SolidText(160-message.Length*3,48,message,0xffcb75,0x152a39,1);
         }
         if(combat==null)return;
         foreach(EnemyFighter enemy in combat.Enemies) {
@@ -348,10 +351,10 @@ public static class Scenes {
         if(combat.HitFlash>0&&!combat.GameOver) {h.Rect(0,38,2,181,0xce5144);h.Rect(318,38,2,181,0xce5144);h.Text(125,63,"HIT -"+combat.LastDamage+" HP",0xffccad,1);}
         if(!combat.GameOver)return;
         h.Rect(61,78,198,109,0x0c1726);h.Rect(61,78,198,2,0xe4735e);
-        h.Text(106,90,"GAME OVER",0xff8b73,2);
-        h.Text(100,119,"ENEMIES DOWN: "+combat.Kills,0xe2eee9,1);
-        h.Rect(121,150,78,22,0x65d6c2);h.Text(142,157,"REPLAY",0x102330,1);
-        h.Text(118,178,"OR PRESS ENTER",0x8aabbb,1);
+        h.SolidText(106,90,"GAME OVER",0xff8b73,0x0c1726,2);
+        h.SolidText(100,119,"ENEMIES DOWN: "+combat.Kills,0xe2eee9,0x0c1726,1);
+        h.Rect(121,150,78,22,0x65d6c2);h.SolidText(142,157,"REPLAY",0x102330,0x65d6c2,1);
+        h.SolidText(118,178,"OR PRESS ENTER",0x8aabbb,0x0c1726,1);
     }
     static void CombatOverlay(Frame frame,Aircraft player,CombatState combat,bool endless=false) {
         Hud h=new Hud(frame);
@@ -421,9 +424,13 @@ public static class Scenes {
     static string Fmt(double x) {return x.ToString("F0",CultureInfo.InvariantCulture);}
 }
 public sealed class Hud {
+    readonly Frame frame;
     readonly Draw draw;readonly double halfWidth,halfHeight;
     struct GlyphRect {public int X,Y,W,H;public GlyphRect(int x,int y,int w,int h) {X=x;Y=y;W=w;H=h;}}
     static readonly Dictionary<char,GlyphRect[]> font=CompileFont();
+    static readonly Dictionary<string,Texture> atlases=new Dictionary<string,Texture>();
+    static readonly List<char> characters=AtlasCharacters();
+    static List<char> AtlasCharacters() {var result=new List<char>(font.Keys);result.Sort();return result;}
     static Dictionary<char,GlyphRect[]> CompileFont() {
         var compiled=new Dictionary<char,GlyphRect[]>();
         foreach(var pair in Font()) {
@@ -437,15 +444,38 @@ public sealed class Hud {
             }
             compiled[pair.Key]=rects.ToArray();
         }
-        return compiled;
+        compiled[' ']=new GlyphRect[0];return compiled;
     }
-    public Hud(Frame f,double width=640,double height=400) {halfWidth=width/2;halfHeight=height/2;draw=f.AddDraw("opaque HUD / clip coordinates");draw.Depth=false;draw.Cull=false;}
+    public Hud(Frame f,double width=640,double height=400) {frame=f;halfWidth=width/2;halfHeight=height/2;draw=f.AddDraw("opaque HUD / clip coordinates");draw.Depth=false;draw.Cull=false;}
     Vertex P(double x,double y,int color) {return new Vertex(new V4(x/halfWidth-1,1-y/halfHeight,0,1),((color>>16)&255)/255.0,((color>>8)&255)/255.0,(color&255)/255.0);}
     public void Rect(double x,double y,double w,double h,int c) {Vertex a=P(x,y,c),b=P(x+w,y,c),z=P(x+w,y+h,c),d=P(x,y+h,c);int n=draw.Vertices.Count;draw.Vertices.Add(a);draw.Vertices.Add(b);draw.Vertices.Add(z);draw.Vertices.Add(d);draw.Indices.Add(n);draw.Indices.Add(n+1);draw.Indices.Add(n+2);draw.Indices.Add(n);draw.Indices.Add(n+2);draw.Indices.Add(n+3);}
     public void Text(double x,double y,string text,int color,double scale) {
         foreach(char raw in text) {
             GlyphRect[] glyph;if(!font.TryGetValue(Char.ToUpperInvariant(raw),out glyph))glyph=font['?'];
             foreach(GlyphRect r in glyph)Rect(x+r.X*scale,y+r.Y*scale,r.W*scale,r.H*scale,color);
+            x+=6*scale;
+        }
+    }
+    // Opaque text on a known solid panel: two FPGA-textured triangles per
+    // character. The CPU builds a reusable font asset, never a game framebuffer.
+    public void SolidText(double x,double y,string text,int color,int background,double scale) {
+        if(!frame.TextureHud){Text(x,y,text,color,scale);return;}
+        string name="hud-font-"+color.ToString("x6")+"-"+background.ToString("x6");Texture atlas;
+        if(!atlases.TryGetValue(name,out atlas)) {
+            int[] pixels=new int[64*64];for(int i=0;i<pixels.Length;i++)pixels[i]=unchecked((int)0xff000000)|background;
+            for(int i=0;i<characters.Count;i++)foreach(GlyphRect r in font[characters[i]])
+                for(int yy=r.Y;yy<r.Y+r.H;yy++)for(int xx=r.X;xx<r.X+r.W;xx++)pixels[((i/8)*8+yy)*64+(i%8)*8+xx]=unchecked((int)0xff000000)|color;
+            atlas=new Texture(name,64,64,pixels);atlases[name]=atlas;
+        }
+        frame.Textures[name]=atlas;Draw glyphs=frame.AddDraw("opaque HUD font atlas");glyphs.Depth=false;glyphs.Cull=false;glyphs.Texture=name;
+        foreach(char raw in text) {
+            char character=Char.ToUpperInvariant(raw);int slot=characters.IndexOf(character);if(slot<0)slot=characters.IndexOf('?');
+            if(character!=' ') {
+                double u=(slot%8)*8/64.0,v=(slot/8)*8/64.0;
+                Vertex a=P(x,y,0xffffff),b=P(x+5*scale,y,0xffffff),c=P(x+5*scale,y+7*scale,0xffffff),d=P(x,y+7*scale,0xffffff);
+                a.U=d.U=u;b.U=c.U=u+5/64.0;a.V=b.V=1-v;c.V=d.V=1-v-7/64.0;
+                glyphs.Tri(a,b,c);glyphs.Tri(a,c,d);
+            }
             x+=6*scale;
         }
     }

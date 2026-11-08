@@ -1,0 +1,11 @@
+{
+  "selected_bundle": "c87b88edf247491677f28b8d97a2ebab1414654e0708e41be34139214a3401f1",
+  "visible_capture": "build/full-pipeline/live-fps-active-20261108-041741.json",
+  "displayed_fps": 16.266460108475336,
+  "active_seconds": 30.983999999938533,
+  "minimum_fps_passed": false,
+  "additional_gpu_pixel_gate_passed": true,
+  "original_cpu_reference_matches": false,
+  "rtl_changed": false,
+  "runtime_archive_sha256": "0ca88afa63fbb2935b93dad10ff9699e2faef653be54bb2a49feedf1ca0ee5f0"
+}

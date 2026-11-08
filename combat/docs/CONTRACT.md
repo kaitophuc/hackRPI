@@ -84,3 +84,12 @@ Fixed 60 Hz simulation, at most 5 catch-up steps per rendered iteration. Incomin
 The world seed defaults to 1337. New recordings use `FLIGHTING_REPLAY,6,<seed>,60`, followed by contiguous tick, pitch, roll, yaw, throttle, buttons and vertical records. Format 6 selects the fixed-camera endless run: distance advances a pool of 11 cached section instances drawn from one nine-section Hanoi sequence. Aircraft and combat actors remain in a local scrolling frame; source geometry and terrain queries share the same periodic phase. Format 5 retains the prior repeating-map free flight; format 4 retains fixed Hanoi; format 3 retains the original terrain and combat; formats 1/2 retain combat-free flight. Formats 1–4 retain their original terrain interpolation. Same-runtime replay reproduces distance, dodge velocities, aircraft and combat state; cross-runtime floating-point tolerances still require review.
 
 Combat uses the same fixed step, specified xorshift32 PRNG, four-fighter/192-projectile/16-burst limits, 100 player HP, 5–10 incoming damage and one-hit enemies. Existing actors and the previous player position are first converted to the new scrolling frame; newly spawned actors are not shifted twice. Swept collision, velocity inheritance and enemy leading then use that consistent frame. Game over freezes distance and combat. Restart resets distance, pool phase, dodge velocities, RNG, timers, actors, score and HP. Rendering remains opaque triangles through the existing interface.
+
+
+## SpinalVoodoo board implementation status
+
+The dedicated `spinal` backend now renders real combat frames on DE10-Standard
+GPU2. It uses W16/LEQUAL depth and opaque RGB565 textures; see
+[DE10_GAME.md](DE10_GAME.md) for the hardware evidence and precision limits.
+This is a tested implementation subset, not acceptance of the complete
+proposed reference contract. Serialized rendering remains required.

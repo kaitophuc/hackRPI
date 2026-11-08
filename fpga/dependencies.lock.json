@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "inspected_utc_date": "2026-11-07",
+  "repositories": [
+    {"name":"RasterIX","url":"https://github.com/ToNi3141/RasterIX.git","commit":"3e2ee5aa5214b829c2a824250c445ce799ac8dc0","role":"evaluated-fallback-and-unit-test-source","submodules":["rtl/Float"]},
+    {"name":"SpinalVoodoo","url":"https://github.com/fayalalebrun/SpinalVoodoo.git","commit":"92c56afa0e98763ccd794cd39512cad2822bd86e","role":"selected-3d-core-not-yet-integrated","submodules":[]},
+    {"name":"GlandaGPU","url":"https://github.com/stiangglanda/GlandaGPU.git","commit":"eed04d0dee9124ddfe755f9bc937c5da0fbdde78","role":"evaluated-reference-no-rtl-incorporated","submodules":[]},
+    {"name":"GlandaGPU_SoC","url":"https://github.com/stiangglanda/GlandaGPU_SoC.git","commit":"a61d2acf80ff959fc7efac9efed6d9fc3d190823","role":"evaluated-standard-board-reference-no-rtl-incorporated","submodules":[]}
+  ],
+  "rasterix_float_commit":"83485654e380392a726ee67f8e5d2f4f8f73dd32"
+}

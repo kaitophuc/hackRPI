@@ -13,7 +13,11 @@ public sealed class HanoiCity {
     public const double LakeX=-85,LakeZ=-60,LakeRadiusX=59,LakeRadiusZ=94,Water=.65;
     public const double BridgeZ=-385;
     readonly uint seed;
+    readonly bool cacheProjectionXY=Environment.GetEnvironmentVariable("FLIGHTING_CITY_XY_CACHE")=="1";
     int detail=-1;bool lowDetail;
+    // Visual neighbourhood range only. Landmarks, ground and physics retain
+    // their existing ranges and geometry; useful for the 50MHz FPGA profile.
+    public double NeighbourhoodRange=1;
     List<Chunk> chunks;
     readonly Dictionary<int,List<Chunk>> cachedLevels=new Dictionary<int,List<Chunk>>();
     readonly Dictionary<int,List<Chunk>[]> sectionLevels=new Dictionary<int,List<Chunk>[]>();
@@ -30,6 +34,8 @@ public sealed class HanoiCity {
     Draw building;
     sealed class Chunk {
         public Draw Mesh;public V3 Center;public double Radius;public bool Landmark;
+        public Vertex[] Vertices;public int[] Indices;
+        public V3[] ProjectionXY;public CameraProjection ProjectionKey;public double ProjectionOffsetX;
     }
     struct VisibleChunk {
         public Chunk Chunk;public V3 Offset;public double Distance;
@@ -80,8 +86,8 @@ public sealed class HanoiCity {
             double margin=chunk.Radius*2.1;
             if(along>chunk.Radius&&(Math.Abs(projected.X)>projected.W+margin||Math.Abs(projected.Y)>projected.W+margin))continue;
             int offset=target.Vertices.Count;
-            foreach(Vertex source in chunk.Mesh.Vertices) {Vertex v=source;v.P=projection.Project(new V3(source.P.X,source.P.Y,source.P.Z));target.Vertices.Add(v);}
-            foreach(int index in chunk.Mesh.Indices)target.Indices.Add(offset+index);
+            foreach(Vertex source in chunk.Vertices) {Vertex v=source;v.P=projection.Project(source.P.X,source.P.Y,source.P.Z);target.Vertices.Add(v);}
+            foreach(int index in chunk.Indices)target.Indices.Add(offset+index);
         }
     }
     void AppendRepeating(Draw target,Camera camera,int level) {
@@ -95,7 +101,7 @@ public sealed class HanoiCity {
             V3 offset=new V3(tx*TileWidth,0,tz*TileLength);bool tileVisible=false;
             foreach(Chunk chunk in chunks) {
                 V3 center=chunk.Center+offset,delta=center-camera.Eye;double distance=V3.Dot(delta,delta);
-                double limit=(lowDetail?(chunk.Landmark?950:550):(chunk.Landmark?1300:range))+chunk.Radius;
+                double limit=(lowDetail?(chunk.Landmark?950:550*NeighbourhoodRange):(chunk.Landmark?1300:range))+chunk.Radius;
                 if(distance>limit*limit||!projection.VisibleSphere(center,chunk.Radius))continue;
                 visible.Add(new VisibleChunk {Chunk=chunk,Offset=offset,Distance=distance});tileVisible=true;
             }
@@ -121,23 +127,33 @@ public sealed class HanoiCity {
             bool sectionVisible=false;V3 offset=new V3(0,0,slot.OffsetZ);
             foreach(Chunk chunk in sections[slot.Source]) {
                 V3 center=chunk.Center+offset,delta=center-camera.Eye;double distance=V3.Dot(delta,delta);
-                double limit=(lowDetail?(chunk.Landmark?950:550):(chunk.Landmark?1300:range))+chunk.Radius;
+                double limit=(lowDetail?(chunk.Landmark?950:550*NeighbourhoodRange):(chunk.Landmark?1300:range))+chunk.Radius;
                 if(distance>limit*limit||!projection.VisibleSphere(center,chunk.Radius))continue;
                 visible.Add(new VisibleChunk {Chunk=chunk,Offset=offset,Distance=distance});sectionVisible=true;
             }
             if(sectionVisible)VisibleSections++;
         }
-        AppendVisible(target,projection);
+        AppendVisible(target,projection,cacheProjectionXY);
     }
-    void AppendVisible(Draw target,CameraProjection projection) {
+    void AppendVisible(Draw target,CameraProjection projection,bool cacheXY=false) {
         visible.Sort(delegate(VisibleChunk a,VisibleChunk b) {return a.Distance.CompareTo(b.Distance);});
         VisibleChunks=visible.Count;
         foreach(VisibleChunk item in visible) {
             int offset=target.Vertices.Count;
-            foreach(Vertex source in item.Chunk.Mesh.Vertices) {
-                Vertex vertex=source;vertex.P=projection.Project(new V3(source.P.X+item.Offset.X,source.P.Y,source.P.Z+item.Offset.Z));target.Vertices.Add(vertex);
+            Chunk chunk=item.Chunk;
+            if(cacheXY){
+                if(chunk.ProjectionXY==null||!chunk.ProjectionKey.SharesXY(projection)||BitConverter.DoubleToInt64Bits(chunk.ProjectionOffsetX)!=BitConverter.DoubleToInt64Bits(item.Offset.X)){
+                    if(chunk.ProjectionXY==null)chunk.ProjectionXY=new V3[chunk.Vertices.Length];
+                    for(int i=0;i<chunk.Vertices.Length;i++){Vertex source=chunk.Vertices[i];chunk.ProjectionXY[i]=projection.PrepareXY(source.P.X+item.Offset.X,source.P.Y);}
+                    chunk.ProjectionKey=projection;chunk.ProjectionOffsetX=item.Offset.X;
+                }
+                for(int i=0;i<chunk.Vertices.Length;i++){
+                    Vertex vertex=chunk.Vertices[i];vertex.P=projection.ProjectFromXY(chunk.ProjectionXY[i],vertex.P.Z+item.Offset.Z);target.Vertices.Add(vertex);
+                }
+            }else foreach(Vertex source in chunk.Vertices) {
+                Vertex vertex=source;vertex.P=projection.Project(source.P.X+item.Offset.X,source.P.Y,source.P.Z+item.Offset.Z);target.Vertices.Add(vertex);
             }
-            foreach(int index in item.Chunk.Mesh.Indices)target.Indices.Add(offset+index);
+            foreach(int index in item.Chunk.Indices)target.Indices.Add(offset+index);
         }
     }
     void SealChunks() {
@@ -268,6 +284,7 @@ public sealed class HanoiCity {
         LongBien(world);
         WartimeDetails(world);
         if(world.Repeating)SealChunks();
+        foreach(Chunk chunk in chunks){chunk.Vertices=chunk.Mesh.Vertices.ToArray();chunk.Indices=chunk.Mesh.Indices.ToArray();}
         cachedLevels[cacheKey]=chunks;
     }
     void Waterways(World world) {

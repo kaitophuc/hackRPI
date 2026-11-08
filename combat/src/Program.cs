@@ -13,8 +13,9 @@ public sealed class Options {
     public int Width=320,Height=240,Scene=6,Complexity=18,Ticks=600,Port,Fps=30;
     public uint Seed=1337;
     public bool Headless,SelfTest,Suite,Scripted,Wire,NoHud,Realtime,Help,TicksExplicit,DesktopSmoke;
-    public string Quality="low",Backend="software",Record,Replay,Out="frame.ppm",Capture,RenderCapture,CompareA,CompareB,AccelerometerUrl;
+    public string Quality="low",Backend="software",Record,Replay,Out="frame.ppm",Capture,RenderCapture,CompareA,CompareB,AccelerometerUrl,SensorFile;
     public int Tolerance=8,Radius=1;public double AllowedFraction=.01;
+    public double SceneryRange=1;
     public static Options Parse(string[] args) {
         Options o=new Options();
         for(int i=0;i<args.Length;i++) {
@@ -32,6 +33,8 @@ public sealed class Options {
                     case "--out":o.Out=v;break;case "--capture":o.Capture=v;break;case "--render-capture":o.RenderCapture=v;break;
                     case "--input-udp":o.Port=Int32.Parse(v);break;
                     case "--accelerometer":o.AccelerometerUrl=v;AccelerometerInput.ValidateAddress(v);break;
+                    case "--sensor-file":o.SensorFile=Path.GetFullPath(v);break;
+                    case "--scenery-range":o.SceneryRange=Double.Parse(v,CultureInfo.InvariantCulture);break;
                     case "--compare":o.CompareA=v;if(i+1>=args.Length)throw new ArgumentException("--compare needs two images");o.CompareB=args[++i];break;
                     case "--tolerance":o.Tolerance=Int32.Parse(v);break;case "--edge-radius":o.Radius=Int32.Parse(v);break;
                     case "--allowed-fraction":o.AllowedFraction=Double.Parse(v,CultureInfo.InvariantCulture);break;
@@ -41,11 +44,15 @@ public sealed class Options {
         }
         if(o.Width<64||o.Width>1920||o.Height<64||o.Height>1080||o.Scene<1||o.Scene>7||o.Complexity<4||o.Complexity>48||o.Ticks<0||o.Port<0||o.Port>65535||o.Tolerance<0||o.Tolerance>255||o.Radius<0||o.Radius>2||o.AllowedFraction<0||o.AllowedFraction>1)throw new ArgumentException("Options outside documented bounds");
         if(o.Quality!="low"&&o.Quality!="full")throw new ArgumentException("--quality must be low or full");
+        if(Double.IsNaN(o.SceneryRange)||o.SceneryRange<.25||o.SceneryRange>1)throw new ArgumentException("--scenery-range must be 0.25 to 1");
         if(o.Fps<1||o.Fps>60)throw new ArgumentException("--fps must be between 1 and 60");
-        if(o.Backend!="software"&&o.Backend!="rasterix")throw Log.Unsupported("backend "+o.Backend);
+        if(o.Backend!="software"&&o.Backend!="rasterix"&&o.Backend!="spinal")throw Log.Unsupported("backend "+o.Backend);
+        if(o.Backend=="spinal"&&(o.Width!=320||o.Height!=240))throw new ArgumentException("SpinalVoodoo Standard requires 320x240");
         if(o.Record!=null&&o.Replay!=null)throw new ArgumentException("--record and --replay are exclusive");
         if(o.Port!=0&&o.Replay!=null)throw new ArgumentException("UDP and replay inputs are exclusive");
-        if(o.AccelerometerUrl!=null&&(o.Port!=0||o.Replay!=null||o.Scripted||o.Headless))throw new ArgumentException("Accelerometer control requires the desktop game without UDP, replay or scripted input");
+        bool boardTilt=o.Backend=="spinal"&&o.Headless&&o.Realtime&&o.Port!=0;
+        if(o.SensorFile!=null&&(!boardTilt||o.AccelerometerUrl!=null||o.Replay!=null||o.Scripted))throw new ArgumentException("--sensor-file requires realtime board input without another sensor source");
+        if(o.AccelerometerUrl!=null&&(o.Replay!=null||o.Scripted||(!boardTilt&&(o.Port!=0||o.Headless))))throw new ArgumentException("Accelerometer control requires desktop input or the realtime SpinalVoodoo board loop");
         if(o.Port!=0&&!o.Realtime&&o.Headless)throw new ArgumentException("Headless UDP requires --realtime");
         if(o.Ticks==0&&!o.Realtime&&!o.Suite&&!o.SelfTest&&o.RenderCapture==null&&o.CompareA==null)throw new ArgumentException("--ticks 0 requires --realtime");
         if(o.Realtime&&!o.Headless)throw new ArgumentException("--realtime is the headless platform loop");
@@ -59,6 +66,7 @@ public sealed class Session : IDisposable {
     public readonly IRenderer Renderer;public readonly FixedClock Clock=new FixedClock();public readonly Telemetry Metrics=new Telemetry();
     public readonly Replay Reader,Writer;public readonly UdpInput Remote;
     public readonly AccelerometerInput Sensor;
+    bool calibrationHeld;
     public readonly EndlessRun Run;
     public bool Paused,Finished;public InputState LastInput=InputState.Neutral();
     public Frame LastFrame;public int[] LastPixels;
@@ -69,19 +77,31 @@ public sealed class Session : IDisposable {
         Options=options;
         if(options.Replay!=null)Reader=new Replay(options.Replay,0,false);
         World=new World(Reader==null?options.Seed:Reader.Seed,Reader==null||Reader.FormatVersion>=4,Reader==null||Reader.FormatVersion>=5,Reader==null||Reader.FormatVersion>=6);
+        if(World.City!=null)World.City.NeighbourhoodRange=options.SceneryRange;
         if(World.Endless)Run=new EndlessRun();
         Combat=new CombatState(World.Seed);
         Renderer=MakeRenderer(options,options.Width,options.Height);
         if(options.Record!=null)Writer=new Replay(options.Record,World.Seed,true);
         if(options.Port!=0)Remote=new UdpInput(options.Port);
         if(options.AccelerometerUrl!=null)Sensor=new AccelerometerInput(options.AccelerometerUrl);
-        Metrics.Backend=options.Backend=="software"?"DESKTOP SOFTWARE / CPU":"RASTERIX BRIDGE";
+        if(options.SensorFile!=null)Sensor=new AccelerometerInput(options.SensorFile,true);
+        Metrics.Backend=options.Backend=="software"?"DESKTOP SOFTWARE / CPU":options.Backend=="spinal"?"SPINALVOODOO FPGA / GPU2":"RASTERIX BRIDGE";
         Log.Write("BACKEND "+Renderer.Name+"; contract FG-CONTRACT-1-PROPOSED; board validation pending");
     }
-    public static IRenderer MakeRenderer(Options options,int w,int h) {return options.Backend=="software"?(IRenderer)new SoftwareRenderer():new RasterixRenderer(w,h);}
+    public static IRenderer MakeRenderer(Options options,int w,int h) {return options.Backend=="software"?(IRenderer)new SoftwareRenderer():options.Backend=="spinal"?(IRenderer)new SpinalVoodooRenderer(w,h):new RasterixRenderer(w,h);}
     public InputState Input(InputState local,long now) {
         if(Reader!=null) {InputState s=Reader.At(Aircraft.Tick);if(s==null) {Finished=true;return InputState.Neutral();}return s;}
-        if(Remote!=null)return Remote.Read(now);
+        if(Remote!=null) {
+            local=Remote.Read(now);
+            if(Sensor!=null) {
+                bool calibrate=local.focused&&local.connected&&local.tilt_enabled&&local.calibrate;
+                Sensor.Invert(local.invert_horizontal,local.invert_vertical);
+                if(calibrate&&!calibrationHeld)Sensor.Calibrate();
+                calibrationHeld=calibrate;
+                if(local.tilt_enabled)return Sensor.Read(local,Aircraft,Run!=null);
+            }
+            return local;
+        }
         if(Sensor!=null)return Sensor.Read(local,Aircraft,Run!=null);
         return Options.Scripted?Program.Script(Aircraft.Tick):local;
     }
@@ -100,12 +120,22 @@ public sealed class Session : IDisposable {
         LastFrame=null;LastPixels=null;Paused=false;Finished=false;if(Writer!=null)Writer.RestartRecording();
     }
     public void Render() {
+        SubmitFrame(BuildRenderFrame());
+    }
+    public Frame BuildRenderFrame() {
         Stopwatch watch=renderWatch;watch.Restart();Metrics.Status=Finished?"REPLAY COMPLETE":Reader!=null?"DETERMINISTIC REPLAY":Writer!=null?"RECORDING INPUT":"FLIGHT LAB / LIVE";
         if(Sensor!=null)Metrics.Status=Sensor.Ready?"MMA7660 / LIVE TILT":"CLICK CALIBRATE / PLAY";
-        LastFrame=Scenes.Build(Options.Scene,Options.Width,Options.Height,Options.Complexity,World,Aircraft,Metrics,Paused,Options.Wire,!Options.NoHud,CombatEnabled?Combat:null,Options.Quality=="low",renderFrame);
-        Metrics.GeometryMs=watch.Elapsed.TotalMilliseconds;watch.Restart();LastPixels=Renderer.Render(LastFrame);Metrics.SubmissionMs=watch.Elapsed.TotalMilliseconds;
+        LastFrame=Scenes.Build(Options.Scene,Options.Width,Options.Height,Options.Complexity,World,Aircraft,Metrics,Paused,Options.Wire,!Options.NoHud,CombatEnabled?Combat:null,Options.Quality=="low",renderFrame,Options.Backend=="spinal");
+        Metrics.GeometryMs=watch.Elapsed.TotalMilliseconds;
+        SpinalVoodooRenderer gpu=Renderer as SpinalVoodooRenderer;
+        if(gpu!=null&&!gpu.PipelineActive) {gpu.SetState(Aircraft.Tick,Aircraft.Health,Combat.Kills,Run==null?0:Run.Distance,Paused,Combat.GameOver);gpu.SetSensor(Sensor);}
+        return LastFrame;
+    }
+    public void SubmitFrame(Frame frame) {
+        Stopwatch watch=renderWatch;watch.Restart();LastPixels=Renderer.Render(frame);Metrics.SubmissionMs=watch.Elapsed.TotalMilliseconds;
+        SpinalVoodooRenderer gpu=Renderer as SpinalVoodooRenderer;if(gpu!=null)gpu.SetHostTiming(Metrics.GeometryMs,Metrics.SubmissionMs);
         watch.Restart();Renderer.Deliver();Metrics.DeliveryMs=watch.Elapsed.TotalMilliseconds;
-        Metrics.Triangles=LastFrame.Triangles;Metrics.DrawCalls=LastFrame.Draws.Count;Metrics.TextureBytes=Renderer.TextureBytes;Metrics.Dropped=Clock.DroppedSeconds;
+        Metrics.Triangles=frame.Triangles;Metrics.DrawCalls=frame.Draws.Count;Metrics.TextureBytes=Renderer.TextureBytes;Metrics.Dropped=Clock.DroppedSeconds;
         RenderedFrames++;
     }
     public void Capture(string directory) {if(LastFrame==null)Render();FrameIO.Capture(directory,LastFrame,LastPixels,World,Aircraft,LastInput,Renderer.Name,CombatEnabled?Combat:null,Run);Log.Write("CAPTURE "+Path.GetFullPath(directory));}
@@ -153,6 +183,8 @@ public static class Program {
                 for(int i=0;i<target;i++) {InputState input=session.Input(new InputState {throttle=.55},0);if(session.Finished||session.Combat.GameOver)break;session.Step(input);}
                 session.Metrics.SimulationMs=watch.Elapsed.TotalMilliseconds;
                 session.Render();
+            } else if(o.Backend=="spinal") {
+                SpinalBoardLoop.Run(session,o);
             } else {
                 quit=false;Console.CancelKeyPress+=Cancel;
                 Stopwatch elapsed=Stopwatch.StartNew();double previous=0;FramePacer renderPacer=new FramePacer();
@@ -200,7 +232,7 @@ public static class Program {
     }
     public const string Help=@"FLIGHTING SIMULATOR GAME / contract v1 PROPOSED
 No arguments: desktop flight window (Windows build).
---backend software|rasterix    Explicit renderer; RasterIX requires GPU-team bridge
+--backend software|rasterix|spinal   Explicit renderer; spinal uses Standard FPGA GPU2
 --scene 1..7 --width 320 --height 240 --complexity 4..48 --seed 1337
 --quality low|full --fps 1..60  Default: low detail, 30 FPS; simulation stays 60 Hz
 --headless --ticks 600 --scripted --out frame.ppm

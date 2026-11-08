@@ -1,0 +1,24 @@
+CHECKED build/software-profile/samples/tick-1200.rpl
+CHECKED build/software-profile/samples/tick-180.rpl
+CHECKED build/software-profile/samples/tick-2.rpl
+CHECKED build/software-profile/samples/tick-360.rpl
+CHECKED build/software-profile/samples/tick-600.rpl
+CHECKED build/software-profile/samples/tick-90.rpl
+CHECKED build/software-profile/samples/tick-900.rpl
+CHECKED build/batching/diagnostic-scene-1.rpl
+CHECKED build/batching/diagnostic-scene-2.rpl
+CHECKED build/batching/diagnostic-scene-3.rpl
+CHECKED build/batching/diagnostic-scene-4.rpl
+CHECKED build/batching/diagnostic-scene-5.rpl
+CHECKED build/batching/diagnostic-scene-6.rpl
+CHECKED build/batching/diagnostic-scene-7.rpl
+CHECKED subpixel boundary variant 0
+CHECKED subpixel boundary variant 1
+CHECKED subpixel boundary variant 2
+CHECKED subpixel boundary variant 3
+CHECKED coverage stress variant 0
+CHECKED coverage stress variant 1
+CHECKED coverage stress variant 2
+CHECKED coverage stress variant 3
+CHECKED alternating in-flight frames and 4 invalid-geometry cases
+RESULT frames=288 different_pixels=0

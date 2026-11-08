@@ -1,0 +1,489 @@
+diff --git a/src/voodoo/Core.scala b/src/voodoo/Core.scala
+index 100f1c6..379ddb8 100644
+--- a/src/voodoo/Core.scala
++++ b/src/voodoo/Core.scala
+@@ -60,7 +60,7 @@ object Core {
+   )
+ }
+ 
+-case class Core(c: Config) extends Component {
++case class Core(c: Config, headless: Boolean = false) extends Component {
+   val io = new Bundle {
+     // Unified CPU bus (24-bit address covers 16MB PCI BAR)
+     val cpuBus = slave(Bmb(Core.cpuBmbParams))
+@@ -91,6 +91,11 @@ case class Core(c: Config) extends Component {
+ 
+     // Simulation-only framebuffer cache flush request
+     val flushFbCaches = in Bool ()
++    // Publication observes all pixel/FIFO work and both writeback planes.
++    val publicationPipelineBusy = out Bool ()
++    val publicationWriteBusy = out Bool ()
++    val publicationRenderWorkBusy = out Bool ()
++    val publicationExternalMemoryBusy = if (headless) in Bool () else null
+ 
+     // Integrated scanout path. Board wrappers provide the physical HDMI transmitter/clocking.
+     val hdmi = master(HdmiScanoutPort(c))
+@@ -147,7 +152,7 @@ case class Core(c: Config) extends Component {
+     hdmiScanout.io.regs.pixelStride := framebufferLayout.draw.pixelStride
+     hdmiScanout.io.regs.displayWidth := 640
+     hdmiScanout.io.regs.displayHeight := 480
+-    hdmiScanout.io.regs.framebufferEnable := True
++    hdmiScanout.io.regs.framebufferEnable := (if (headless) False else True)
+     hdmiScanout.io.regs.testPatternEnable := False
+     hdmiScanout.io.regs.gammaLut := regBank.io.gammaLut
+ 
+@@ -181,7 +186,11 @@ case class Core(c: Config) extends Component {
+   framebufferMem.io.prefetchColor <> pixelPipeline.io.prefetchColor
+   framebufferMem.io.prefetchAux <> pixelPipeline.io.prefetchAux
+   framebufferMem.io.lfbReadBus <> pixelPipeline.io.lfbReadBus
+-  framebufferMem.io.flush := io.flushFbCaches
++  // Flush retained partial runs BETWEEN draws, including a queued SYNC/NOP.
++  // Actual pixel work excludes FIFO-sync waiting and LFB waiting, avoiding a
++  // flush/busy feedback deadlock when a later command waits for writeback.
++  framebufferMem.io.flush := io.flushFbCaches ||
++    (if (headless) !pixelPipeline.io.publicationRenderWorkBusy else False)
+   framebufferMem.io.fbMemWrite <> io.fbMemWrite
+   framebufferMem.io.fbColorWriteMem <> io.fbColorWriteMem
+   framebufferMem.io.fbAuxWriteMem <> io.fbAuxWriteMem
+@@ -202,11 +211,17 @@ case class Core(c: Config) extends Component {
+   regBank.io.statistics := pixelPipeline.io.stats
+   regBank.io.debug := pixelPipeline.io.debug
+ 
+-  pciFifo.io.pipelineBusy := pixelPipeline.io.debug.pipelineBusy
++  pciFifo.io.pipelineBusy := pixelPipeline.io.debug.pipelineBusy ||
++    (if (headless) framebufferMem.io.status.colorBusy || framebufferMem.io.status.auxBusy ||
++      io.publicationExternalMemoryBusy || textureMem.io.downloadBusy else False)
+   pciFifo.io.commandReady := regBank.io.commandReady
+   pciFifo.io.wasEnqueuedAddr := U(0x128, pciFifo.busAddrWidth bits)
+   regBank.io.pciFifoEmpty := pciFifo.io.fifoEmpty
+   regBank.io.pciFifoFree := pciFifo.io.pciFifoFree
+   regBank.io.swapCmdEnqueued := pciFifo.io.wasEnqueued
+   regBank.io.syncDrained := pciFifo.io.syncDrained
++  io.publicationPipelineBusy := pixelPipeline.io.debug.pipelineBusy || !pciFifo.io.fifoEmpty ||
++    textureMem.io.downloadBusy
++  io.publicationWriteBusy := framebufferMem.io.status.colorBusy || framebufferMem.io.status.auxBusy
++  io.publicationRenderWorkBusy := pixelPipeline.io.publicationRenderWorkBusy
+ }
+diff --git a/src/voodoo/core/PixelPipeline.scala b/src/voodoo/core/PixelPipeline.scala
+index 7797711..2fa8933 100644
+--- a/src/voodoo/core/PixelPipeline.scala
++++ b/src/voodoo/core/PixelPipeline.scala
+@@ -187,6 +187,7 @@ case class PixelPipeline(c: Config) extends Component {
+ 
+     val stats = out(CoreStats())
+     val debug = out(CoreDebug())
++    val publicationRenderWorkBusy = out Bool ()
+   }
+ 
+   private def buildPaletteWriteFlow(regs: PaletteRegs): Flow[Tmu.PaletteWrite] = {
+@@ -280,15 +281,15 @@ case class PixelPipeline(c: Config) extends Component {
+ 
+   val rasterYPipe = rasterYTransformed.stage()
+   val rasterFork = StreamFork2(rasterYPipe, synchronous = true)
+-  val postTmuQueue = rasterFork._2
+-    .translateWith(Rasterizer.PostTmu.fromOutput(c, rasterFork._2.payload))
+-    .queue(64)
+-    .stage()
+-    .stage()
++  val postTmuFifo = rasterFork._2
++    .translateWith(Rasterizer.PostTmu.fromOutput(c, rasterFork._2.payload)).queue(64)
++  val postTmuPipe = postTmuFifo.stage()
++  val postTmuQueue = postTmuPipe.stage()
+ 
+   val tmuOutput = Stream(Tmu.Output(c))
+   val tmuInputValid = Bool()
+   val tmuBusy = Bool()
++  val tmuTransportBusy = Bool()
+ 
+   if (c.enableTmu) {
+     val tmu = Tmu(c)
+@@ -306,15 +307,18 @@ case class PixelPipeline(c: Config) extends Component {
+     io.texRead <> tmu.io.texRead
+ 
+     val tmuInput = Stream(Tmu.Input(c))
+-    tmuInput.translateFrom(rasterFork._1.stage())((out, in) =>
++    val rasterTmuPipe = rasterFork._1.stage()
++    tmuInput.translateFrom(rasterTmuPipe)((out, in) =>
+       out := Tmu.Input.fromRasterizer(c, in)
+     )
+     tmuInput >/-> tmu.io.input
+     tmuOutput << tmu.io.output
+     tmuInputValid := tmu.io.input.valid
+     tmuBusy := tmu.io.busy
++    tmuTransportBusy := rasterTmuPipe.valid || tmuInput.valid
+   } else {
+-    tmuOutput.translateFrom(rasterFork._1.stage()) { (out, in) =>
++    val rasterTmuPipe = rasterFork._1.stage()
++    tmuOutput.translateFrom(rasterTmuPipe) { (out, in) =>
+       out.texture.r := 0
+       out.texture.g := 0
+       out.texture.b := 0
+@@ -335,9 +339,11 @@ case class PixelPipeline(c: Config) extends Component {
+     io.texRead.rsp.ready := True
+     tmuInputValid := False
+     tmuBusy := False
++    tmuTransportBusy := rasterTmuPipe.valid
+   }
+ 
+-  val tmuJoined = StreamJoin(tmuOutput.stage(), postTmuQueue)
++  val tmuOutputPipe = tmuOutput.stage()
++  val tmuJoined = StreamJoin(tmuOutputPipe, postTmuQueue)
+   if (c.trace.enabled) {
+     postTmuQueue.simPublic()
+     tmuJoined.simPublic()
+@@ -347,7 +353,8 @@ case class PixelPipeline(c: Config) extends Component {
+   }
+ 
+   val colorCombineInput = Stream(ColorCombine.Input(c))
+-  colorCombineInput.translateFrom(tmuJoined.stage())((out, payload) =>
++  val colorJoinPipe = tmuJoined.stage()
++  colorCombineInput.translateFrom(colorJoinPipe)((out, payload) =>
+     out := ColorCombine.Input.fromTmuAndRaster(c, payload._1, payload._2, io.controls.syncRender)
+   )
+   colorCombineInput >/-> colorCombine.io.input
+@@ -653,8 +660,13 @@ case class PixelPipeline(c: Config) extends Component {
+   io.debug.writePath.zFuncFailNonZero := zFuncFailCounter.orR
+   io.debug.writePath.aFuncFailNonZero := aFuncFailCounter.orR
+ 
+-  val pipelineBusySignal =
+-    triangleSetup.o.valid || rasterizer.running || tmuInputValid ||
++  val triangleWorkBusy = triangleSetupInput.valid || !triangleSetup.i.ready || triangleSetup.o.valid
++  val renderWorkBusySignal =
++    triangleWorkBusy || rasterizer.running || rasterizer.o.valid ||
++      rasterYPipe.valid || rasterFork._1.valid || rasterFork._2.valid ||
++      postTmuFifo.valid || postTmuPipe.valid || postTmuQueue.valid ||
++      tmuTransportBusy || tmuOutput.valid || tmuOutputPipe.valid ||
++      tmuJoined.valid || colorJoinPipe.valid || colorCombineInput.valid || tmuInputValid ||
+       tmuBusy || fbAccess.io.busy ||
+       colorCombine.io.input.valid || fogBusy || fbAccess.io.input.valid ||
+       writeColor.i.fromPipeline.valid || writeAux.i.fromPipeline.valid ||
+@@ -664,7 +676,9 @@ case class PixelPipeline(c: Config) extends Component {
+       preDitherMerged.valid || preDitherPiped.valid ||
+       ditherOutput.valid || ditherJoined.valid ||
+       forColorWrite.valid || forAuxWrite.valid ||
+-      colorWriteInput.valid || auxWriteInput.valid ||
++      colorWriteInput.valid || auxWriteInput.valid
++  io.publicationRenderWorkBusy := renderWorkBusySignal
++  val pipelineBusySignal = renderWorkBusySignal ||
+       io.externalBusy.nopCmd || io.externalBusy.fastfillCmd ||
+       io.externalBusy.swapbufferCmd || io.externalBusy.swapWaiting || lfb.io.busy
+ 
+@@ -674,7 +688,7 @@ case class PixelPipeline(c: Config) extends Component {
+ 
+   val pipelineBusySources = Bits(32 bits)
+   pipelineBusySources := 0
+-  pipelineBusySources(0) := triangleSetup.o.valid
++  pipelineBusySources(0) := triangleWorkBusy
+   pipelineBusySources(1) := rasterizer.running
+   pipelineBusySources(2) := tmuInputValid
+   pipelineBusySources(3) := tmuBusy
+diff --git a/src/voodoo/bus/PciFifo.scala b/src/voodoo/bus/PciFifo.scala
+index 226d60e..a6e4ff8 100644
+--- a/src/voodoo/bus/PciFifo.scala
++++ b/src/voodoo/bus/PciFifo.scala
+@@ -303,13 +303,20 @@ case class PciFifo(
+ 
+     val fifoEmpty = Bool().setName("pciFifo_fifoEmpty")
+     fifoEmpty.simPublic()
+-    fifoEmpty := !pciFifo.io.pop.valid && !issuedWrite.valid
++    fifoEmpty := !stageFifo.io.pop.valid && !floatConvertInFlight &&
++      !pciFifo.io.pop.valid && !issuedWrite.valid
+     io.fifoEmpty := fifoEmpty
+   }
+   private val canDrain = drainControl.canDrain
+   private val issuedWrite = drainControl.issuedWrite
+   private val commandStreamBlocked = drainControl.commandStreamBlocked
+-  private val drainedWrite = issuedWrite
++  // A command can make the renderer busy after the next word enters this
++  // registered stage. Synchronization is a commit condition, not just an issue
++  // condition; hold the staged payload until both constraints are satisfied.
++  private val issuedCommandBlocked = Bool()
++  issuedCommandBlocked := False
++  private val issuedSyncBlocked = issuedWrite.syncRequired && io.pipelineBusy
++  private val drainedWrite = issuedWrite.haltWhen(issuedSyncBlocked || issuedCommandBlocked)
+   private val fifoEmpty = drainControl.fifoEmpty
+ 
+   // ========================================================================
+@@ -492,12 +499,16 @@ case class PciFifo(
+         when(pciFifo.io.pop.address === U(addr, busAddrWidth bits)) {
+           commandStreamBlocked := !io.commandReady(idx)
+         }
++        when(issuedWrite.address === U(addr, busAddrWidth bits)) {
++          issuedCommandBlocked := !io.commandReady(idx)
++        }
+       }
+     }
+   })
+ 
+   GenerationFlags.formal {
+-    assert(io.fifoEmpty === (!pciFifo.io.pop.valid && !issuedWrite.valid))
++    assert(io.fifoEmpty === (!stageFifo.io.pop.valid && !floatConvertInFlight &&
++      !pciFifo.io.pop.valid && !issuedWrite.valid))
+     assert(isTexDrain === (drainedWrite.valid && drainedWrite.isTexture))
+     assert(isRegDrain === (drainedWrite.valid && !drainedWrite.isTexture))
+     assert(io.texDrain.valid === isTexDrain)
+@@ -536,10 +547,10 @@ case class PciFifo(
+       assert(io.regSide.cmd.last)
+     }
+ 
+-    when(pciFifo.io.pop.syncRequired && io.pipelineBusy) {
++    when(issuedSyncBlocked) {
+       assert(!drainedWrite.fire)
+     }
+-    when(commandStreamBlocked) {
++    when(issuedCommandBlocked) {
+       assert(!drainedWrite.fire)
+     }
+ 
+diff --git a/src/voodoo/texture/TmuTextureCache.scala b/src/voodoo/texture/TmuTextureCache.scala
+index 465ea78..9f9fae7 100644
+--- a/src/voodoo/texture/TmuTextureCache.scala
++++ b/src/voodoo/texture/TmuTextureCache.scala
+@@ -762,7 +762,7 @@ case class TmuTextureCache(
+ 
+   fillRsp.ready := !fillFetchEmit || fillFetchRaw.ready
+   fillFetchRaw.valid := fillRsp.valid && fillFetchEmit
+-  fillFetchRaw.payload := ownerRspCommitted
++  fillFetchRaw.payload := ownerRsp
+ 
+   when(fillRsp.fire) {
+     val nextWordAddr =
+diff --git a/src/voodoo/texture/TextureMem.scala b/src/voodoo/texture/TextureMem.scala
+index f164007..788485e 100644
+--- a/src/voodoo/texture/TextureMem.scala
++++ b/src/voodoo/texture/TextureMem.scala
+@@ -74,7 +74,8 @@ object TextureMem {
+     def fromPciDrain(
+         c: Config,
+         drain: Stream[TexWritePayload],
+-        cfg: DownloadConfig
++        cfg: DownloadConfig,
++        busy: Bool = null
+     ): Stream[WriteCmd] = {
+       val pciAddr = drain.pciAddr
+       val tmuValid = pciAddr(22 downto 21) === 0
+@@ -122,7 +123,7 @@ object TextureMem {
+           }
+           .m2sPipe()
+ 
+-        prepared
++        val output = prepared
+           .throwWhen(!prepared.payload.validWrite)
+           .translateWith {
+             val prep = prepared.payload
+@@ -144,6 +145,8 @@ object TextureMem {
+             cmd
+           }
+           .m2sPipe()
++        if (busy != null) busy := prepared.valid || output.valid
++        output
+       } else {
+         val lod = pciAddr(20 downto 17)
+         val baseReg = UInt(24 bits)
+@@ -177,7 +180,7 @@ object TextureMem {
+           }
+           .m2sPipe()
+ 
+-        prepared
++        val output = prepared
+           .throwWhen(!prepared.payload.validWrite)
+           .translateWith {
+             val prep = prepared.payload
+@@ -188,6 +191,8 @@ object TextureMem {
+             cmd
+           }
+           .m2sPipe()
++        if (busy != null) busy := prepared.valid || output.valid
++        output
+       }
+     }
+   }
+diff --git a/src/voodoo/core/TextureMemSubsystem.scala b/src/voodoo/core/TextureMemSubsystem.scala
+index 4831d83..f4f96ef 100644
+--- a/src/voodoo/core/TextureMemSubsystem.scala
++++ b/src/voodoo/core/TextureMemSubsystem.scala
+@@ -13,10 +13,12 @@ case class TextureMemSubsystem(c: Config) extends Component {
+     val cpuTexRead = slave(Bmb(voodoo.Core.cpuTexBmbParams))
+     val tmuTexRead = slave(Bmb(Tmu.bmbParams(c)))
+     val downloadConfig = in(TextureMem.DownloadConfig(c))
++    val downloadBusy = out Bool ()
+     val texMem = master(Bmb(voodoo.Core.texMemBmbParams(c)))
+   }
+ 
+-  val cpuTexWriteCmd = TextureMem.WriteCmd.fromPciDrain(c, io.cpuTexDrain, io.downloadConfig)
++  val cpuTexWriteCmd = TextureMem.WriteCmd.fromPciDrain(c, io.cpuTexDrain, io.downloadConfig,
++    io.downloadBusy)
+   val cpuTexWriteBus =
+     TextureMem.WriteCmd.toBmb(cpuTexWriteCmd, voodoo.Core.cpuTexBmbParams, source = 0)
+ 
+diff --git a/src/voodoo/de10/CoreDe10.scala b/src/voodoo/de10/CoreDe10.scala
+index d1bc1f7..6ddb0a7 100644
+--- a/src/voodoo/de10/CoreDe10.scala
++++ b/src/voodoo/de10/CoreDe10.scala
+@@ -364,7 +364,7 @@ case class H2fLwToBmbBridge(
+   }
+ }
+ 
+-case class CoreDe10(c: Config) extends Component {
++case class CoreDe10(c: Config, headless: Boolean = false) extends Component {
+   private val cpuAddressWidth = Core.cpuBmbParams.access.addressWidth
+ 
+   val io = new Bundle {
+@@ -386,10 +386,17 @@ case class CoreDe10(c: Config) extends Component {
+     )
+     val memTex = master(AvalonMM(De10MemBackend.avalonConfig(De10MemBackend.physicalAddressWidth)))
+     val hdmi = master(HdmiScanoutPort(c))
++    val fenceFlush = if (headless) in Bool () else null
++    val publicationPipelineBusy = out Bool ()
++    val publicationWriteBusy = out Bool ()
++    val publicationRenderWorkBusy = out Bool ()
++    val publicationExternalBusBusy = if (headless) in Bool () else null
+   }
+ 
+-  val core = Core(c)
++  val core = Core(c, headless)
+   val memBackend = De10MemBackend(c)
++  if (headless) core.io.publicationExternalMemoryBusy :=
++    memBackend.io.publicationBusy || io.publicationExternalBusBusy
+   val h2fBridge = H2fLwToBmbBridge(cpuAddressWidth, Core.cpuBmbParams)
+ 
+   io.h2fLw <> h2fBridge.io.h2fLw
+@@ -410,7 +417,7 @@ case class CoreDe10(c: Config) extends Component {
+     io.memTex <> memBackend.io.memTex
+   )
+ 
+-  core.io.statusInputs.vRetrace := core.io.hdmi.status.newFrame
++  core.io.statusInputs.vRetrace := (if (headless) False else core.io.hdmi.status.newFrame)
+   core.io.statusInputs.memFifoFree := 0xffff
+   core.io.statusInputs.pciInterrupt := False
+   core.io.hdmi.clock := io.hdmi.clock
+@@ -421,5 +428,8 @@ case class CoreDe10(c: Config) extends Component {
+   io.hdmi.fifoLevel := core.io.hdmi.fifoLevel
+ 
+   core.io.fbBaseAddr := 0
+-  core.io.flushFbCaches := False
++  core.io.flushFbCaches := (if (headless) io.fenceFlush else False)
++  io.publicationPipelineBusy := core.io.publicationPipelineBusy
++  io.publicationWriteBusy := core.io.publicationWriteBusy || memBackend.io.publicationBusy
++  io.publicationRenderWorkBusy := core.io.publicationRenderWorkBusy
+ }
+diff --git a/src/voodoo/de10/De10MemBackend.scala b/src/voodoo/de10/De10MemBackend.scala
+index 17f2a68..6705a79 100644
+--- a/src/voodoo/de10/De10MemBackend.scala
++++ b/src/voodoo/de10/De10MemBackend.scala
+@@ -63,6 +63,7 @@ case class De10BmbToAvalonMm(
+   val io = new Bundle {
+     val bmb = slave(Bmb(bmbParams))
+     val mem = master(AvalonMM(De10MemBackend.avalonConfig(avalonAddressWidth)))
++    val publicationBusy = out Bool ()
+   }
+ 
+   val writeBurstActive = RegInit(False)
+@@ -150,6 +151,8 @@ case class De10BmbToAvalonMm(
+     queuedReadCmdValid && queuedReadCmd.beatCount =/= 0 && queuedReadCmdSpanInRange && queuedReadCmdBurstConsistent
+   val pendingReadTraffic =
+     queuedReadCmdValid || outstandingReadBeats =/= 0 || readRspFifo.io.occupancy =/= 0
++  io.publicationBusy := writeBurstActive || writeRspPending || pendingReadTraffic ||
++    io.bmb.cmd.valid || io.mem.readDataValid
+   val readRspNow = readRspFifo.io.pop.valid && !writeRspPending
+   val writeRspBlocksCmd = writeRspPending && !io.bmb.rsp.ready
+   val readStorageUsedWidth = log2Up(readRspFifoDepth * 3 + 2)
+@@ -164,13 +167,17 @@ case class De10BmbToAvalonMm(
+       readStorageUsedWidth bits
+     )
+   val canLaunchRead =
+-    !writeBurstActive && !writeRspBlocksCmd && outstandingReadBeats === 0 && !io.mem.readDataValid && io.mem.waitRequestn
+-  val launchQueuedRead = canLaunchRead && queuedReadCmdSafe
++    !writeBurstActive && !writeRspBlocksCmd && outstandingReadBeats === 0 && !io.mem.readDataValid
++  // Avalon requests must not depend on waitrequest. The interconnect may derive
++  // waitrequest from the request, address and arbitration of other masters.
++  val queuedReadRequest = canLaunchRead && queuedReadCmdSafe
++  val launchQueuedRead = queuedReadRequest && io.mem.waitRequestn
+   val launchDirectRead = False
+   val readLaunch = launchQueuedRead || launchDirectRead
+   val readQueueFreeThisCycle = canLaunchRead
+-  val acceptWriteBeat =
+-    io.bmb.cmd.valid && cmdIsWrite && cmdBeatCount =/= 0 && cmdWriteSpanInRange && !pendingReadTraffic && !writeRspBlocksCmd && io.mem.waitRequestn
++  val writeRequest =
++    io.bmb.cmd.valid && cmdIsWrite && cmdBeatCount =/= 0 && cmdWriteSpanInRange && !pendingReadTraffic && !writeRspBlocksCmd
++  val acceptWriteBeat = writeRequest && io.mem.waitRequestn
+   val queueAcceptedReadCmd =
+     io.bmb.cmd.valid && !cmdIsWrite && cmdBeatCount =/= 0 && cmdReadSpanInRange && !queuedReadCmdValid && readStorageCanAcceptCmd
+   val acceptReadCmd = queueAcceptedReadCmd
+@@ -210,10 +217,12 @@ case class De10BmbToAvalonMm(
+     writeRspPending := False
+   }
+ 
+-  when(acceptWriteBeat) {
++  when(writeRequest) {
+     io.mem.write := True
+     io.mem.burstCount := 1
+     io.mem.byteEnable := io.bmb.cmd.mask
++  }
++  when(acceptWriteBeat) {
+     io.bmb.cmd.ready := True
+     writeBurstActive := !io.bmb.cmd.last
+     when(io.bmb.cmd.last) {
+@@ -235,11 +244,13 @@ case class De10BmbToAvalonMm(
+     queuedReadCmdValid := False
+   }
+ 
+-  when(readLaunch) {
++  when(queuedReadRequest) {
+     io.mem.read := True
+     io.mem.address := launchedReadCmd.address
+     io.mem.burstCount := launchedReadCmd.burstCount
+     io.mem.byteEnable := fullMask
++  }
++  when(readLaunch) {
+     outstandingReadBeats := outstandingReadBeats + launchedReadCmd.beatCount.resized
+     readRspBurstActive := True
+     readRspBurstBeatsLeft := launchedReadCmd.beatCount
+@@ -345,11 +356,7 @@ case class De10BmbToAvalonMm(
+ 
+     assert(!(io.mem.read && io.mem.write))
+     assert(!(writeRspPending && readRspNow))
+-    assert(io.mem.read === readLaunch)
+-
+-    when(io.mem.read) {
+-      assert(io.mem.waitRequestn)
+-    }
++    assert(memReadFire === readLaunch)
+ 
+     when(io.mem.read) {
+       assert(readSpanInRange(io.mem.address, io.mem.burstCount.resize(readCountWidth)))
+@@ -452,6 +459,7 @@ case class De10BmbToAvalonMm(
+ 
+ case class De10MemBackend(c: Config) extends Component {
+   val io = new Bundle {
++    val publicationBusy = out Bool ()
+     val fbMemWrite = slave(Bmb(Core.fbMemBmbParams(c)))
+     val fbColorWriteMem = slave(Bmb(Core.fbMemBmbParams(c)))
+     val fbAuxWriteMem = slave(Bmb(Core.fbMemBmbParams(c)))
+@@ -501,7 +509,12 @@ case class De10MemBackend(c: Config) extends Component {
+       addressBase = De10AddressMap.texMemBase,
+       addressMask = De10AddressMap.texMemMask
+     )
+-    sourceRemover.io.output <> bridge.io.bmb
++    // Register the selected texture command before address/range decoding and
++    // the Qsys width/burst adapters. Keep responses direct: publicationBusy
++    // then covers the staged command through bridge.io.bmb.cmd.valid and all
++    // accepted traffic through the bridge's pending response/read tracking.
++    bridge.io.bmb.cmd << sourceRemover.io.output.cmd.m2sPipe()
++    sourceRemover.io.output.rsp << bridge.io.bmb.rsp
+     (sourceRemover, bridge)
+   }
+ 
+@@ -511,6 +524,12 @@ case class De10MemBackend(c: Config) extends Component {
+   val (fbColorReadSourceRemover, fbColorReadBridge) = fbBridge(pipeInput = true)
+   val (fbAuxReadSourceRemover, fbAuxReadBridge) = fbBridge(pipeInput = true)
+   val (texSourceRemover, texBridgeInst) = texBridge()
++  io.publicationBusy := Seq(
++    fbWriteBridge, fbColorWriteBridge, fbAuxWriteBridge,
++    fbColorReadBridge, fbAuxReadBridge, texBridgeInst
++  ).map(_.io.publicationBusy).reduce(_ || _) ||
++    io.fbMemWrite.cmd.valid || io.fbColorWriteMem.cmd.valid || io.fbAuxWriteMem.cmd.valid ||
++    io.fbColorReadMem.cmd.valid || io.fbAuxReadMem.cmd.valid || io.texMem.cmd.valid
+ 
+   Seq(
+     io.fbMemWrite <> fbWriteSourceRemover.io.input,

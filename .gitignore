@@ -16,3 +16,15 @@ htmlcov/
 .vs/
 Thumbs.db
 Desktop.ini
+build/
+.board-known-hosts
+fpga/build/
+fpga/tools/
+fpga/third_party/
+fpga/images/*.sof
+fpga/hardware/**/db/
+fpga/hardware/**/incremental_db/
+fpga/hardware/**/output_files/
+fpga/hardware/spinal_standard/spinal_system/
+fpga/hardware/de10_standard/soc_system/
+*.ppm

@@ -1,3 +1,7 @@
 * text=auto eol=lf
 *.cmd text eol=crlf
 *.bat text eol=crlf
+# Preserve the byte hashes of the imported, accepted FPGA source snapshot.
+fpga/hardware/** -text -whitespace
+fpga/patches/** -text -whitespace
+fpga/licenses/** -text -whitespace

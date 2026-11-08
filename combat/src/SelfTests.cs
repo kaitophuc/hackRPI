@@ -27,6 +27,11 @@ public static class SelfTests {
             p.roll=0;p.buttons=128;Assert(!gate.Accept(p,107),"unknown buttons rejected");
             p.buttons=0;p.sender_ms=500;Assert(!gate.Accept(p,1200),"delayed timestamp rejected relative to session clock anchor");
             Assert(!new InputState {vertical=Double.NaN}.Valid()&&!new InputState {vertical=1.01}.Valid(),"invalid vertical input rejected");
+            // Cross-language fixture from Python struct.pack('<4s32sqq5dI6B').
+            byte[] boardPacket=Convert.FromBase64String("U0ZJMTAxMjM0NTY3ODlhYmNkZWYwMTIzNDU2Nzg5YWJjZGVmEQAAAAAAAAAgAwAAAAAAAAAAAAAAANA/AAAAAAAA4L8AAAAAAADoPwAAAAAAAAAAmpmZmZmZ4T8EAAAAAQEBAQAB");
+            InputState board=UdpInput.ReadBoardPacket(boardPacket);
+            Assert(board.Valid()&&board.sequence==17&&board.sender_ms==800&&board.pitch==.25&&board.roll==-.5&&board.yaw==.75&&board.throttle==.55&&board.buttons==4&&board.tilt_enabled&&board.calibrate&&!board.invert_horizontal&&board.invert_vertical,"Python binary controls preserve axes, flags and ordering counters exactly");
+            boardPacket[101]=2;bool badFlag=false;try {UdpInput.ReadBoardPacket(boardPacket);}catch(InvalidDataException){badFlag=true;}Assert(badFlag,"malformed binary control flags rejected");
             Assert(InputState.Neutral().vertical==0,"safe neutral resets vertical input");
             FixedClock clock=new FixedClock();Assert(clock.Advance(1,false)==5,"bounded catchup");Assert(Math.Abs(clock.DroppedSeconds-55.0/60)<1e-9,"dropped wall time accounted");
             Assert(clock.Advance(10,true)==0&&clock.Advance(1.0/60,false)==1,"pause resets accumulator");
@@ -160,6 +165,8 @@ public static class SelfTests {
                 lit.Textures[tex.Name]=new Texture(tex.Name,3,3,new int[9]);bool failed=false;try {renderer.Render(lit);}catch(ArgumentException){failed=true;}Assert(failed,"unsupported texture upload fails loudly");
             }
             Assert(!Options.Parse(new string[]{"--headless"}).Realtime,"headless defaults reproducible");
+            Options tiltOptions=Options.Parse(new string[]{"--backend","spinal","--headless","--realtime","--input-udp","5522","--accelerometer","http://127.0.0.1:8765/"});
+            Assert(tiltOptions.Port==5522&&tiltOptions.AccelerometerUrl!=null,"board USB tilt and browser button inputs can coexist");
             bool badBackend=false;try {Options.Parse(new string[]{"--backend","unknown"});}catch(NotSupportedException){badBackend=true;}Assert(badBackend,"unknown backend rejected");
             Console.WriteLine("PASS: "+checks+" checks (flight, combat, HP, shooting, restart, replay, input, rendering and captures)");return 0;
         } finally {

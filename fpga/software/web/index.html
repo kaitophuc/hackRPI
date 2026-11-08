@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DE10-Standard framebuffer</title>
+<style>
+:root { color-scheme: dark; font-family: system-ui, sans-serif; background:#101922; color:#e9f0f7; }
+body { max-width:960px; margin:32px auto; padding:0 20px; }
+h1 { font-size:1.5rem; } p { line-height:1.5; color:#b9c9d8; }
+canvas { display:block; width:min(100%, 640px); height:auto; background:#000; image-rendering:pixelated; border:1px solid #486078; }
+.controls { display:flex; gap:16px; align-items:center; margin:20px 0; flex-wrap:wrap; }
+button,select { background:#25394d; color:inherit; border:1px solid #58738c; padding:8px 12px; border-radius:4px; }
+button:disabled { opacity:.5; } #status { font-weight:600; } #source { color:#ffcf72; }
+pre { background:#182736; padding:16px; white-space:pre-wrap; line-height:1.5; }
+</style>
+<h1>DE10-Standard framebuffer</h1>
+<p id="status" role="status">Connecting…</p>
+<p id="source">Waiting for a completed frame.</p>
+<canvas id="frame" width="320" height="240" aria-label="Board-rendered RGB565 framebuffer"></canvas>
+<div class="controls">
+<label>Transport <select id="transport"><option value="raw">Raw WebSocket (exact pixels)</option><option value="mjpeg" id="mjpeg-option" disabled>MJPEG (lossy, shared encoder)</option></select></label>
+<label>Scene <select id="scene"><option value="pattern">FPGA test pattern</option></select></label>
+<button id="pause" disabled>Pause capture</button>
+<button id="rotation" disabled title="Available only from a native 3D producer">Pause cube rotation</button>
+</div>
+<p>The browser displays completed FPGA frames. Raw WebSocket preserves exact RGB565 pixels; MJPEG compresses the same HPS snapshot. Scene rendering happens on the FPGA.</p>
+<pre id="metrics">No measurements yet.</pre>
+<script src="/app.js"></script>
+</html>

@@ -1,0 +1,11 @@
+{
+  "source": "tested D:/GPU_proj Standard GPU2 integration",
+  "upstream_spinalvoodoo": "92c56afa0e98763ccd794cd39512cad2822bd86e",
+  "sof_sha256": "e1366086d8d6badb5bd9c82f97d40293dcb44dee278c1f940cc8be8baf7c69b2",
+  "device": "5CSXFC6D6F31C6",
+  "clock_hz": 50000000,
+  "width": 320,
+  "height": 240,
+  "pixel_format": "RGB565",
+  "submission": "serialized; queued constant-color mode unsupported"
+}

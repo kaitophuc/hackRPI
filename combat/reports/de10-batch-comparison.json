@@ -1,0 +1,69 @@
+{
+  "results": [
+    {
+      "exact_match": true,
+      "scene": "combat-hud",
+      "serialized_seconds": 18.214425086975098,
+      "batch_seconds": 16.646816968917847,
+      "pixel_sha256": "5c83188847b5b8abd886eac047f03dd79d07fd6f723f47ef0fcab1ac081e54ff",
+      "geometry_sha256": "43998b13547bfc4c539c47b91d45ebeb68ed8310915afbf6a4b40aca205d0882"
+    },
+    {
+      "exact_match": true,
+      "scene": "scene-1",
+      "serialized_seconds": 3.2965869903564453,
+      "batch_seconds": 3.6178519725799561,
+      "pixel_sha256": "4775015a3c3cddd240130602fd8914e85351757f759a6d20f46980942f5f0e96",
+      "geometry_sha256": "c090a2350199d1ae7480df0e30834fe526f12646ff111a3c167474e8e932f8cd"
+    },
+    {
+      "exact_match": true,
+      "scene": "scene-2",
+      "serialized_seconds": 3.2983369827270508,
+      "batch_seconds": 3.4683830738067627,
+      "pixel_sha256": "3d52bbcd7409e7da465ade9330b04e6f2c7d83c7258f75863352cf0664faff6b",
+      "geometry_sha256": "ed8633c6c6b04b39c84e9f8b3a19620d06ccc25662436a37148fc5caa709d059"
+    },
+    {
+      "exact_match": true,
+      "scene": "scene-3",
+      "serialized_seconds": 3.330967903137207,
+      "batch_seconds": 3.3350090980529785,
+      "pixel_sha256": "da582aec6e7ac5fddd78a0715b283205b0f243f86d051b4bee1bccbbd6dfd3dc",
+      "geometry_sha256": "38fafd9723ccfc2e6763e7b1a6da0c9493c155ff2c26a5d0dd26f406223ab54c"
+    },
+    {
+      "exact_match": true,
+      "scene": "scene-4",
+      "serialized_seconds": 3.3644940853118896,
+      "batch_seconds": 3.6334741115570068,
+      "pixel_sha256": "3a53c93eac8259767c4ca08f1600d47ba2f2bab378e85ca0d1e4041e54f290ba",
+      "geometry_sha256": "01fb91c624d50c2a1cc5119e8fcc9becc2a394fd1c68064447e985ddcba04791"
+    },
+    {
+      "exact_match": true,
+      "scene": "scene-5",
+      "serialized_seconds": 3.4123859405517578,
+      "batch_seconds": 3.3086299896240234,
+      "pixel_sha256": "47556f9e2c4bc2e2df959310d2e21c5846e62e8cac84510f3ec5a6b182321ef7",
+      "geometry_sha256": "d69b13ed7a50a51df7743600ca1b12e6a26e82f59b01634e39b8cd668c553c44"
+    },
+    {
+      "exact_match": false,
+      "scene": "scene-6",
+      "serialized_seconds": 14.445988893508911,
+      "batch_seconds": 14.411292791366577,
+      "pixel_sha256": "42ca9c187102a95192bb13eb2bc35f2f680b53ea44ebbce51e21697b9bb5dc52",
+      "geometry_sha256": "23fe41659f295824c1ad71b02c453364d509c94722d8fde88906c879b68b60d4"
+    },
+    {
+      "exact_match": true,
+      "scene": "scene-7",
+      "serialized_seconds": 3.7906579971313477,
+      "batch_seconds": 4.1137230396270752,
+      "pixel_sha256": "f4c2d923660fb754d42a303bb5157c56bdf36d4065e81c73d1ce055245a5313c",
+      "geometry_sha256": "74119566bd3aaca1a01638c73d1e08b172ade64396d973037fd55f05575f979c"
+    }
+  ],
+  "passed": false
+}

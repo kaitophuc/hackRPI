@@ -1,0 +1,22 @@
+[
+    {
+        "source":  "D:\\hardwareaccel\\quartus\\DE10_Standard_AI\\DE10_Standard_GHRD.v",
+        "sha256":  "DFAB0CD754C2F74B8017BE5FF6B2FEBC6825754B5AEB1C4A225B468B973265FF"
+    },
+    {
+        "source":  "D:\\hardwareaccel\\quartus\\DE10_Standard_AI\\DE10_Standard_GHRD.qsf",
+        "sha256":  "01C89C0A935F8715C37EED0C773969345A0A4847D0B2D9012B6F429A6CEDF2BC"
+    },
+    {
+        "source":  "D:\\hardwareaccel\\quartus\\DE10_Standard_AI\\DE10_Standard_GHRD.qpf",
+        "sha256":  "B19E1E0A649A2927D28E56B753CDE15EBE407A005B819524884BF421405D5204"
+    },
+    {
+        "source":  "D:\\hardwareaccel\\quartus\\DE10_Standard_AI\\DE10_Standard_GHRD.sdc",
+        "sha256":  "8FD8752304D0F6739E407505E8FDACA39E704E7E15764CAF763E28629DA9F293"
+    },
+    {
+        "source":  "D:\\hardwareaccel\\quartus\\DE10_Standard_AI\\soc_system.qsys",
+        "sha256":  "1287F67DEAAFE73EF76F60798096EBA18A8829FDB2928CB7EACD8C2FB431C36F"
+    }
+]

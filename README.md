@@ -1,5 +1,20 @@
 # AERO — Escape Run
 
+## DE10-Standard FPGA version
+
+The 3D combat game now runs on the board's ARM HPS with actual SpinalVoodoo
+FPGA rendering and Arduino MMA7660 tilt input. Open **http://169.254.170.29:8081/**
+on the directly connected computer/iPad. Hold the sensor steady and use
+**CALIBRATE & PLAY**, or leave tilt disabled and press **Play / Resume** for
+keyboard/touch controls. The latest 30-second active browser test measured
+16.27 displayed FPS with the Arduino streaming. Performance varies with the
+scene; the 27 FPS minimum and 30 FPS target have not been achieved.
+
+GPU/platform sources are copied into `fpga/`; the game bridge and service
+scripts are in `combat/board/` and `combat/native/`. See
+[the board guide](combat/docs/DE10_GAME.md) for deployment, tests and limits.
+
+
 ## Plane combat with the Arduino accelerometer (Windows)
 
 The desktop plane-combat game now lives in `combat/` inside this repository. The original Temp folder is not used at runtime. To play with the MMA7660:

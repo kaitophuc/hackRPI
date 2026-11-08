@@ -1,0 +1,351 @@
+{
+  "static_scenes": [
+    {
+      "scene": "tick-1200.rpl",
+      "command_ms": [
+        32.869,
+        27.31,
+        32.865
+      ],
+      "gpu_busy_ms": [
+        31.2793,
+        25.58378,
+        31.2698
+      ],
+      "pixels_identical": true
+    },
+    {
+      "scene": "tick-180.rpl",
+      "command_ms": [
+        50.635,
+        45.556,
+        50.633
+      ],
+      "gpu_busy_ms": [
+        44.96732,
+        39.31586,
+        44.96818
+      ],
+      "pixels_identical": true
+    },
+    {
+      "scene": "tick-2.rpl",
+      "command_ms": [
+        50.398,
+        45.337,
+        50.378
+      ],
+      "gpu_busy_ms": [
+        44.50388,
+        38.84106,
+        44.49722
+      ],
+      "pixels_identical": true
+    },
+    {
+      "scene": "tick-360.rpl",
+      "command_ms": [
+        48.272,
+        43.128,
+        48.277
+      ],
+      "gpu_busy_ms": [
+        43.16176,
+        37.49734,
+        43.1748
+      ],
+      "pixels_identical": true
+    },
+    {
+      "scene": "tick-600.rpl",
+      "command_ms": [
+        45.021,
+        39.847,
+        45.003
+      ],
+      "gpu_busy_ms": [
+        40.61108,
+        34.95194,
+        40.61846
+      ],
+      "pixels_identical": true
+    },
+    {
+      "scene": "tick-90.rpl",
+      "command_ms": [
+        50.405,
+        45.389,
+        50.374
+      ],
+      "gpu_busy_ms": [
+        44.19726,
+        38.52984,
+        44.18668
+      ],
+      "pixels_identical": true
+    },
+    {
+      "scene": "tick-900.rpl",
+      "command_ms": [
+        39.806,
+        34.374,
+        39.806
+      ],
+      "gpu_busy_ms": [
+        37.6781,
+        31.99972,
+        37.6767
+      ],
+      "pixels_identical": true
+    }
+  ],
+  "depth-before": {
+    "ready_wait_ms": {
+      "median": 0.003,
+      "maximum": 18.84,
+      "p95": 8.398
+    },
+    "first_tick": 61,
+    "drain_ms": {
+      "median": 0.053,
+      "maximum": 0.087,
+      "p95": 0.07
+    },
+    "geometry_ms": {
+      "median": 21.358,
+      "maximum": 36.74,
+      "p95": 32.296
+    },
+    "previous_submit_ms": {
+      "median": 49.22,
+      "maximum": 65.67,
+      "p95": 60.431
+    },
+    "previous_publish_ms": {
+      "median": 1.339,
+      "maximum": 22.459,
+      "p95": 2.018
+    },
+    "affinity_applied": false,
+    "prepare_cpu_ms": {
+      "median": 20.984,
+      "maximum": 32.617,
+      "p95": 26.031
+    },
+    "frames": 344,
+    "command_submit_ms": {
+      "median": 48.959,
+      "maximum": 65.495,
+      "p95": 60.263
+    },
+    "name": "depth-before",
+    "owner_cpu_ms": {
+      "median": 43.905,
+      "maximum": 51.432,
+      "p95": 48.818
+    },
+    "completed_fps": 19.118739915424957,
+    "slot_wait_ms": {
+      "median": 0.008,
+      "maximum": 0.502,
+      "p95": 0.018
+    },
+    "copy_seconds": {
+      "median": 6.122240000000001,
+      "maximum": 32.03551,
+      "p95": 12.201740000000001
+    },
+    "scene_wait_ms": {
+      "median": 0.002,
+      "maximum": 7.036,
+      "p95": 0.003
+    },
+    "seconds": 17.940512895584106,
+    "prepare_ms": {
+      "median": 24.617,
+      "maximum": 46.404,
+      "p95": 33.855
+    },
+    "geometry_cpu_ms": {
+      "median": 18.45,
+      "maximum": 33.728,
+      "p95": 27.942
+    },
+    "host_submit_ms": {
+      "median": 49.011,
+      "maximum": 65.546,
+      "p95": 60.314
+    },
+    "last_tick": 1139,
+    "capture_ms": {
+      "median": 58.662279999999996,
+      "p95": 71.37955
+    }
+  },
+  "depth-bypass": {
+    "ready_wait_ms": {
+      "median": 6.986,
+      "maximum": 17.767,
+      "p95": 9.834
+    },
+    "first_tick": 62,
+    "drain_ms": {
+      "median": 0.037,
+      "maximum": 0.167,
+      "p95": 0.053
+    },
+    "geometry_ms": {
+      "median": 26.831,
+      "maximum": 39.885,
+      "p95": 34.399
+    },
+    "previous_submit_ms": {
+      "median": 41.016,
+      "maximum": 53.366,
+      "p95": 50.26
+    },
+    "previous_publish_ms": {
+      "median": 1.324,
+      "maximum": 11.529,
+      "p95": 1.683
+    },
+    "affinity_applied": false,
+    "prepare_cpu_ms": {
+      "median": 16.791,
+      "maximum": 27.559,
+      "p95": 20.338
+    },
+    "frames": 390,
+    "command_submit_ms": {
+      "median": 40.706,
+      "maximum": 53.166,
+      "p95": 50.085
+    },
+    "name": "depth-bypass",
+    "owner_cpu_ms": {
+      "median": 39.02,
+      "maximum": 47.763,
+      "p95": 45.277
+    },
+    "completed_fps": 21.698309622067015,
+    "slot_wait_ms": {
+      "median": 0.01,
+      "maximum": 7.351,
+      "p95": 0.109
+    },
+    "copy_seconds": {
+      "median": 6.1376800000000005,
+      "maximum": 35.49609,
+      "p95": 7.42264
+    },
+    "scene_wait_ms": {
+      "median": 0.002,
+      "maximum": 0.005,
+      "p95": 0.002
+    },
+    "seconds": 17.927663803100586,
+    "prepare_ms": {
+      "median": 19.588,
+      "maximum": 33.786,
+      "p95": 28.395
+    },
+    "geometry_cpu_ms": {
+      "median": 19.577,
+      "maximum": 31.738,
+      "p95": 25.603
+    },
+    "host_submit_ms": {
+      "median": 40.767,
+      "maximum": 53.201,
+      "p95": 50.113
+    },
+    "last_tick": 1140,
+    "capture_ms": {
+      "median": 49.422534999999996,
+      "p95": 62.862539999999996
+    }
+  },
+  "depth-after": {
+    "ready_wait_ms": {
+      "median": 0.003,
+      "maximum": 13.855,
+      "p95": 8.942
+    },
+    "first_tick": 63,
+    "drain_ms": {
+      "median": 0.052,
+      "maximum": 0.206,
+      "p95": 0.072
+    },
+    "geometry_ms": {
+      "median": 22.253,
+      "maximum": 38.973,
+      "p95": 33.894
+    },
+    "previous_submit_ms": {
+      "median": 49.118,
+      "maximum": 65.443,
+      "p95": 59.463
+    },
+    "previous_publish_ms": {
+      "median": 1.32,
+      "maximum": 17.099,
+      "p95": 2.435
+    },
+    "affinity_applied": false,
+    "prepare_cpu_ms": {
+      "median": 21.125,
+      "maximum": 31.17,
+      "p95": 27.649
+    },
+    "frames": 338,
+    "command_submit_ms": {
+      "median": 48.835,
+      "maximum": 65.275,
+      "p95": 59.297
+    },
+    "name": "depth-after",
+    "owner_cpu_ms": {
+      "median": 44.61,
+      "maximum": 53.657,
+      "p95": 51.153
+    },
+    "completed_fps": 18.805156986850392,
+    "slot_wait_ms": {
+      "median": 0.008,
+      "maximum": 1.444,
+      "p95": 0.023
+    },
+    "copy_seconds": {
+      "median": 6.44623,
+      "maximum": 32.70469,
+      "p95": 15.41101
+    },
+    "scene_wait_ms": {
+      "median": 0.002,
+      "maximum": 6.909,
+      "p95": 0.003
+    },
+    "seconds": 17.920616149902344,
+    "prepare_ms": {
+      "median": 24.592,
+      "maximum": 41.25,
+      "p95": 30.683
+    },
+    "geometry_cpu_ms": {
+      "median": 18.311,
+      "maximum": 31.855,
+      "p95": 26.776
+    },
+    "host_submit_ms": {
+      "median": 48.885,
+      "maximum": 65.326,
+      "p95": 59.348
+    },
+    "last_tick": 1140,
+    "capture_ms": {
+      "median": 58.30963,
+      "p95": 71.61815
+    }
+  }
+}

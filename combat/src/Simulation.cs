@@ -30,6 +30,7 @@ public sealed class InputState {
     [DataMember(EmitDefaultValue=false)] public double vertical;
     [DataMember(IsRequired=true)] public bool focused=true,connected=true;
     [DataMember(IsRequired=true)] public uint buttons;
+    [DataMember(EmitDefaultValue=false)] public bool tilt_enabled,calibrate,invert_horizontal,invert_vertical;
     public InputState Copy() { return (InputState)MemberwiseClone(); }
     public static InputState Neutral() { return new InputState {focused=false,connected=false}; }
     public bool Valid() {
@@ -55,13 +56,26 @@ public sealed class InputGate {
 }
 public sealed class UdpInput : IDisposable {
     readonly UdpClient socket; readonly InputGate gate=new InputGate();
+    readonly DataContractJsonSerializer serializer=new DataContractJsonSerializer(typeof(InputState));
     public UdpInput(int port) { socket=new UdpClient(new IPEndPoint(IPAddress.Loopback,port));socket.Client.Blocking=false; }
+    public static InputState ReadBoardPacket(byte[] data) {
+        if(data.Length!=102||data[0]!='S'||data[1]!='F'||data[2]!='I'||data[3]!='1')throw new InvalidDataException("Invalid board input packet");
+        using(var stream=new MemoryStream(data))using(var reader=new BinaryReader(stream)) {
+            reader.ReadBytes(4);var state=new InputState();state.session=Encoding.ASCII.GetString(reader.ReadBytes(32));
+            state.sequence=reader.ReadInt64();state.sender_ms=reader.ReadInt64();state.pitch=reader.ReadDouble();state.roll=reader.ReadDouble();state.yaw=reader.ReadDouble();state.vertical=reader.ReadDouble();state.throttle=reader.ReadDouble();state.buttons=reader.ReadUInt32();
+            bool[] flags=new bool[6];for(int i=0;i<6;i++){byte flag=reader.ReadByte();if(flag>1)throw new InvalidDataException("Invalid board input flag");flags[i]=flag!=0;}
+            state.focused=flags[0];state.connected=flags[1];state.tilt_enabled=flags[2];state.calibrate=flags[3];state.invert_horizontal=flags[4];state.invert_vertical=flags[5];return state;
+        }
+    }
     public InputState Read(long now) {
         int count=0;
         while(socket.Available>0 && count++<64) {
             IPEndPoint endpoint=new IPEndPoint(IPAddress.Any,0);byte[] data=socket.Receive(ref endpoint);
             if(data.Length>2048) { Log.Write("INPUT rejected oversized packet");continue; }
-            try { using(var stream=new MemoryStream(data)) gate.Accept((InputState)new DataContractJsonSerializer(typeof(InputState)).ReadObject(stream),now); }
+            try {
+                if(data.Length>=4&&data[0]=='S'&&data[1]=='F'&&data[2]=='I'&&data[3]=='1')gate.Accept(ReadBoardPacket(data),now);
+                else using(var stream=new MemoryStream(data))gate.Accept((InputState)serializer.ReadObject(stream),now);
+            }
             catch(Exception e) { Log.Write("INPUT rejected packet: "+e.Message); }
         }
         return gate.Read(now);

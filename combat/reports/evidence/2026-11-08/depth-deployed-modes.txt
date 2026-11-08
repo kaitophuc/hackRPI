@@ -1,0 +1,7 @@
+CHECKED depth-mode variant 0
+CHECKED depth-mode variant 1
+CHECKED depth-mode variant 2
+CHECKED depth-mode variant 3
+CHECKED depth-mode variant 4
+CHECKED depth-mode variant 5
+RESULT queued_frames=72 reference_scenes=6 different_pixels=0

@@ -1,0 +1,32 @@
+{
+  "bundle_sha256": "c87b88edf247491677f28b8d97a2ebab1414654e0708e41be34139214a3401f1",
+  "files": {
+    "combat/dist/Flighting.Headless.exe": "c42205b3a28856372f6bc0f3540fbdc4862421353b24075a5808fc38b0b9a502",
+    "combat/src/Math3D.cs": "7ea24678e9a1387a7a3c0c04e022221a4ca9092abcdb6dc682d953001f11d010",
+    "combat/src/HanoiCity.cs": "30afc7b7473de45ac5d4a191633b7513334b4ba8457d3339d433d87692bbd3f7",
+    "combat/src/OptimizationTests.cs": "975f8cc508a757762f33b81785042152f7b1b51f9b6a03f08f95e29d6fdb7fb2",
+    "combat/native/spinal_pipeline.c": "d137871ffc4e598d6a947fdadf814b754a99c57e98cf9bf420f9384d2223dc14",
+    "combat/native/spinal_color_cache.c": "f7be000e91017b4d38f2417fa12e66f538607607733db4b970b8b9bee4024819",
+    "combat/board/arduino_usb.py": "a87965daf335380d9799c0b40dbb5cd80b87a95b180b54ef3722763f1e89a636",
+    "combat/board/start_service.sh": "8379f7bed123018a01b45f7f17ea5fb6b189b5cb15f887828f9e7cb1f0aa9160",
+    "fpga/images/Spinal_Standard_GPU.sof": "e1366086d8d6badb5bd9c82f97d40293dcb44dee278c1f940cc8be8baf7c69b2",
+    "combat/dist/libflighting_spinal_bridge.so": "515618d24ac54cc0ca10aca2df7a1d75574b7f7c2653a740764d1360e1b75dbd",
+    "fpga/software/server.py": "6953bc6eecc80ce5123ec7515edd41e432e178401fb8c486e4b91c3dd9c87906",
+    "combat/board/build_native.sh": "b7cb3238cf2f592f97c0b25bc9feaad3dc1b1d8d51145502787169f40e536e6d"
+  },
+  "gates": [
+    "depth-deployed-validation.json",
+    "depth-game-smoke.json"
+  ],
+  "latest_complete_browser_evidence": "build/full-pipeline/live-fps-active-20261108-041741.json",
+  "selected_build_visible_browser_measurement_pending": false,
+  "minimum_fps_passed": false,
+  "readback_policy": 3,
+  "readback_policy_error": 0,
+  "controlled_completed_fps": 21.698309622067015,
+  "latest_browser_attempt": "build/full-pipeline/live-fps-active-20261108-041741.json",
+  "latest_browser_attempt_complete": true,
+  "displayed_fps": 16.266460108475336,
+  "active_seconds": 30.983999999938533,
+  "depth_bypass_enabled": true
+}

@@ -1,0 +1,12 @@
+{
+  "headless_checks_passed": 428,
+  "desktop_checks_passed": 429,
+  "sensor_tests_passed": 12,
+  "frame_notification_tests_run": 4,
+  "frame_notification_tests_passed": 2,
+  "frame_notification_tests_skipped": 2,
+  "frame_notification_skip_reason": "Linux inotify unavailable on Windows",
+  "compiled_from_current_sources": true,
+  "city_projection_cache_enabled": true,
+  "live_fpga_not_modified": true
+}

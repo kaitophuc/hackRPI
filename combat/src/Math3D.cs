@@ -47,7 +47,29 @@ public struct CameraProjection {
         near=camera.Near;far=camera.Far;sideMargin=Math.Sqrt(1+q*q/(aspect*aspect));topMargin=Math.Sqrt(1+q*q);
         a=(camera.Far+camera.Near)/(camera.Near-camera.Far);b=2*camera.Far*camera.Near/(camera.Near-camera.Far);
     }
-    public V4 Project(V3 p) {V3 d=p-eye;double x=V3.Dot(d,right),y=V3.Dot(d,up),z=-V3.Dot(d,forward);return new V4(x*q/aspect,y*q,a*z+b,-z);}
+    public V4 Project(V3 p) {return Project(p.X,p.Y,p.Z);}
+    public V4 Project(double px,double py,double pz) {
+        double dx=px-eye.X,dy=py-eye.Y,dz=pz-eye.Z;
+        double x=dx*right.X+dy*right.Y+dz*right.Z,y=dx*up.X+dy*up.Y+dz*up.Z,z=-(dx*forward.X+dy*forward.Y+dz*forward.Z);
+        return new V4(x*q/aspect,y*q,a*z+b,-z);
+    }
+    // Cache the exact first two terms of each dot product. Scene translation
+    // changes Z only in endless mode; no reassociation or precision change.
+    public V3 PrepareXY(double px,double py) {
+        double dx=px-eye.X,dy=py-eye.Y;
+        return new V3(dx*right.X+dy*right.Y,dx*up.X+dy*up.Y,dx*forward.X+dy*forward.Y);
+    }
+    public V4 ProjectFromXY(V3 xy,double pz) {
+        double dz=pz-eye.Z,x=xy.X+dz*right.Z,y=xy.Y+dz*up.Z,z=-(xy.Z+dz*forward.Z);
+        return new V4(x*q/aspect,y*q,a*z+b,-z);
+    }
+    static bool SameBits(double x,double y) {return BitConverter.DoubleToInt64Bits(x)==BitConverter.DoubleToInt64Bits(y);}
+    public bool SharesXY(CameraProjection other) {
+        return SameBits(eye.X,other.eye.X)&&SameBits(eye.Y,other.eye.Y)&&
+            SameBits(right.X,other.right.X)&&SameBits(right.Y,other.right.Y)&&
+            SameBits(up.X,other.up.X)&&SameBits(up.Y,other.up.Y)&&
+            SameBits(forward.X,other.forward.X)&&SameBits(forward.Y,other.forward.Y);
+    }
     public bool VisibleSphere(V3 center,double radius) {
         V3 d=center-eye;double z=V3.Dot(d,forward);
         return z+radius>=near&&z-radius<=far&&Math.Abs(V3.Dot(d,right))*q/aspect<=z+radius*sideMargin&&Math.Abs(V3.Dot(d,up))*q<=z+radius*topMargin;
@@ -73,7 +95,7 @@ public sealed class Draw {
 }
 public sealed class Frame {
     public int Width,Height,Scene; public long Tick; public int Clear=unchecked((int)0xff101d30);
-    public bool Wireframe; public Camera Camera;
+    public bool Wireframe,TextureHud; public Camera Camera;
     public List<Draw> Draws=new List<Draw>();
     public Dictionary<string,Texture> Textures=new Dictionary<string,Texture>();
     readonly List<Draw> pool=new List<Draw>();
