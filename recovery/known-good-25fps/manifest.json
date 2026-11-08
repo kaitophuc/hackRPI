@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "baseline_source_commit": "a0d3a3d834dbc5be2c7387b8332ee4caf03b39eb",
+  "upstream_spinalvoodoo_commit": "92c56afa0e98763ccd794cd39512cad2822bd86e",
+  "displayed_fps_observation": {
+    "fps": 25.21988272915944,
+    "seconds": 30.016000000061467,
+    "canvas_acknowledgements": 757,
+    "resolution": [
+      320,
+      240
+    ],
+    "simulation_hz": 60.00133262247841,
+    "note": "Accepted by the user at 25 FPS; scene-dependent observation, not a guaranteed frame rate."
+  },
+  "game_bundle_sha256": "c87b88edf247491677f28b8d97a2ebab1414654e0708e41be34139214a3401f1",
+  "headless_exe_sha256": "c42205b3a28856372f6bc0f3540fbdc4862421353b24075a5808fc38b0b9a502",
+  "native_library_sha256": "515618d24ac54cc0ca10aca2df7a1d75574b7f7c2653a740764d1360e1b75dbd",
+  "accepted_hardware_sources": {
+    "fpga/hardware/spinal_standard/avalon_frame_fence.v": "ec96798c63aa6cd430cf1be3b9e612af74e9c52bd14b46186ea71ebef9f9c700",
+    "fpga/hardware/spinal_standard/DE10_Standard_GHRD.sdc": "7565ce99923e479d12aaa905d4dcb7bc112882b4dd9955e10c2aabed20e8ff8d",
+    "fpga/hardware/spinal_standard/gpu2_sidecar.v": "cf3ef96127a9b937fb491fe82e9be3396734912c42aed3c5c380259a27197d99",
+    "fpga/hardware/spinal_standard/gpu_spinal_standard.v": "63e4428143f9012991376b40e4aeaa1f3b0bb5b236c448c6e6aefbd0d378ee11",
+    "fpga/patches/spinal/hardware-headless-fence.patch": "abcf55bf756e577e847997116fc1aea8f2dfbef3d65aa702d351942a5b7bc6b0",
+    "fpga/hardware/spinal_standard/SpinalStandardGen.scala": "b82afee5ff9f759058df4a6f63258da3a53bf9eccf19b36a04673b6a9bb220f3",
+    "fpga/hardware/spinal_standard/Spinal_Standard_GPU.qsf": "b53c145a622db8a17945022d0b8013d570da697b0b9768e15057c9c4a88778a3",
+    "fpga/hardware/spinal_standard/rtl/SpinalStandardCore.v": "2f3d411cf012c127a523243746bd1b4591d67bf81ab0c584282261d335002a94"
+  },
+  "artifacts": {
+    "mmio-support-armhf.tar.gz": {
+      "bytes": 6595,
+      "sha256": "7f802394e8544022d6d69a8859a1f48e04168d8563f02395b1cc34a1be39b345"
+    },
+    "mono-armhf.tar.gz": {
+      "bytes": 7680215,
+      "sha256": "454c6e0f605d0e470c34a58e2711846774787af4c554c73dfd3862fd5a16709f"
+    },
+    "mono-packages.lock.json": {
+      "bytes": 5033,
+      "sha256": "1e87dcec5a9d47fbaa0308280d795d42c5542f44b2fbccec00eb1d22ff58adc6"
+    },
+    "selected-runtime.tar.gz": {
+      "bytes": 366311,
+      "sha256": "0ca88afa63fbb2935b93dad10ff9699e2faef653be54bb2a49feedf1ca0ee5f0"
+    },
+    "Spinal_Standard_GPU.sof": {
+      "bytes": 7441702,
+      "sha256": "1af55209f870b807422caf18b2966a65745adcf6e22eef640f6de7b3260ab767"
+    },
+    "spinalvoodoo-source.tar.gz": {
+      "bytes": 7771637,
+      "sha256": "648a3b242e9157d54ee799b4184c780004778c4be42b5b8cd60a350dc50603ba"
+    }
+  },
+  "hardware_validation_checkpoint": "2b02821",
+  "rollback_tag": "de10-known-good-16fps"
+}

@@ -1,8 +1,10 @@
 # Depth-read RTL profile and isolated candidate
 
-The accepted design is checkpoint `a0d3a3d` with generated-core SHA256
+The original 16 FPS baseline is checkpoint `a0d3a3d` with generated-core SHA256
 `bb2d5d4e5aa997f451bdb373093f55594cc6f2344f71ba9cc90dd12f5f32954c`.
-The complete runnable rollback is tag `de10-known-good-16fps`.
+The complete runnable rollback is tag `de10-known-good-16fps`. The accepted
+25.22 FPS checkpoint now uses core `2f3d411c` and SOF `1af55209`, with complete
+recovery at `de10-known-good-25fps`.
 This experiment preserves 320x240, game code, animation, geometry, textures,
 the 50 MHz clock, memory ownership, board pins and completion fences.
 
@@ -84,7 +86,7 @@ scala-cli test project.scala src <repo>/fpga/verification/spinal --server=false 
 From the repository root, run the full-core comparison:
 
 ```powershell
-python fpga/experiments/rtl_profile/run_matrix.py --candidate-rtl build/rtl-profile/candidate-rtl/SpinalStandardCore.v --output build/rtl-profile/matrix
+python fpga/experiments/rtl_profile/run_matrix.py --baseline-rtl build/rtl-profile/recovery/fpga/hardware/spinal_standard/rtl/SpinalStandardCore.v --candidate-rtl build/rtl-profile/candidate-rtl/SpinalStandardCore.v --output build/rtl-profile/matrix
 ```
 
 The matrix stops at the first changed framebuffer byte. Its raw images and
@@ -130,15 +132,15 @@ window had a median 3,279 triangles compared with 1,371 here. Their ratio is
 not a controlled speedup. The same-scene native comparison above establishes
 the RTL improvement independently.
 
-**The 27 displayed-FPS minimum is still unmet.** CPU preparation and frame
-delivery require further measured work. Resolution, scenery, animation, game
+The user accepted **25 FPS as sufficient** and requested completion at this
+checkpoint. Resolution, scenery, animation, game
 executable and native library are unchanged. The original CPU/FPGA image
 mismatch remains a separate unresolved issue.
 
 `images/Spinal_Standard_GPU.sof` preserves this tested candidate. The fixed
 `de10-known-good-16fps` tag retains the complete accepted recovery bundle and
 its previous FPGA image. The candidate uses that same game/runtime software;
-it is an experimental image rather than a replacement for that recovery tag.
+the complete accepted backup is now also saved under `recovery/known-good-25fps`.
 `candidate-manifest.json` records the image, generated RTL and runtime hashes.
 `evidence/visible-fps.json` contains the complete browser capture, including
 the selected active samples and excluded paused intervals.
@@ -182,7 +184,7 @@ restores services; the optional `FLIGHTING_PROFILE_DIR` keeps its results in
 RAM. See `evidence/setup-cache-on-pipelined-rtl.json` and
 `evidence/selected-cpu-on-pipelined-rtl.json`.
 
-## Follow-up depth-pair sample: synthesis in progress
+## Follow-up depth-pair sample: stopped, not selected
 
 `FramebufferPlanePairReader.scala` combines consecutive opposite halfwords of
 the same word only while the first word command is still unaccepted. It never
@@ -213,7 +215,9 @@ eleven byte-identical ROMs; only the generator's Git-hash comment differs.
 
 `pair_hardware_gate.py prepare` preserves the tested image/reports, checks
 ports and ROMs, and prepares only the two generated core copies for compilation.
-After the Quartus build, `pair_hardware_gate.py verify` checks timing, all 342
+For a future Quartus build, `pair_hardware_gate.py verify` checks timing, all 342
 compiled signal pins, DDR pins, inherited unconstrained counts, and unchanged
-board/constraint/memory inputs. The pair candidate is not programmed yet.
-The tested 25.22 FPS image remains the current board configuration.
+board/constraint/memory inputs. The synthesis experiment was stopped at the
+user's request after accepting the tested 25.22 FPS image. The pair candidate
+was never programmed. Its tests are isolated under `pair-verification`; include
+that directory alongside `fpga/verification/spinal` to run its 15-test suite.

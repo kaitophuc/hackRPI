@@ -3,9 +3,11 @@
 This directory contains the actual accepted FPGA image and matching game runtime,
 stored directly in Git. A normal clone downloads the binaries; Git LFS and the
 old `D:/GPU_proj` directory are not needed. The release tag is
-**`de10-known-good-16fps`**. It preserves the source checkpoint `a0d3a3d`,
+**`de10-known-good-25fps`**. It preserves the game from checkpoint `a0d3a3d`,
 320x240 rendering, the original scenery/gameplay/animation, and the configuration
-measured at 16.27 displayed FPS over 30.98 seconds. Frame rate depends on the scene.
+measured at 25.22 displayed FPS over 30.016 seconds with the validated depth-read
+pipeline. The user accepted this 25 FPS checkpoint. Frame rate depends on the scene.
+The earlier complete rollback remains at tag `de10-known-good-16fps`.
 
 ## Requirements
 
@@ -28,7 +30,7 @@ The Arduino's current firmware is retained; recovery does not flash it.
 Keep the old directory until this verification succeeds. From a new directory:
 
 ```powershell
-git clone --branch de10-known-good-16fps https://github.com/kaitophuc/hackRPI.git hackRPI-restored
+git clone --branch de10-known-good-25fps https://github.com/kaitophuc/hackRPI.git hackRPI-restored
 cd hackRPI-restored
 python recovery/recover.py verify
 python recovery/recover.py build-game
@@ -54,11 +56,15 @@ takes several minutes on the board; it is optional during a quick recovery.
 
 Open **http://169.254.170.29:8081/** and press Play / Resume. For Arduino controls,
 hold the normal grip and use Calibrate & Play. All saved assets are checked
-against `known-good-16fps/manifest.json` before installation.
+against `known-good-25fps/manifest.json` before installation.
 
 The board must already be running the accepted FPGA image. If FPGA configuration
 was changed, restore it first using the sequence below. A Git checkout cannot
-change an already programmed FPGA.
+change an already programmed FPGA. Power loss clears the FPGA configuration.
+Reload the saved SOF and restart Linux/network/game services; resynthesis is
+unnecessary. Normal restoration takes a few minutes. A new RTL synthesis takes
+about 32 minutes on the development computer. Automatic startup after power loss
+is not configured.
 
 ## Restore FPGA configuration
 
@@ -134,7 +140,7 @@ recovery using the exact tested SOF from a new synthesis result.
 
 | Artifact | Purpose |
 | --- | --- |
-| `Spinal_Standard_GPU.sof` | Exact accepted FPGA bitstream, SHA starts `e1366086` |
+| `Spinal_Standard_GPU.sof` | Exact accepted FPGA bitstream, SHA starts `1af55209` |
 | `selected-runtime.tar.gz` | Exact selected game payload, executable and native renderer |
 | `mono-armhf.tar.gz` | Private Mono 5.18.1 ARMhf runtime, including package licenses |
 | `mono-packages.lock.json` | Original package URLs and SHA256 values |
@@ -144,18 +150,22 @@ recovery using the exact tested SOF from a new synthesis result.
 
 No SSH credentials, host trust file, browser sessions, sensor recordings or
 machine-specific runtime logs are included. The existing CPU/FPGA image mismatch
-and the unmet 27 FPS target are preserved limitations of this baseline.
+remains documented; optimization introduced zero additional differences in the
+360-frame board gate. The accepted performance requirement is now 25 FPS.
 
 ## Recovery validation
 
-The [verification summary](verification/summary.json) records a clean GitHub
+The [earlier software verification](verification/summary.json) records a clean GitHub
 clone, 428 C# checks on Windows and ARM, a successful native source build,
-and byte-identical regeneration of all 12 accepted Verilog/ROM files.
+and regeneration of the earlier accepted Verilog/ROM files.
 The [13 source-build image comparisons](verification/source-pixels.json)
 have zero differing bytes. Both the saved runtime and the source-built queued
 game passed live Arduino/calibration/rendering/pause checks. The exact accepted
 executable and native library were restored after testing.
 
-Packaging reused the previously accepted SOF; it did not rerun Quartus synthesis
-or reprogram the FPGA. The recovery guide documents the reviewed programming
-and warm-reset sequence.
+The current [25 FPS validation](verification/25fps-summary.json) records the new
+accepted image, timing/pin checks, 360 board comparisons and real browser capture.
+Its game/native/Mono payloads are identical to the earlier verified software.
+The new core is reproduced from the bundled source and complete patch; the
+generator's Git-hash comment may differ, while the logic and all eleven ROMs match.
+The later depth-pairing experiment was stopped and was never programmed.

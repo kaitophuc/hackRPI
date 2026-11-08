@@ -19,6 +19,6 @@
   "baseline_core_sha256": "2f3d411cf012c127a523243746bd1b4591d67bf81ab0c584282261d335002a94",
   "baseline_sof_sha256": "1af55209f870b807422caf18b2966a65745adcf6e22eef640f6de7b3260ab767",
   "candidate_core_sha256": "ad6c1e56cfce54eaecc1640af998be6315689a0db272447da900982440b4e331",
-  "status": "Simulation validated; synthesis in progress; not programmed",
+  "status": "Simulation validated; synthesis stopped at user request; not programmed; not selected",
   "displayed_fps": null
 }

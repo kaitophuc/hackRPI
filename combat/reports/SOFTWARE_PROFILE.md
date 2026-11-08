@@ -2,6 +2,11 @@
 
 Reference commit: `6b55fee2fd837894c211b46652201583ec096488`.
 
+Current checkpoint: the later depth-read RTL measured **25.22 displayed FPS**
+with this same selected software and was accepted at 25 FPS. The software-only
+measurements below are historical. See the [recovery guide](../../recovery/README.md)
+and [RTL evidence](../../fpga/experiments/rtl_profile/README.md).
+
 This pass keeps 320×240 RGB565 and the accepted 50 MHz FPGA image. It restores
 the commit's scenery profile: scene 6, complexity 18, quality `low` (the commit's
 default), seed 1337, neighbourhood range 1. The earlier board profile and isolated

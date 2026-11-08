@@ -92,12 +92,12 @@ and verifies focus loss pauses simulation. Run it with the game paused; it
 does not take an active browser controller's lease. Keep the sensor steady
 for this test. It leaves the game paused.
 
-The latest selected software measured **16.27 displayed FPS over 30.98 seconds
-of uninterrupted active play**, with 504 acknowledged canvas updates, one
-visible browser, fresh Arduino data throughout and 59.87 Hz simulation. The
-GPU completion counter averaged 17.72 FPS and server collection 17.49 FPS.
-The **27 FPS minimum and 30 FPS target remain unmet**. The controlled sample
-without web/sensor load reached 21.70 completed FPS; it is not displayed FPS.
+The accepted depth-read RTL measured **25.22 displayed FPS over 30.016 seconds
+of uninterrupted active play**, with 757 acknowledged canvas updates, one
+visible browser, fresh Arduino data throughout and 60.001 Hz simulation. The
+GPU completion counter averaged 27.22 FPS and server collection 26.82 FPS.
+The user accepted 25 FPS as sufficient. These are scene-dependent observations.
+The game executable, native library, resolution and original visuals are unchanged.
 
 The selected software includes unchanged-scenery projection caching, the
 validated native compiler settings, and actual depth disabling for HUD draws
@@ -148,7 +148,11 @@ quantization. Zero additional FPGA differences does not satisfy the user's
 strict zero-error original-reference gate. Thin road/water layers retain
 precision differences; the general graphics contract is not declared passed.
 
-`fpga/images/Spinal_Standard_GPU.sof` is the existing accepted GPU2 image:
-SHA256 `e1366086d8d6badb5bd9c82f97d40293dcb44dee278c1f940cc8be8baf7c69b2`.
-No new FPGA build was needed for the game or USB integration. The old project
-remains available for diagnostic rollback.
+The accepted GPU2 image is `recovery/known-good-25fps/Spinal_Standard_GPU.sof`:
+SHA256 `1af55209f870b807422caf18b2966a65745adcf6e22eef640f6de7b3260ab767`.
+It pipelines eight ordered, uncached depth reads. Timing and all 342 compiled
+signal-pin assignments passed the board gates. The complete restore point is
+tag `de10-known-good-25fps`; the earlier image remains at `de10-known-good-16fps`.
+See the [recovery guide](../../recovery/README.md). Reloading the saved image
+after power loss does not require synthesis. Automatic power-on startup is
+not configured; Linux/network/game startup is still required.

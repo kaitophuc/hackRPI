@@ -1,0 +1,180 @@
+{
+  "schema": 1,
+  "accepted_minimum_displayed_fps": 25,
+  "user_accepted_25_fps": true,
+  "displayed_fps": {
+    "complete": true,
+    "requested_active_seconds": 30.0,
+    "observed_seconds": 91.04700000002049,
+    "longest_active_seconds": 30.016000000061467,
+    "samples": 92,
+    "errors": [],
+    "interruptions": [
+      {
+        "seconds": 9.077999999979511,
+        "reason": "Simulation paused"
+      },
+      {
+        "seconds": 29.030999999959022,
+        "reason": "Simulation paused"
+      },
+      {
+        "seconds": 59.03099999995902,
+        "reason": "Simulation paused"
+      }
+    ],
+    "active_seconds": 30.016000000061467,
+    "displayed_frames": 757,
+    "displayed_fps": 25.21988272915944,
+    "completed_counter_fps": 27.218816631074326,
+    "collected_fps": 26.819029850691347,
+    "tick_advance": 1801,
+    "simulation_hz": 60.00133262247841,
+    "all_sensor_fresh": true,
+    "timings_ms": {
+      "geometry_ms": {
+        "median": 9.336,
+        "p95": 29.471
+      },
+      "prepare_ms": {
+        "median": 8.807,
+        "p95": 23.869
+      },
+      "host_submit_ms": {
+        "median": 17.681,
+        "p95": 36.855
+      },
+      "command_submit_ms": {
+        "median": 17.651,
+        "p95": 36.828
+      },
+      "copy_ms": {
+        "median": 7.64365,
+        "p95": 17.26192
+      },
+      "owner_cpu_ms": {
+        "median": 13.41,
+        "p95": 21.772
+      },
+      "geometry_cpu_ms": {
+        "median": 7.334,
+        "p95": 11.944
+      },
+      "prepare_cpu_ms": {
+        "median": 7.876,
+        "p95": 15.443
+      },
+      "ready_wait_ms": {
+        "median": 15.357,
+        "p95": 33.66
+      },
+      "slot_wait_ms": {
+        "median": 0.009,
+        "p95": 0.013
+      },
+      "previous_publish_ms": {
+        "median": 2.285,
+        "p95": 17.036
+      }
+    }
+  },
+  "board_pixel_gate": {
+    "sof_sha256": "1af55209f870b807422caf18b2966a65745adcf6e22eef640f6de7b3260ab767",
+    "reference_scenes": 28,
+    "passed": true,
+    "zero_additional_pixel_differences": true,
+    "queued_frames": 360,
+    "library_sha256": "515618d24ac54cc0ca10aca2df7a1d75574b7f7c2653a740764d1360e1b75dbd"
+  },
+  "hardware_gate": {
+    "timing_passed": true,
+    "minimum_slack": 0.077,
+    "compiled_pin_assignment_count": 410,
+    "hps_ddr_pins_verified": 72,
+    "sof_sha256": "1af55209f870b807422caf18b2966a65745adcf6e22eef640f6de7b3260ab767",
+    "core_sha256": "2f3d411cf012c127a523243746bd1b4591d67bf81ab0c584282261d335002a94"
+  },
+  "source_reproduction": {
+    "passed": true,
+    "files": {
+      "SpinalStandardCore.v": {
+        "accepted_sha256": "2f3d411cf012c127a523243746bd1b4591d67bf81ab0c584282261d335002a94",
+        "reproduced_sha256": "bd42a8a822ad27f4ece0106306db7bbf485c743570338920f1ab16ea8743354a",
+        "bytes_identical": false,
+        "logic_identical_excluding_git_comment": true
+      },
+      "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_dither_3_romB.bin": {
+        "accepted_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+        "reproduced_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+        "bytes_identical": true,
+        "logic_identical_excluding_git_comment": true
+      },
+      "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_dither_3_romG.bin": {
+        "accepted_sha256": "3ec7b08d09f3107c99c201b46f3dee4a3fe8cc7a2639f7a4e9a98850d45be803",
+        "reproduced_sha256": "3ec7b08d09f3107c99c201b46f3dee4a3fe8cc7a2639f7a4e9a98850d45be803",
+        "bytes_identical": true,
+        "logic_identical_excluding_git_comment": true
+      },
+      "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_dither_3_romR.bin": {
+        "accepted_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+        "reproduced_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+        "bytes_identical": true,
+        "logic_identical_excluding_git_comment": true
+      },
+      "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_fastfillWriter_dither0_romB.bin": {
+        "accepted_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+        "reproduced_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+        "bytes_identical": true,
+        "logic_identical_excluding_git_comment": true
+      },
+      "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_fastfillWriter_dither0_romG.bin": {
+        "accepted_sha256": "3ec7b08d09f3107c99c201b46f3dee4a3fe8cc7a2639f7a4e9a98850d45be803",
+        "reproduced_sha256": "3ec7b08d09f3107c99c201b46f3dee4a3fe8cc7a2639f7a4e9a98850d45be803",
+        "bytes_identical": true,
+        "logic_identical_excluding_git_comment": true
+      },
+      "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_fastfillWriter_dither0_romR.bin": {
+        "accepted_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+        "reproduced_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+        "bytes_identical": true,
+        "logic_identical_excluding_git_comment": true
+      },
+      "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_fastfillWriter_dither1_romB.bin": {
+        "accepted_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+        "reproduced_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+        "bytes_identical": true,
+        "logic_identical_excluding_git_comment": true
+      },
+      "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_fastfillWriter_dither1_romG.bin": {
+        "accepted_sha256": "3ec7b08d09f3107c99c201b46f3dee4a3fe8cc7a2639f7a4e9a98850d45be803",
+        "reproduced_sha256": "3ec7b08d09f3107c99c201b46f3dee4a3fe8cc7a2639f7a4e9a98850d45be803",
+        "bytes_identical": true,
+        "logic_identical_excluding_git_comment": true
+      },
+      "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_fastfillWriter_dither1_romR.bin": {
+        "accepted_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+        "reproduced_sha256": "0f30340d4d7a5d168a7d5a7bede2d32047e80022749f63908a56f2228d1473f3",
+        "bytes_identical": true,
+        "logic_identical_excluding_git_comment": true
+      },
+      "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_tmu_1_lookupTables_logTable.bin": {
+        "accepted_sha256": "736b3692db0672cef4599468d1f8e0c046687f8560f7c2ee4538079954db8d11",
+        "reproduced_sha256": "736b3692db0672cef4599468d1f8e0c046687f8560f7c2ee4538079954db8d11",
+        "bytes_identical": true,
+        "logic_identical_excluding_git_comment": true
+      },
+      "SpinalStandardCore.v_toplevel_core_1_pixelPipeline_1_tmu_1_lookupTables_recipTable.bin": {
+        "accepted_sha256": "1e4495b65f4a2b4178c584584dcc4c2d7f28f39796ee37e937e81a2f144bf52b",
+        "reproduced_sha256": "1e4495b65f4a2b4178c584584dcc4c2d7f28f39796ee37e937e81a2f144bf52b",
+        "bytes_identical": true,
+        "logic_identical_excluding_git_comment": true
+      }
+    },
+    "patch_sha256": "abcf55bf756e577e847997116fc1aea8f2dfbef3d65aa702d351942a5b7bc6b0",
+    "note": "Only the generated Git-hash comment differs; logic and eleven ROMs are identical."
+  },
+  "software_unchanged_from_16fps_backup": true,
+  "fresh_online_clone_validation": "pending",
+  "unselected_pair_experiment": "Synthesis stopped at user request; never programmed",
+  "original_cpu_fpga_reference_mismatch": "Still documented; sampled optimization regression gates have zero additional differences"
+}

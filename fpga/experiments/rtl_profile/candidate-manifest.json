@@ -14,5 +14,7 @@
   "unchanged_native_library_sha256": "515618d24ac54cc0ca10aca2df7a1d75574b7f7c2653a740764d1360e1b75dbd",
   "recovery_tag": "de10-known-good-16fps",
   "displayed_fps": 25.21988272915944,
-  "displayed_fps_target_met": false
+  "accepted_displayed_fps_minimum": 25,
+  "displayed_fps_target_met": true,
+  "accepted_by_user": true
 }

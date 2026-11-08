@@ -1,4 +1,10 @@
-# Software pass: requirements and remaining work
+# Historical software pass: requirements and remaining work
+
+The subsequent depth-read RTL measured **25.22 displayed FPS** and was accepted
+by the user at 25 FPS. The table below records the earlier software-only pass.
+Current hardware/browser evidence and the complete restore package are in the
+[25 FPS recovery guide](../../recovery/README.md). Original CPU/FPGA image
+differences remain separate from the passed zero-additional-difference gates.
 
 Selected runtime bundle:
 `c87b88edf247491677f28b8d97a2ebab1414654e0708e41be34139214a3401f1`.

@@ -1,5 +1,6 @@
 // Generator : SpinalHDL v1.13.0    git head : d9d72474863badf47d8585d187f3e04ae4749c59
 // Component : SpinalStandardCore
+// Git hash  : a0d3a3d834dbc5be2c7387b8332ee4caf03b39eb
 
 `timescale 1ns/1ps
 
@@ -1670,7 +1671,7 @@ module De10MemBackend (
     .io_output_rsp_payload_fragment_data    (fbAuxReadBridge_io_bmb_rsp_s2mPipe_payload_fragment_data[31:0]     ), //i
     .io_output_rsp_payload_fragment_context (fbAuxReadBridge_io_bmb_rsp_s2mPipe_payload_fragment_context[3:0]   )  //i
   );
-  De10BmbToAvalonMm fbAuxReadBridge (
+  De10BmbToAvalonMm_4 fbAuxReadBridge (
     .io_bmb_cmd_valid                    (fbAuxReadSourceRemover_io_output_cmd_m2sPipe_valid                         ), //i
     .io_bmb_cmd_ready                    (fbAuxReadBridge_io_bmb_cmd_ready                                           ), //o
     .io_bmb_cmd_payload_last             (fbAuxReadSourceRemover_io_output_cmd_m2sPipe_payload_last                  ), //i
@@ -5892,293 +5893,263 @@ module De10BmbToAvalonMm_5 (
   input  wire          reset
 );
 
-  wire                readRspFifo_io_push_payload_last;
-  wire                readRspFifo_io_pop_ready;
-  wire                readRspFifo_io_push_ready;
-  wire                readRspFifo_io_pop_valid;
-  wire       [31:0]   readRspFifo_io_pop_payload_data;
-  wire                readRspFifo_io_pop_payload_last;
-  wire       [5:0]    readRspFifo_io_pop_payload_context;
-  wire       [11:0]   readRspFifo_io_occupancy;
-  wire       [11:0]   readRspFifo_io_availability;
-  wire       [32:0]   _zz_translatedAddress;
-  wire       [31:0]   _zz_translatedAddress_1;
-  wire       [25:0]   _zz_translatedAddress_2;
-  wire       [11:0]   _zz_cmdByteCount;
-  wire       [9:0]    _zz_cmdBeatCount;
-  wire       [32:0]   _zz_cmdReadSpanInRange;
-  wire       [32:0]   _zz_cmdReadSpanInRange_1;
-  wire       [32:0]   _zz_cmdReadSpanInRange_2;
-  wire       [34:0]   _zz_cmdReadSpanInRange_3;
-  wire       [32:0]   _zz_cmdReadSpanInRange_4;
-  wire       [32:0]   _zz_cmdWriteSpanInRange;
-  wire       [32:0]   _zz_cmdWriteSpanInRange_1;
-  wire       [32:0]   _zz_queuedReadCmdSpanInRange;
-  wire       [32:0]   _zz_queuedReadCmdSpanInRange_1;
-  wire       [32:0]   _zz_queuedReadCmdSpanInRange_2;
-  wire       [34:0]   _zz_queuedReadCmdSpanInRange_3;
-  wire       [32:0]   _zz_queuedReadCmdSpanInRange_4;
-  wire       [12:0]   _zz_readStorageUsed;
-  wire       [12:0]   _zz_readStorageUsed_1;
-  wire       [12:0]   _zz_readStorageUsed_2;
-  wire       [12:0]   _zz_readStorageUsed_3;
-  wire       [12:0]   _zz_readStorageCanAcceptCmd;
-  wire       [12:0]   _zz_readStorageCanAcceptCmd_1;
-  wire       [11:0]   _zz_outstandingReadBeats;
-  reg                 writeBurstActive;
-  reg                 writeRspPending;
-  reg        [5:0]    writeRspContext;
-  reg                 readRspBurstActive;
-  reg        [10:0]   readRspBurstBeatsLeft;
-  reg        [5:0]    readRspBurstContext;
-  reg        [11:0]   outstandingReadBeats;
-  reg                 queuedReadCmdValid;
-  reg        [31:0]   queuedReadCmd_address;
-  reg        [10:0]   queuedReadCmd_beatCount;
-  reg        [10:0]   queuedReadCmd_burstCount;
-  reg        [5:0]    queuedReadCmd_context;
-  wire       [31:0]   translatedAddressMin;
-  wire       [31:0]   translatedAddressExclusive;
-  wire       [32:0]   translatedAddressMinWide;
-  wire       [32:0]   translatedAddressExclusiveWide;
-  wire       [31:0]   translatedAddress;
-  wire       [3:0]    fullMask;
-  wire       [11:0]   cmdByteCount;
-  wire       [10:0]   cmdBeatCount;
-  wire       [10:0]   cmdBurstCount;
-  wire                cmdReadSpanInRange;
-  wire                cmdWriteSpanInRange;
-  wire       [31:0]   cmdPayload_address;
-  wire       [10:0]   cmdPayload_beatCount;
-  wire       [10:0]   cmdPayload_burstCount;
-  wire       [5:0]    cmdPayload_context;
-  wire                cmdIsWrite;
-  wire                queuedReadCmdSpanInRange;
-  wire                queuedReadCmdBurstConsistent;
-  wire                queuedReadCmdSafe;
-  wire                pendingReadTraffic;
-  wire                readRspNow;
-  wire                writeRspBlocksCmd;
-  wire       [10:0]   queuedReadCmdBeats;
-  wire       [12:0]   readStorageUsed;
-  wire                readStorageCanAcceptCmd;
-  wire                canLaunchRead;
-  wire                queuedReadRequest;
-  wire                launchQueuedRead;
-  wire                launchDirectRead;
-  wire                readLaunch;
-  wire                writeRequest;
-  wire                acceptWriteBeat;
-  wire                queueAcceptedReadCmd;
+  wire                streamFifo_41_io_push_payload_last;
+  wire                streamFifo_41_io_pop_ready;
+  wire                streamFifo_41_io_push_ready;
+  wire                streamFifo_41_io_pop_valid;
+  wire       [31:0]   streamFifo_41_io_pop_payload_data;
+  wire                streamFifo_41_io_pop_payload_last;
+  wire       [5:0]    streamFifo_41_io_pop_payload_context;
+  wire       [11:0]   streamFifo_41_io_occupancy;
+  wire       [11:0]   streamFifo_41_io_availability;
+  wire       [32:0]   _zz__zz_io_mem_address_1;
+  wire       [31:0]   _zz__zz_io_mem_address_1_1;
+  wire       [25:0]   _zz__zz_io_mem_address_1_2;
+  wire       [9:0]    _zz__zz_io_mem_burstCount_1;
+  wire       [11:0]   _zz__zz_io_mem_burstCount_1_1;
+  wire       [11:0]   _zz__zz_io_mem_burstCount_1_2;
+  wire       [32:0]   _zz__zz_when_De10MemBackend_l248_5;
+  wire       [32:0]   _zz__zz_when_De10MemBackend_l248_5_1;
+  wire       [32:0]   _zz__zz_when_De10MemBackend_l248_5_2;
+  wire       [34:0]   _zz__zz_when_De10MemBackend_l248_5_3;
+  wire       [32:0]   _zz__zz_when_De10MemBackend_l248_5_4;
+  wire       [32:0]   _zz__zz_when_De10MemBackend_l223_2;
+  wire       [32:0]   _zz__zz_when_De10MemBackend_l223_2_1;
+  wire       [32:0]   _zz__zz_1;
+  wire       [32:0]   _zz__zz_1_1;
+  wire       [32:0]   _zz__zz_1_2;
+  wire       [34:0]   _zz__zz_1_3;
+  wire       [32:0]   _zz__zz_1_4;
+  wire       [12:0]   _zz__zz_1_5;
+  wire       [12:0]   _zz__zz_1_6;
+  wire       [12:0]   _zz__zz_1_7;
+  wire       [12:0]   _zz__zz_1_8;
+  wire       [12:0]   _zz__zz_1_9;
+  wire       [12:0]   _zz__zz_1_10;
+  wire       [10:0]   _zz__zz_1_11;
+  wire       [12:0]   _zz__zz_1_12;
+  wire       [11:0]   _zz__zz_when_De10MemBackend_l287;
+  reg                 _zz_io_publicationBusy;
+  reg                 _zz_io_bmb_rsp_valid;
+  reg        [5:0]    _zz_io_bmb_rsp_payload_fragment_context;
+  reg                 _zz_when_De10MemBackend_l283;
+  reg        [10:0]   _zz_when_De10MemBackend_l275;
+  reg        [5:0]    _zz_io_push_payload_context;
+  reg        [11:0]   _zz_when_De10MemBackend_l287;
+  reg                 _zz_when_De10MemBackend_l248;
+  reg        [31:0]   _zz_io_mem_address;
+  reg        [10:0]   _zz_when_De10MemBackend_l248_1;
+  reg        [10:0]   _zz_io_mem_burstCount;
+  reg        [5:0]    _zz_io_push_payload_context_1;
+  wire       [31:0]   _zz_when_De10MemBackend_l248_2;
+  wire       [31:0]   _zz_when_De10MemBackend_l248_3;
+  wire       [32:0]   _zz_when_De10MemBackend_l248_4;
+  wire       [31:0]   _zz_io_mem_address_1;
+  wire       [10:0]   _zz_io_mem_burstCount_1;
+  wire                _zz_when_De10MemBackend_l223;
+  wire                _zz_when_De10MemBackend_l248_5;
+  wire                _zz_io_publicationBusy_1;
+  wire                _zz_when_De10MemBackend_l223_1;
+  wire                _zz_when_De10MemBackend_l283_1;
+  wire                _zz_when_De10MemBackend_l283_2;
+  wire                _zz_when_De10MemBackend_l283_3;
+  wire                _zz_when_De10MemBackend_l223_2;
+  wire                _zz_when_De10MemBackend_l223_3;
+  wire                _zz_1;
   wire                io_bmb_rsp_fire;
-  wire                when_De10MemBackend_l216;
-  wire                when_De10MemBackend_l241;
-  wire                when_De10MemBackend_l268;
-  wire                when_De10MemBackend_l276;
-  wire                when_De10MemBackend_l280;
+  wire                when_De10MemBackend_l223;
+  wire                when_De10MemBackend_l248;
+  wire                when_De10MemBackend_l275;
+  wire                when_De10MemBackend_l283;
+  wire                when_De10MemBackend_l287;
 
-  assign _zz_translatedAddress = ({1'b0,_zz_translatedAddress_1} + {1'b0,32'h3f800000});
-  assign _zz_translatedAddress_2 = (io_bmb_cmd_payload_fragment_address & 26'h07fffff);
-  assign _zz_translatedAddress_1 = {6'd0, _zz_translatedAddress_2};
-  assign _zz_cmdByteCount = {1'd0, io_bmb_cmd_payload_fragment_length};
-  assign _zz_cmdBeatCount = (cmdByteCount >>> 2'd2);
-  assign _zz_cmdReadSpanInRange = (_zz_cmdReadSpanInRange_1 + _zz_cmdReadSpanInRange_2);
-  assign _zz_cmdReadSpanInRange_1 = {1'd0, translatedAddress};
-  assign _zz_cmdReadSpanInRange_3 = ({2'd0,_zz_cmdReadSpanInRange_4} <<< 2'd2);
-  assign _zz_cmdReadSpanInRange_2 = _zz_cmdReadSpanInRange_3[32:0];
-  assign _zz_cmdReadSpanInRange_4 = {22'd0, cmdBeatCount};
-  assign _zz_cmdWriteSpanInRange = (_zz_cmdWriteSpanInRange_1 + 33'h000000004);
-  assign _zz_cmdWriteSpanInRange_1 = {1'd0, translatedAddress};
-  assign _zz_queuedReadCmdSpanInRange = (_zz_queuedReadCmdSpanInRange_1 + _zz_queuedReadCmdSpanInRange_2);
-  assign _zz_queuedReadCmdSpanInRange_1 = {1'd0, queuedReadCmd_address};
-  assign _zz_queuedReadCmdSpanInRange_3 = ({2'd0,_zz_queuedReadCmdSpanInRange_4} <<< 2'd2);
-  assign _zz_queuedReadCmdSpanInRange_2 = _zz_queuedReadCmdSpanInRange_3[32:0];
-  assign _zz_queuedReadCmdSpanInRange_4 = {22'd0, queuedReadCmd_beatCount};
-  assign _zz_readStorageUsed = (_zz_readStorageUsed_1 + _zz_readStorageUsed_2);
-  assign _zz_readStorageUsed_1 = {1'd0, readRspFifo_io_occupancy};
-  assign _zz_readStorageUsed_2 = {1'd0, outstandingReadBeats};
-  assign _zz_readStorageUsed_3 = {2'd0, queuedReadCmdBeats};
-  assign _zz_readStorageCanAcceptCmd = (readStorageUsed + _zz_readStorageCanAcceptCmd_1);
-  assign _zz_readStorageCanAcceptCmd_1 = {2'd0, cmdBeatCount};
-  assign _zz_outstandingReadBeats = {1'd0, queuedReadCmd_beatCount};
-  StreamFifo_38 readRspFifo (
-    .io_push_valid           (io_mem_readDataValid                   ), //i
-    .io_push_ready           (readRspFifo_io_push_ready              ), //o
-    .io_push_payload_data    (io_mem_readData[31:0]                  ), //i
-    .io_push_payload_last    (readRspFifo_io_push_payload_last       ), //i
-    .io_push_payload_context (readRspBurstContext[5:0]               ), //i
-    .io_pop_valid            (readRspFifo_io_pop_valid               ), //o
-    .io_pop_ready            (readRspFifo_io_pop_ready               ), //i
-    .io_pop_payload_data     (readRspFifo_io_pop_payload_data[31:0]  ), //o
-    .io_pop_payload_last     (readRspFifo_io_pop_payload_last        ), //o
-    .io_pop_payload_context  (readRspFifo_io_pop_payload_context[5:0]), //o
-    .io_flush                (1'b0                                   ), //i
-    .io_occupancy            (readRspFifo_io_occupancy[11:0]         ), //o
-    .io_availability         (readRspFifo_io_availability[11:0]      ), //o
-    .clk                     (clk                                    ), //i
-    .reset                   (reset                                  )  //i
+  assign _zz__zz_io_mem_address_1 = ({1'b0,_zz__zz_io_mem_address_1_1} + {1'b0,32'h3f800000});
+  assign _zz__zz_io_mem_address_1_2 = (io_bmb_cmd_payload_fragment_address & 26'h07fffff);
+  assign _zz__zz_io_mem_address_1_1 = {6'd0, _zz__zz_io_mem_address_1_2};
+  assign _zz__zz_io_mem_burstCount_1 = (_zz__zz_io_mem_burstCount_1_1 >>> 2'd2);
+  assign _zz__zz_io_mem_burstCount_1_1 = (_zz__zz_io_mem_burstCount_1_2 + 12'h001);
+  assign _zz__zz_io_mem_burstCount_1_2 = {1'd0, io_bmb_cmd_payload_fragment_length};
+  assign _zz__zz_when_De10MemBackend_l248_5 = (_zz__zz_when_De10MemBackend_l248_5_1 + _zz__zz_when_De10MemBackend_l248_5_2);
+  assign _zz__zz_when_De10MemBackend_l248_5_1 = {1'd0, _zz_io_mem_address};
+  assign _zz__zz_when_De10MemBackend_l248_5_3 = ({2'd0,_zz__zz_when_De10MemBackend_l248_5_4} <<< 2'd2);
+  assign _zz__zz_when_De10MemBackend_l248_5_2 = _zz__zz_when_De10MemBackend_l248_5_3[32:0];
+  assign _zz__zz_when_De10MemBackend_l248_5_4 = {22'd0, _zz_when_De10MemBackend_l248_1};
+  assign _zz__zz_when_De10MemBackend_l223_2 = (_zz__zz_when_De10MemBackend_l223_2_1 + 33'h000000004);
+  assign _zz__zz_when_De10MemBackend_l223_2_1 = {1'd0, _zz_io_mem_address_1};
+  assign _zz__zz_1 = (_zz__zz_1_1 + _zz__zz_1_2);
+  assign _zz__zz_1_1 = {1'd0, _zz_io_mem_address_1};
+  assign _zz__zz_1_3 = ({2'd0,_zz__zz_1_4} <<< 2'd2);
+  assign _zz__zz_1_2 = _zz__zz_1_3[32:0];
+  assign _zz__zz_1_4 = {22'd0, _zz_io_mem_burstCount_1};
+  assign _zz__zz_1_5 = (_zz__zz_1_6 + _zz__zz_1_12);
+  assign _zz__zz_1_6 = (_zz__zz_1_7 + _zz__zz_1_10);
+  assign _zz__zz_1_7 = (_zz__zz_1_8 + _zz__zz_1_9);
+  assign _zz__zz_1_8 = {1'd0, streamFifo_41_io_occupancy};
+  assign _zz__zz_1_9 = {1'd0, _zz_when_De10MemBackend_l287};
+  assign _zz__zz_1_11 = (_zz_when_De10MemBackend_l248 ? _zz_when_De10MemBackend_l248_1 : 11'h0);
+  assign _zz__zz_1_10 = {2'd0, _zz__zz_1_11};
+  assign _zz__zz_1_12 = {2'd0, _zz_io_mem_burstCount_1};
+  assign _zz__zz_when_De10MemBackend_l287 = {1'd0, _zz_when_De10MemBackend_l248_1};
+  StreamFifo_40 streamFifo_41 (
+    .io_push_valid           (io_mem_readDataValid                     ), //i
+    .io_push_ready           (streamFifo_41_io_push_ready              ), //o
+    .io_push_payload_data    (io_mem_readData[31:0]                    ), //i
+    .io_push_payload_last    (streamFifo_41_io_push_payload_last       ), //i
+    .io_push_payload_context (_zz_io_push_payload_context[5:0]         ), //i
+    .io_pop_valid            (streamFifo_41_io_pop_valid               ), //o
+    .io_pop_ready            (streamFifo_41_io_pop_ready               ), //i
+    .io_pop_payload_data     (streamFifo_41_io_pop_payload_data[31:0]  ), //o
+    .io_pop_payload_last     (streamFifo_41_io_pop_payload_last        ), //o
+    .io_pop_payload_context  (streamFifo_41_io_pop_payload_context[5:0]), //o
+    .io_flush                (1'b0                                     ), //i
+    .io_occupancy            (streamFifo_41_io_occupancy[11:0]         ), //o
+    .io_availability         (streamFifo_41_io_availability[11:0]      ), //o
+    .clk                     (clk                                      ), //i
+    .reset                   (reset                                    )  //i
   );
-  assign translatedAddressMin = 32'h3f800000;
-  assign translatedAddressExclusive = 32'h40000000;
-  assign translatedAddressMinWide = {1'd0, translatedAddressMin};
-  assign translatedAddressExclusiveWide = {1'd0, translatedAddressExclusive};
-  assign translatedAddress = _zz_translatedAddress[31:0];
-  assign fullMask = 4'b1111;
-  assign cmdByteCount = (_zz_cmdByteCount + 12'h001);
-  assign cmdBeatCount = {1'd0, _zz_cmdBeatCount};
-  assign cmdBurstCount = cmdBeatCount;
-  assign cmdReadSpanInRange = (((translatedAddressMin <= translatedAddress) && (translatedAddress < translatedAddressExclusive)) && (_zz_cmdReadSpanInRange <= translatedAddressExclusiveWide));
-  assign cmdWriteSpanInRange = (((translatedAddressMin <= translatedAddress) && (translatedAddress < translatedAddressExclusive)) && (_zz_cmdWriteSpanInRange <= translatedAddressExclusiveWide));
-  assign cmdPayload_address = translatedAddress;
-  assign cmdPayload_beatCount = cmdBeatCount;
-  assign cmdPayload_burstCount = cmdBurstCount;
-  assign cmdPayload_context = io_bmb_cmd_payload_fragment_context;
-  assign cmdIsWrite = (io_bmb_cmd_payload_fragment_opcode == 1'b1);
-  assign queuedReadCmdSpanInRange = (((translatedAddressMin <= queuedReadCmd_address) && (queuedReadCmd_address < translatedAddressExclusive)) && (_zz_queuedReadCmdSpanInRange <= translatedAddressExclusiveWide));
-  assign queuedReadCmdBurstConsistent = (queuedReadCmd_burstCount == queuedReadCmd_beatCount);
-  assign queuedReadCmdSafe = (((queuedReadCmdValid && (queuedReadCmd_beatCount != 11'h0)) && queuedReadCmdSpanInRange) && queuedReadCmdBurstConsistent);
-  assign pendingReadTraffic = ((queuedReadCmdValid || (outstandingReadBeats != 12'h0)) || (readRspFifo_io_occupancy != 12'h0));
-  assign io_publicationBusy = ((((writeBurstActive || writeRspPending) || pendingReadTraffic) || io_bmb_cmd_valid) || io_mem_readDataValid);
-  assign readRspNow = (readRspFifo_io_pop_valid && (! writeRspPending));
-  assign writeRspBlocksCmd = (writeRspPending && (! io_bmb_rsp_ready));
-  assign queuedReadCmdBeats = (queuedReadCmdValid ? queuedReadCmd_beatCount : 11'h0);
-  assign readStorageUsed = (_zz_readStorageUsed + _zz_readStorageUsed_3);
-  assign readStorageCanAcceptCmd = (_zz_readStorageCanAcceptCmd <= 13'h0800);
-  assign canLaunchRead = ((((! writeBurstActive) && (! writeRspBlocksCmd)) && (outstandingReadBeats == 12'h0)) && (! io_mem_readDataValid));
-  assign queuedReadRequest = (canLaunchRead && queuedReadCmdSafe);
-  assign launchQueuedRead = (queuedReadRequest && io_mem_waitRequestn);
-  assign launchDirectRead = 1'b0;
-  assign readLaunch = (launchQueuedRead || launchDirectRead);
-  assign writeRequest = (((((io_bmb_cmd_valid && cmdIsWrite) && (cmdBeatCount != 11'h0)) && cmdWriteSpanInRange) && (! pendingReadTraffic)) && (! writeRspBlocksCmd));
-  assign acceptWriteBeat = (writeRequest && io_mem_waitRequestn);
-  assign queueAcceptedReadCmd = (((((io_bmb_cmd_valid && (! cmdIsWrite)) && (cmdBeatCount != 11'h0)) && cmdReadSpanInRange) && (! queuedReadCmdValid)) && readStorageCanAcceptCmd);
+  assign _zz_when_De10MemBackend_l248_2 = 32'h3f800000;
+  assign _zz_when_De10MemBackend_l248_3 = 32'h40000000;
+  assign _zz_when_De10MemBackend_l248_4 = {1'd0, _zz_when_De10MemBackend_l248_3};
+  assign _zz_io_mem_address_1 = _zz__zz_io_mem_address_1[31:0];
+  assign _zz_io_mem_burstCount_1 = {1'd0, _zz__zz_io_mem_burstCount_1};
+  assign _zz_when_De10MemBackend_l223 = (io_bmb_cmd_payload_fragment_opcode == 1'b1);
+  assign _zz_when_De10MemBackend_l248_5 = (((_zz_when_De10MemBackend_l248 && (_zz_when_De10MemBackend_l248_1 != 11'h0)) && (((_zz_when_De10MemBackend_l248_2 <= _zz_io_mem_address) && (_zz_io_mem_address < _zz_when_De10MemBackend_l248_3)) && (_zz__zz_when_De10MemBackend_l248_5 <= _zz_when_De10MemBackend_l248_4))) && (_zz_io_mem_burstCount == _zz_when_De10MemBackend_l248_1));
+  assign _zz_io_publicationBusy_1 = ((_zz_when_De10MemBackend_l248 || (_zz_when_De10MemBackend_l287 != 12'h0)) || (streamFifo_41_io_occupancy != 12'h0));
+  assign io_publicationBusy = ((((_zz_io_publicationBusy || _zz_io_bmb_rsp_valid) || _zz_io_publicationBusy_1) || io_bmb_cmd_valid) || io_mem_readDataValid);
+  assign _zz_when_De10MemBackend_l223_1 = (_zz_io_bmb_rsp_valid && (! io_bmb_rsp_ready));
+  assign _zz_when_De10MemBackend_l283_1 = (((((! _zz_io_publicationBusy) && (! _zz_when_De10MemBackend_l223_1)) && (_zz_when_De10MemBackend_l287 == 12'h0)) && (! io_mem_readDataValid)) && _zz_when_De10MemBackend_l248_5);
+  assign _zz_when_De10MemBackend_l283_2 = (_zz_when_De10MemBackend_l283_1 && io_mem_waitRequestn);
+  assign _zz_when_De10MemBackend_l283_3 = (_zz_when_De10MemBackend_l283_2 || 1'b0);
+  assign _zz_when_De10MemBackend_l223_2 = (((((io_bmb_cmd_valid && _zz_when_De10MemBackend_l223) && (_zz_io_mem_burstCount_1 != 11'h0)) && (((_zz_when_De10MemBackend_l248_2 <= _zz_io_mem_address_1) && (_zz_io_mem_address_1 < _zz_when_De10MemBackend_l248_3)) && (_zz__zz_when_De10MemBackend_l223_2 <= _zz_when_De10MemBackend_l248_4))) && (! _zz_io_publicationBusy_1)) && (! _zz_when_De10MemBackend_l223_1));
+  assign _zz_when_De10MemBackend_l223_3 = (_zz_when_De10MemBackend_l223_2 && io_mem_waitRequestn);
+  assign _zz_1 = (((((io_bmb_cmd_valid && (! _zz_when_De10MemBackend_l223)) && (_zz_io_mem_burstCount_1 != 11'h0)) && (((_zz_when_De10MemBackend_l248_2 <= _zz_io_mem_address_1) && (_zz_io_mem_address_1 < _zz_when_De10MemBackend_l248_3)) && (_zz__zz_1 <= _zz_when_De10MemBackend_l248_4))) && (! _zz_when_De10MemBackend_l248)) && (_zz__zz_1_5 <= 13'h0800));
   always @(*) begin
-    io_mem_address = translatedAddress;
-    if(queuedReadRequest) begin
-      io_mem_address = queuedReadCmd_address;
+    io_mem_address = _zz_io_mem_address_1;
+    if(_zz_when_De10MemBackend_l283_1) begin
+      io_mem_address = _zz_io_mem_address;
     end
   end
 
   always @(*) begin
     io_mem_read = 1'b0;
-    if(queuedReadRequest) begin
+    if(_zz_when_De10MemBackend_l283_1) begin
       io_mem_read = 1'b1;
     end
   end
 
   always @(*) begin
     io_mem_write = 1'b0;
-    if(writeRequest) begin
+    if(_zz_when_De10MemBackend_l223_2) begin
       io_mem_write = 1'b1;
     end
   end
 
   always @(*) begin
     io_mem_burstCount = 11'h001;
-    if(writeRequest) begin
+    if(_zz_when_De10MemBackend_l223_2) begin
       io_mem_burstCount = 11'h001;
     end
-    if(queuedReadRequest) begin
-      io_mem_burstCount = queuedReadCmd_burstCount;
+    if(_zz_when_De10MemBackend_l283_1) begin
+      io_mem_burstCount = _zz_io_mem_burstCount;
     end
   end
 
   always @(*) begin
     io_mem_byteEnable = 4'b0000;
-    if(writeRequest) begin
+    if(_zz_when_De10MemBackend_l223_2) begin
       io_mem_byteEnable = io_bmb_cmd_payload_fragment_mask;
     end
-    if(queuedReadRequest) begin
-      io_mem_byteEnable = fullMask;
+    if(_zz_when_De10MemBackend_l283_1) begin
+      io_mem_byteEnable = 4'b1111;
     end
   end
 
   assign io_mem_writeData = io_bmb_cmd_payload_fragment_data;
   always @(*) begin
     io_bmb_cmd_ready = 1'b0;
-    if(acceptWriteBeat) begin
+    if(_zz_when_De10MemBackend_l223_3) begin
       io_bmb_cmd_ready = 1'b1;
     end
-    if(queueAcceptedReadCmd) begin
+    if(_zz_1) begin
       io_bmb_cmd_ready = 1'b1;
     end
   end
 
-  assign io_bmb_rsp_valid = (writeRspPending || readRspNow);
-  assign io_bmb_rsp_payload_last = (writeRspPending ? 1'b1 : readRspFifo_io_pop_payload_last);
+  assign io_bmb_rsp_valid = (_zz_io_bmb_rsp_valid || (streamFifo_41_io_pop_valid && (! _zz_io_bmb_rsp_valid)));
+  assign io_bmb_rsp_payload_last = (_zz_io_bmb_rsp_valid ? 1'b1 : streamFifo_41_io_pop_payload_last);
   assign io_bmb_rsp_payload_fragment_opcode = 1'b0;
-  assign io_bmb_rsp_payload_fragment_data = (writeRspPending ? 32'h0 : readRspFifo_io_pop_payload_data);
-  assign io_bmb_rsp_payload_fragment_context = (writeRspPending ? writeRspContext : readRspFifo_io_pop_payload_context);
-  assign readRspFifo_io_pop_ready = ((! writeRspPending) && io_bmb_rsp_ready);
-  assign readRspFifo_io_push_payload_last = (readRspBurstBeatsLeft == 11'h001);
+  assign io_bmb_rsp_payload_fragment_data = (_zz_io_bmb_rsp_valid ? 32'h0 : streamFifo_41_io_pop_payload_data);
+  assign io_bmb_rsp_payload_fragment_context = (_zz_io_bmb_rsp_valid ? _zz_io_bmb_rsp_payload_fragment_context : streamFifo_41_io_pop_payload_context);
+  assign streamFifo_41_io_pop_ready = ((! _zz_io_bmb_rsp_valid) && io_bmb_rsp_ready);
+  assign streamFifo_41_io_push_payload_last = (_zz_when_De10MemBackend_l275 == 11'h001);
   assign io_bmb_rsp_fire = (io_bmb_rsp_valid && io_bmb_rsp_ready);
-  assign when_De10MemBackend_l216 = ((writeRspPending && io_bmb_rsp_fire) && (! (acceptWriteBeat && io_bmb_cmd_payload_last)));
-  assign when_De10MemBackend_l241 = (queuedReadCmdValid && (! queuedReadCmdSafe));
-  assign when_De10MemBackend_l268 = (readRspBurstBeatsLeft == 11'h001);
-  assign when_De10MemBackend_l276 = (((! readRspBurstActive) && (! readLaunch)) && (! io_mem_readDataValid));
-  assign when_De10MemBackend_l280 = (((outstandingReadBeats == 12'h0) && (! readLaunch)) && (! io_mem_readDataValid));
+  assign when_De10MemBackend_l223 = ((_zz_io_bmb_rsp_valid && io_bmb_rsp_fire) && (! (_zz_when_De10MemBackend_l223_3 && io_bmb_cmd_payload_last)));
+  assign when_De10MemBackend_l248 = (_zz_when_De10MemBackend_l248 && (! _zz_when_De10MemBackend_l248_5));
+  assign when_De10MemBackend_l275 = (_zz_when_De10MemBackend_l275 == 11'h001);
+  assign when_De10MemBackend_l283 = (((! _zz_when_De10MemBackend_l283) && (! _zz_when_De10MemBackend_l283_3)) && (! io_mem_readDataValid));
+  assign when_De10MemBackend_l287 = (((_zz_when_De10MemBackend_l287 == 12'h0) && (! _zz_when_De10MemBackend_l283_3)) && (! io_mem_readDataValid));
   always @(posedge clk or posedge reset) begin
     if(reset) begin
-      writeBurstActive <= 1'b0;
-      writeRspPending <= 1'b0;
-      writeRspContext <= 6'h0;
-      readRspBurstActive <= 1'b0;
-      readRspBurstBeatsLeft <= 11'h0;
-      readRspBurstContext <= 6'h0;
-      outstandingReadBeats <= 12'h0;
-      queuedReadCmdValid <= 1'b0;
+      _zz_io_publicationBusy <= 1'b0;
+      _zz_io_bmb_rsp_valid <= 1'b0;
+      _zz_io_bmb_rsp_payload_fragment_context <= 6'h0;
+      _zz_when_De10MemBackend_l283 <= 1'b0;
+      _zz_when_De10MemBackend_l275 <= 11'h0;
+      _zz_io_push_payload_context <= 6'h0;
+      _zz_when_De10MemBackend_l287 <= 12'h0;
+      _zz_when_De10MemBackend_l248 <= 1'b0;
     end else begin
-      if(when_De10MemBackend_l216) begin
-        writeRspPending <= 1'b0;
+      if(when_De10MemBackend_l223) begin
+        _zz_io_bmb_rsp_valid <= 1'b0;
       end
-      if(acceptWriteBeat) begin
-        writeBurstActive <= (! io_bmb_cmd_payload_last);
+      if(_zz_when_De10MemBackend_l223_3) begin
+        _zz_io_publicationBusy <= (! io_bmb_cmd_payload_last);
         if(io_bmb_cmd_payload_last) begin
-          writeRspPending <= 1'b1;
-          writeRspContext <= io_bmb_cmd_payload_fragment_context;
+          _zz_io_bmb_rsp_valid <= 1'b1;
+          _zz_io_bmb_rsp_payload_fragment_context <= io_bmb_cmd_payload_fragment_context;
         end
       end
-      if(queueAcceptedReadCmd) begin
-        queuedReadCmdValid <= 1'b1;
+      if(_zz_1) begin
+        _zz_when_De10MemBackend_l248 <= 1'b1;
       end
-      if(when_De10MemBackend_l241) begin
-        queuedReadCmdValid <= 1'b0;
+      if(when_De10MemBackend_l248) begin
+        _zz_when_De10MemBackend_l248 <= 1'b0;
       end else begin
-        if(launchQueuedRead) begin
-          queuedReadCmdValid <= 1'b0;
+        if(_zz_when_De10MemBackend_l283_2) begin
+          _zz_when_De10MemBackend_l248 <= 1'b0;
         end
       end
-      if(readLaunch) begin
-        outstandingReadBeats <= (outstandingReadBeats + _zz_outstandingReadBeats);
-        readRspBurstActive <= 1'b1;
-        readRspBurstBeatsLeft <= queuedReadCmd_beatCount;
-        readRspBurstContext <= queuedReadCmd_context;
+      if(_zz_when_De10MemBackend_l283_3) begin
+        _zz_when_De10MemBackend_l287 <= (_zz_when_De10MemBackend_l287 + _zz__zz_when_De10MemBackend_l287);
+        _zz_when_De10MemBackend_l283 <= 1'b1;
+        _zz_when_De10MemBackend_l275 <= _zz_when_De10MemBackend_l248_1;
+        _zz_io_push_payload_context <= _zz_io_push_payload_context_1;
       end
       if(io_mem_readDataValid) begin
-        outstandingReadBeats <= (outstandingReadBeats - 12'h001);
-        if(when_De10MemBackend_l268) begin
-          readRspBurstActive <= 1'b0;
-          readRspBurstBeatsLeft <= 11'h0;
+        _zz_when_De10MemBackend_l287 <= (_zz_when_De10MemBackend_l287 - 12'h001);
+        if(when_De10MemBackend_l275) begin
+          _zz_when_De10MemBackend_l283 <= 1'b0;
+          _zz_when_De10MemBackend_l275 <= 11'h0;
         end else begin
-          readRspBurstBeatsLeft <= (readRspBurstBeatsLeft - 11'h001);
+          _zz_when_De10MemBackend_l275 <= (_zz_when_De10MemBackend_l275 - 11'h001);
         end
       end
-      if(when_De10MemBackend_l276) begin
-        outstandingReadBeats <= 12'h0;
+      if(when_De10MemBackend_l283) begin
+        _zz_when_De10MemBackend_l287 <= 12'h0;
       end
-      if(when_De10MemBackend_l280) begin
-        readRspBurstActive <= 1'b0;
-        readRspBurstBeatsLeft <= 11'h0;
+      if(when_De10MemBackend_l287) begin
+        _zz_when_De10MemBackend_l283 <= 1'b0;
+        _zz_when_De10MemBackend_l275 <= 11'h0;
       end
     end
   end
 
   always @(posedge clk) begin
-    if(queueAcceptedReadCmd) begin
-      queuedReadCmd_address <= cmdPayload_address;
-      queuedReadCmd_beatCount <= cmdPayload_beatCount;
-      queuedReadCmd_burstCount <= cmdPayload_burstCount;
-      queuedReadCmd_context <= cmdPayload_context;
+    if(_zz_1) begin
+      _zz_io_mem_address <= _zz_io_mem_address_1;
+      _zz_when_De10MemBackend_l248_1 <= _zz_io_mem_burstCount_1;
+      _zz_io_mem_burstCount <= _zz_io_mem_burstCount_1;
+      _zz_io_push_payload_context_1 <= io_bmb_cmd_payload_fragment_context;
     end
   end
 
@@ -6241,7 +6212,94 @@ module BmbSourceRemover_5 (
 
 endmodule
 
-//De10BmbToAvalonMm_4 replaced by De10BmbToAvalonMm
+module De10BmbToAvalonMm_4 (
+  input  wire          io_bmb_cmd_valid,
+  output wire          io_bmb_cmd_ready,
+  input  wire          io_bmb_cmd_payload_last,
+  input  wire [0:0]    io_bmb_cmd_payload_fragment_opcode,
+  input  wire [25:0]   io_bmb_cmd_payload_fragment_address,
+  input  wire [10:0]   io_bmb_cmd_payload_fragment_length,
+  input  wire [31:0]   io_bmb_cmd_payload_fragment_data,
+  input  wire [3:0]    io_bmb_cmd_payload_fragment_mask,
+  input  wire [3:0]    io_bmb_cmd_payload_fragment_context,
+  output wire          io_bmb_rsp_valid,
+  input  wire          io_bmb_rsp_ready,
+  output wire          io_bmb_rsp_payload_last,
+  output wire [0:0]    io_bmb_rsp_payload_fragment_opcode,
+  output wire [31:0]   io_bmb_rsp_payload_fragment_data,
+  output wire [3:0]    io_bmb_rsp_payload_fragment_context,
+  output wire          io_mem_read,
+  output wire          io_mem_write,
+  input  wire          io_mem_waitRequestn,
+  output wire [31:0]   io_mem_address,
+  output wire [10:0]   io_mem_burstCount,
+  output wire [3:0]    io_mem_byteEnable,
+  output wire [31:0]   io_mem_writeData,
+  input  wire          io_mem_readDataValid,
+  input  wire [31:0]   io_mem_readData,
+  output wire          io_publicationBusy,
+  input  wire          clk,
+  input  wire          reset
+);
+
+  wire                de10PipelinedWordReader_1_io_bmb_cmd_ready;
+  wire                de10PipelinedWordReader_1_io_bmb_rsp_valid;
+  wire                de10PipelinedWordReader_1_io_bmb_rsp_payload_last;
+  wire       [0:0]    de10PipelinedWordReader_1_io_bmb_rsp_payload_fragment_opcode;
+  wire       [31:0]   de10PipelinedWordReader_1_io_bmb_rsp_payload_fragment_data;
+  wire       [3:0]    de10PipelinedWordReader_1_io_bmb_rsp_payload_fragment_context;
+  wire                de10PipelinedWordReader_1_io_mem_read;
+  wire                de10PipelinedWordReader_1_io_mem_write;
+  wire       [31:0]   de10PipelinedWordReader_1_io_mem_address;
+  wire       [10:0]   de10PipelinedWordReader_1_io_mem_burstCount;
+  wire       [3:0]    de10PipelinedWordReader_1_io_mem_byteEnable;
+  wire       [31:0]   de10PipelinedWordReader_1_io_mem_writeData;
+  wire                de10PipelinedWordReader_1_io_publicationBusy;
+
+  De10PipelinedWordReader de10PipelinedWordReader_1 (
+    .io_bmb_cmd_valid                    (io_bmb_cmd_valid                                                  ), //i
+    .io_bmb_cmd_ready                    (de10PipelinedWordReader_1_io_bmb_cmd_ready                        ), //o
+    .io_bmb_cmd_payload_last             (io_bmb_cmd_payload_last                                           ), //i
+    .io_bmb_cmd_payload_fragment_opcode  (io_bmb_cmd_payload_fragment_opcode                                ), //i
+    .io_bmb_cmd_payload_fragment_address (io_bmb_cmd_payload_fragment_address[25:0]                         ), //i
+    .io_bmb_cmd_payload_fragment_length  (io_bmb_cmd_payload_fragment_length[10:0]                          ), //i
+    .io_bmb_cmd_payload_fragment_data    (io_bmb_cmd_payload_fragment_data[31:0]                            ), //i
+    .io_bmb_cmd_payload_fragment_mask    (io_bmb_cmd_payload_fragment_mask[3:0]                             ), //i
+    .io_bmb_cmd_payload_fragment_context (io_bmb_cmd_payload_fragment_context[3:0]                          ), //i
+    .io_bmb_rsp_valid                    (de10PipelinedWordReader_1_io_bmb_rsp_valid                        ), //o
+    .io_bmb_rsp_ready                    (io_bmb_rsp_ready                                                  ), //i
+    .io_bmb_rsp_payload_last             (de10PipelinedWordReader_1_io_bmb_rsp_payload_last                 ), //o
+    .io_bmb_rsp_payload_fragment_opcode  (de10PipelinedWordReader_1_io_bmb_rsp_payload_fragment_opcode      ), //o
+    .io_bmb_rsp_payload_fragment_data    (de10PipelinedWordReader_1_io_bmb_rsp_payload_fragment_data[31:0]  ), //o
+    .io_bmb_rsp_payload_fragment_context (de10PipelinedWordReader_1_io_bmb_rsp_payload_fragment_context[3:0]), //o
+    .io_mem_read                         (de10PipelinedWordReader_1_io_mem_read                             ), //o
+    .io_mem_write                        (de10PipelinedWordReader_1_io_mem_write                            ), //o
+    .io_mem_waitRequestn                 (io_mem_waitRequestn                                               ), //i
+    .io_mem_address                      (de10PipelinedWordReader_1_io_mem_address[31:0]                    ), //o
+    .io_mem_burstCount                   (de10PipelinedWordReader_1_io_mem_burstCount[10:0]                 ), //o
+    .io_mem_byteEnable                   (de10PipelinedWordReader_1_io_mem_byteEnable[3:0]                  ), //o
+    .io_mem_writeData                    (de10PipelinedWordReader_1_io_mem_writeData[31:0]                  ), //o
+    .io_mem_readDataValid                (io_mem_readDataValid                                              ), //i
+    .io_mem_readData                     (io_mem_readData[31:0]                                             ), //i
+    .io_publicationBusy                  (de10PipelinedWordReader_1_io_publicationBusy                      ), //o
+    .clk                                 (clk                                                               ), //i
+    .reset                               (reset                                                             )  //i
+  );
+  assign io_bmb_cmd_ready = de10PipelinedWordReader_1_io_bmb_cmd_ready;
+  assign io_bmb_rsp_valid = de10PipelinedWordReader_1_io_bmb_rsp_valid;
+  assign io_bmb_rsp_payload_last = de10PipelinedWordReader_1_io_bmb_rsp_payload_last;
+  assign io_bmb_rsp_payload_fragment_opcode = de10PipelinedWordReader_1_io_bmb_rsp_payload_fragment_opcode;
+  assign io_bmb_rsp_payload_fragment_data = de10PipelinedWordReader_1_io_bmb_rsp_payload_fragment_data;
+  assign io_bmb_rsp_payload_fragment_context = de10PipelinedWordReader_1_io_bmb_rsp_payload_fragment_context;
+  assign io_mem_read = de10PipelinedWordReader_1_io_mem_read;
+  assign io_mem_write = de10PipelinedWordReader_1_io_mem_write;
+  assign io_mem_address = de10PipelinedWordReader_1_io_mem_address;
+  assign io_mem_burstCount = de10PipelinedWordReader_1_io_mem_burstCount;
+  assign io_mem_byteEnable = de10PipelinedWordReader_1_io_mem_byteEnable;
+  assign io_mem_writeData = de10PipelinedWordReader_1_io_mem_writeData;
+  assign io_publicationBusy = de10PipelinedWordReader_1_io_publicationBusy;
+
+endmodule
 
 //BmbSourceRemover_4 replaced by BmbSourceRemover
 
@@ -6287,293 +6345,263 @@ module De10BmbToAvalonMm (
   input  wire          reset
 );
 
-  wire                readRspFifo_io_push_payload_last;
-  wire                readRspFifo_io_pop_ready;
-  wire                readRspFifo_io_push_ready;
-  wire                readRspFifo_io_pop_valid;
-  wire       [31:0]   readRspFifo_io_pop_payload_data;
-  wire                readRspFifo_io_pop_payload_last;
-  wire       [3:0]    readRspFifo_io_pop_payload_context;
-  wire       [11:0]   readRspFifo_io_occupancy;
-  wire       [11:0]   readRspFifo_io_availability;
-  wire       [32:0]   _zz_translatedAddress;
-  wire       [31:0]   _zz_translatedAddress_1;
-  wire       [25:0]   _zz_translatedAddress_2;
-  wire       [11:0]   _zz_cmdByteCount;
-  wire       [9:0]    _zz_cmdBeatCount;
-  wire       [32:0]   _zz_cmdReadSpanInRange;
-  wire       [32:0]   _zz_cmdReadSpanInRange_1;
-  wire       [32:0]   _zz_cmdReadSpanInRange_2;
-  wire       [34:0]   _zz_cmdReadSpanInRange_3;
-  wire       [32:0]   _zz_cmdReadSpanInRange_4;
-  wire       [32:0]   _zz_cmdWriteSpanInRange;
-  wire       [32:0]   _zz_cmdWriteSpanInRange_1;
-  wire       [32:0]   _zz_queuedReadCmdSpanInRange;
-  wire       [32:0]   _zz_queuedReadCmdSpanInRange_1;
-  wire       [32:0]   _zz_queuedReadCmdSpanInRange_2;
-  wire       [34:0]   _zz_queuedReadCmdSpanInRange_3;
-  wire       [32:0]   _zz_queuedReadCmdSpanInRange_4;
-  wire       [12:0]   _zz_readStorageUsed;
-  wire       [12:0]   _zz_readStorageUsed_1;
-  wire       [12:0]   _zz_readStorageUsed_2;
-  wire       [12:0]   _zz_readStorageUsed_3;
-  wire       [12:0]   _zz_readStorageCanAcceptCmd;
-  wire       [12:0]   _zz_readStorageCanAcceptCmd_1;
-  wire       [11:0]   _zz_outstandingReadBeats;
-  reg                 writeBurstActive;
-  reg                 writeRspPending;
-  reg        [3:0]    writeRspContext;
-  reg                 readRspBurstActive;
-  reg        [10:0]   readRspBurstBeatsLeft;
-  reg        [3:0]    readRspBurstContext;
-  reg        [11:0]   outstandingReadBeats;
-  reg                 queuedReadCmdValid;
-  reg        [31:0]   queuedReadCmd_address;
-  reg        [10:0]   queuedReadCmd_beatCount;
-  reg        [10:0]   queuedReadCmd_burstCount;
-  reg        [3:0]    queuedReadCmd_context;
-  wire       [31:0]   translatedAddressMin;
-  wire       [31:0]   translatedAddressExclusive;
-  wire       [32:0]   translatedAddressMinWide;
-  wire       [32:0]   translatedAddressExclusiveWide;
-  wire       [31:0]   translatedAddress;
-  wire       [3:0]    fullMask;
-  wire       [11:0]   cmdByteCount;
-  wire       [10:0]   cmdBeatCount;
-  wire       [10:0]   cmdBurstCount;
-  wire                cmdReadSpanInRange;
-  wire                cmdWriteSpanInRange;
-  wire       [31:0]   cmdPayload_address;
-  wire       [10:0]   cmdPayload_beatCount;
-  wire       [10:0]   cmdPayload_burstCount;
-  wire       [3:0]    cmdPayload_context;
-  wire                cmdIsWrite;
-  wire                queuedReadCmdSpanInRange;
-  wire                queuedReadCmdBurstConsistent;
-  wire                queuedReadCmdSafe;
-  wire                pendingReadTraffic;
-  wire                readRspNow;
-  wire                writeRspBlocksCmd;
-  wire       [10:0]   queuedReadCmdBeats;
-  wire       [12:0]   readStorageUsed;
-  wire                readStorageCanAcceptCmd;
-  wire                canLaunchRead;
-  wire                queuedReadRequest;
-  wire                launchQueuedRead;
-  wire                launchDirectRead;
-  wire                readLaunch;
-  wire                writeRequest;
-  wire                acceptWriteBeat;
-  wire                queueAcceptedReadCmd;
+  wire                streamFifo_41_io_push_payload_last;
+  wire                streamFifo_41_io_pop_ready;
+  wire                streamFifo_41_io_push_ready;
+  wire                streamFifo_41_io_pop_valid;
+  wire       [31:0]   streamFifo_41_io_pop_payload_data;
+  wire                streamFifo_41_io_pop_payload_last;
+  wire       [3:0]    streamFifo_41_io_pop_payload_context;
+  wire       [11:0]   streamFifo_41_io_occupancy;
+  wire       [11:0]   streamFifo_41_io_availability;
+  wire       [32:0]   _zz__zz_io_mem_address_1;
+  wire       [31:0]   _zz__zz_io_mem_address_1_1;
+  wire       [25:0]   _zz__zz_io_mem_address_1_2;
+  wire       [9:0]    _zz__zz_io_mem_burstCount_1;
+  wire       [11:0]   _zz__zz_io_mem_burstCount_1_1;
+  wire       [11:0]   _zz__zz_io_mem_burstCount_1_2;
+  wire       [32:0]   _zz__zz_when_De10MemBackend_l248_5;
+  wire       [32:0]   _zz__zz_when_De10MemBackend_l248_5_1;
+  wire       [32:0]   _zz__zz_when_De10MemBackend_l248_5_2;
+  wire       [34:0]   _zz__zz_when_De10MemBackend_l248_5_3;
+  wire       [32:0]   _zz__zz_when_De10MemBackend_l248_5_4;
+  wire       [32:0]   _zz__zz_when_De10MemBackend_l223_2;
+  wire       [32:0]   _zz__zz_when_De10MemBackend_l223_2_1;
+  wire       [32:0]   _zz__zz_1;
+  wire       [32:0]   _zz__zz_1_1;
+  wire       [32:0]   _zz__zz_1_2;
+  wire       [34:0]   _zz__zz_1_3;
+  wire       [32:0]   _zz__zz_1_4;
+  wire       [12:0]   _zz__zz_1_5;
+  wire       [12:0]   _zz__zz_1_6;
+  wire       [12:0]   _zz__zz_1_7;
+  wire       [12:0]   _zz__zz_1_8;
+  wire       [12:0]   _zz__zz_1_9;
+  wire       [12:0]   _zz__zz_1_10;
+  wire       [10:0]   _zz__zz_1_11;
+  wire       [12:0]   _zz__zz_1_12;
+  wire       [11:0]   _zz__zz_when_De10MemBackend_l287;
+  reg                 _zz_io_publicationBusy;
+  reg                 _zz_io_bmb_rsp_valid;
+  reg        [3:0]    _zz_io_bmb_rsp_payload_fragment_context;
+  reg                 _zz_when_De10MemBackend_l283;
+  reg        [10:0]   _zz_when_De10MemBackend_l275;
+  reg        [3:0]    _zz_io_push_payload_context;
+  reg        [11:0]   _zz_when_De10MemBackend_l287;
+  reg                 _zz_when_De10MemBackend_l248;
+  reg        [31:0]   _zz_io_mem_address;
+  reg        [10:0]   _zz_when_De10MemBackend_l248_1;
+  reg        [10:0]   _zz_io_mem_burstCount;
+  reg        [3:0]    _zz_io_push_payload_context_1;
+  wire       [31:0]   _zz_when_De10MemBackend_l248_2;
+  wire       [31:0]   _zz_when_De10MemBackend_l248_3;
+  wire       [32:0]   _zz_when_De10MemBackend_l248_4;
+  wire       [31:0]   _zz_io_mem_address_1;
+  wire       [10:0]   _zz_io_mem_burstCount_1;
+  wire                _zz_when_De10MemBackend_l223;
+  wire                _zz_when_De10MemBackend_l248_5;
+  wire                _zz_io_publicationBusy_1;
+  wire                _zz_when_De10MemBackend_l223_1;
+  wire                _zz_when_De10MemBackend_l283_1;
+  wire                _zz_when_De10MemBackend_l283_2;
+  wire                _zz_when_De10MemBackend_l283_3;
+  wire                _zz_when_De10MemBackend_l223_2;
+  wire                _zz_when_De10MemBackend_l223_3;
+  wire                _zz_1;
   wire                io_bmb_rsp_fire;
-  wire                when_De10MemBackend_l216;
-  wire                when_De10MemBackend_l241;
-  wire                when_De10MemBackend_l268;
-  wire                when_De10MemBackend_l276;
-  wire                when_De10MemBackend_l280;
+  wire                when_De10MemBackend_l223;
+  wire                when_De10MemBackend_l248;
+  wire                when_De10MemBackend_l275;
+  wire                when_De10MemBackend_l283;
+  wire                when_De10MemBackend_l287;
 
-  assign _zz_translatedAddress = ({1'b0,_zz_translatedAddress_1} + {1'b0,32'h3f400000});
-  assign _zz_translatedAddress_2 = (io_bmb_cmd_payload_fragment_address & 26'h03fffff);
-  assign _zz_translatedAddress_1 = {6'd0, _zz_translatedAddress_2};
-  assign _zz_cmdByteCount = {1'd0, io_bmb_cmd_payload_fragment_length};
-  assign _zz_cmdBeatCount = (cmdByteCount >>> 2'd2);
-  assign _zz_cmdReadSpanInRange = (_zz_cmdReadSpanInRange_1 + _zz_cmdReadSpanInRange_2);
-  assign _zz_cmdReadSpanInRange_1 = {1'd0, translatedAddress};
-  assign _zz_cmdReadSpanInRange_3 = ({2'd0,_zz_cmdReadSpanInRange_4} <<< 2'd2);
-  assign _zz_cmdReadSpanInRange_2 = _zz_cmdReadSpanInRange_3[32:0];
-  assign _zz_cmdReadSpanInRange_4 = {22'd0, cmdBeatCount};
-  assign _zz_cmdWriteSpanInRange = (_zz_cmdWriteSpanInRange_1 + 33'h000000004);
-  assign _zz_cmdWriteSpanInRange_1 = {1'd0, translatedAddress};
-  assign _zz_queuedReadCmdSpanInRange = (_zz_queuedReadCmdSpanInRange_1 + _zz_queuedReadCmdSpanInRange_2);
-  assign _zz_queuedReadCmdSpanInRange_1 = {1'd0, queuedReadCmd_address};
-  assign _zz_queuedReadCmdSpanInRange_3 = ({2'd0,_zz_queuedReadCmdSpanInRange_4} <<< 2'd2);
-  assign _zz_queuedReadCmdSpanInRange_2 = _zz_queuedReadCmdSpanInRange_3[32:0];
-  assign _zz_queuedReadCmdSpanInRange_4 = {22'd0, queuedReadCmd_beatCount};
-  assign _zz_readStorageUsed = (_zz_readStorageUsed_1 + _zz_readStorageUsed_2);
-  assign _zz_readStorageUsed_1 = {1'd0, readRspFifo_io_occupancy};
-  assign _zz_readStorageUsed_2 = {1'd0, outstandingReadBeats};
-  assign _zz_readStorageUsed_3 = {2'd0, queuedReadCmdBeats};
-  assign _zz_readStorageCanAcceptCmd = (readStorageUsed + _zz_readStorageCanAcceptCmd_1);
-  assign _zz_readStorageCanAcceptCmd_1 = {2'd0, cmdBeatCount};
-  assign _zz_outstandingReadBeats = {1'd0, queuedReadCmd_beatCount};
-  StreamFifo_33 readRspFifo (
-    .io_push_valid           (io_mem_readDataValid                   ), //i
-    .io_push_ready           (readRspFifo_io_push_ready              ), //o
-    .io_push_payload_data    (io_mem_readData[31:0]                  ), //i
-    .io_push_payload_last    (readRspFifo_io_push_payload_last       ), //i
-    .io_push_payload_context (readRspBurstContext[3:0]               ), //i
-    .io_pop_valid            (readRspFifo_io_pop_valid               ), //o
-    .io_pop_ready            (readRspFifo_io_pop_ready               ), //i
-    .io_pop_payload_data     (readRspFifo_io_pop_payload_data[31:0]  ), //o
-    .io_pop_payload_last     (readRspFifo_io_pop_payload_last        ), //o
-    .io_pop_payload_context  (readRspFifo_io_pop_payload_context[3:0]), //o
-    .io_flush                (1'b0                                   ), //i
-    .io_occupancy            (readRspFifo_io_occupancy[11:0]         ), //o
-    .io_availability         (readRspFifo_io_availability[11:0]      ), //o
-    .clk                     (clk                                    ), //i
-    .reset                   (reset                                  )  //i
+  assign _zz__zz_io_mem_address_1 = ({1'b0,_zz__zz_io_mem_address_1_1} + {1'b0,32'h3f400000});
+  assign _zz__zz_io_mem_address_1_2 = (io_bmb_cmd_payload_fragment_address & 26'h03fffff);
+  assign _zz__zz_io_mem_address_1_1 = {6'd0, _zz__zz_io_mem_address_1_2};
+  assign _zz__zz_io_mem_burstCount_1 = (_zz__zz_io_mem_burstCount_1_1 >>> 2'd2);
+  assign _zz__zz_io_mem_burstCount_1_1 = (_zz__zz_io_mem_burstCount_1_2 + 12'h001);
+  assign _zz__zz_io_mem_burstCount_1_2 = {1'd0, io_bmb_cmd_payload_fragment_length};
+  assign _zz__zz_when_De10MemBackend_l248_5 = (_zz__zz_when_De10MemBackend_l248_5_1 + _zz__zz_when_De10MemBackend_l248_5_2);
+  assign _zz__zz_when_De10MemBackend_l248_5_1 = {1'd0, _zz_io_mem_address};
+  assign _zz__zz_when_De10MemBackend_l248_5_3 = ({2'd0,_zz__zz_when_De10MemBackend_l248_5_4} <<< 2'd2);
+  assign _zz__zz_when_De10MemBackend_l248_5_2 = _zz__zz_when_De10MemBackend_l248_5_3[32:0];
+  assign _zz__zz_when_De10MemBackend_l248_5_4 = {22'd0, _zz_when_De10MemBackend_l248_1};
+  assign _zz__zz_when_De10MemBackend_l223_2 = (_zz__zz_when_De10MemBackend_l223_2_1 + 33'h000000004);
+  assign _zz__zz_when_De10MemBackend_l223_2_1 = {1'd0, _zz_io_mem_address_1};
+  assign _zz__zz_1 = (_zz__zz_1_1 + _zz__zz_1_2);
+  assign _zz__zz_1_1 = {1'd0, _zz_io_mem_address_1};
+  assign _zz__zz_1_3 = ({2'd0,_zz__zz_1_4} <<< 2'd2);
+  assign _zz__zz_1_2 = _zz__zz_1_3[32:0];
+  assign _zz__zz_1_4 = {22'd0, _zz_io_mem_burstCount_1};
+  assign _zz__zz_1_5 = (_zz__zz_1_6 + _zz__zz_1_12);
+  assign _zz__zz_1_6 = (_zz__zz_1_7 + _zz__zz_1_10);
+  assign _zz__zz_1_7 = (_zz__zz_1_8 + _zz__zz_1_9);
+  assign _zz__zz_1_8 = {1'd0, streamFifo_41_io_occupancy};
+  assign _zz__zz_1_9 = {1'd0, _zz_when_De10MemBackend_l287};
+  assign _zz__zz_1_11 = (_zz_when_De10MemBackend_l248 ? _zz_when_De10MemBackend_l248_1 : 11'h0);
+  assign _zz__zz_1_10 = {2'd0, _zz__zz_1_11};
+  assign _zz__zz_1_12 = {2'd0, _zz_io_mem_burstCount_1};
+  assign _zz__zz_when_De10MemBackend_l287 = {1'd0, _zz_when_De10MemBackend_l248_1};
+  StreamFifo_33 streamFifo_41 (
+    .io_push_valid           (io_mem_readDataValid                     ), //i
+    .io_push_ready           (streamFifo_41_io_push_ready              ), //o
+    .io_push_payload_data    (io_mem_readData[31:0]                    ), //i
+    .io_push_payload_last    (streamFifo_41_io_push_payload_last       ), //i
+    .io_push_payload_context (_zz_io_push_payload_context[3:0]         ), //i
+    .io_pop_valid            (streamFifo_41_io_pop_valid               ), //o
+    .io_pop_ready            (streamFifo_41_io_pop_ready               ), //i
+    .io_pop_payload_data     (streamFifo_41_io_pop_payload_data[31:0]  ), //o
+    .io_pop_payload_last     (streamFifo_41_io_pop_payload_last        ), //o
+    .io_pop_payload_context  (streamFifo_41_io_pop_payload_context[3:0]), //o
+    .io_flush                (1'b0                                     ), //i
+    .io_occupancy            (streamFifo_41_io_occupancy[11:0]         ), //o
+    .io_availability         (streamFifo_41_io_availability[11:0]      ), //o
+    .clk                     (clk                                      ), //i
+    .reset                   (reset                                    )  //i
   );
-  assign translatedAddressMin = 32'h3f400000;
-  assign translatedAddressExclusive = 32'h3f800000;
-  assign translatedAddressMinWide = {1'd0, translatedAddressMin};
-  assign translatedAddressExclusiveWide = {1'd0, translatedAddressExclusive};
-  assign translatedAddress = _zz_translatedAddress[31:0];
-  assign fullMask = 4'b1111;
-  assign cmdByteCount = (_zz_cmdByteCount + 12'h001);
-  assign cmdBeatCount = {1'd0, _zz_cmdBeatCount};
-  assign cmdBurstCount = cmdBeatCount;
-  assign cmdReadSpanInRange = (((translatedAddressMin <= translatedAddress) && (translatedAddress < translatedAddressExclusive)) && (_zz_cmdReadSpanInRange <= translatedAddressExclusiveWide));
-  assign cmdWriteSpanInRange = (((translatedAddressMin <= translatedAddress) && (translatedAddress < translatedAddressExclusive)) && (_zz_cmdWriteSpanInRange <= translatedAddressExclusiveWide));
-  assign cmdPayload_address = translatedAddress;
-  assign cmdPayload_beatCount = cmdBeatCount;
-  assign cmdPayload_burstCount = cmdBurstCount;
-  assign cmdPayload_context = io_bmb_cmd_payload_fragment_context;
-  assign cmdIsWrite = (io_bmb_cmd_payload_fragment_opcode == 1'b1);
-  assign queuedReadCmdSpanInRange = (((translatedAddressMin <= queuedReadCmd_address) && (queuedReadCmd_address < translatedAddressExclusive)) && (_zz_queuedReadCmdSpanInRange <= translatedAddressExclusiveWide));
-  assign queuedReadCmdBurstConsistent = (queuedReadCmd_burstCount == queuedReadCmd_beatCount);
-  assign queuedReadCmdSafe = (((queuedReadCmdValid && (queuedReadCmd_beatCount != 11'h0)) && queuedReadCmdSpanInRange) && queuedReadCmdBurstConsistent);
-  assign pendingReadTraffic = ((queuedReadCmdValid || (outstandingReadBeats != 12'h0)) || (readRspFifo_io_occupancy != 12'h0));
-  assign io_publicationBusy = ((((writeBurstActive || writeRspPending) || pendingReadTraffic) || io_bmb_cmd_valid) || io_mem_readDataValid);
-  assign readRspNow = (readRspFifo_io_pop_valid && (! writeRspPending));
-  assign writeRspBlocksCmd = (writeRspPending && (! io_bmb_rsp_ready));
-  assign queuedReadCmdBeats = (queuedReadCmdValid ? queuedReadCmd_beatCount : 11'h0);
-  assign readStorageUsed = (_zz_readStorageUsed + _zz_readStorageUsed_3);
-  assign readStorageCanAcceptCmd = (_zz_readStorageCanAcceptCmd <= 13'h0800);
-  assign canLaunchRead = ((((! writeBurstActive) && (! writeRspBlocksCmd)) && (outstandingReadBeats == 12'h0)) && (! io_mem_readDataValid));
-  assign queuedReadRequest = (canLaunchRead && queuedReadCmdSafe);
-  assign launchQueuedRead = (queuedReadRequest && io_mem_waitRequestn);
-  assign launchDirectRead = 1'b0;
-  assign readLaunch = (launchQueuedRead || launchDirectRead);
-  assign writeRequest = (((((io_bmb_cmd_valid && cmdIsWrite) && (cmdBeatCount != 11'h0)) && cmdWriteSpanInRange) && (! pendingReadTraffic)) && (! writeRspBlocksCmd));
-  assign acceptWriteBeat = (writeRequest && io_mem_waitRequestn);
-  assign queueAcceptedReadCmd = (((((io_bmb_cmd_valid && (! cmdIsWrite)) && (cmdBeatCount != 11'h0)) && cmdReadSpanInRange) && (! queuedReadCmdValid)) && readStorageCanAcceptCmd);
+  assign _zz_when_De10MemBackend_l248_2 = 32'h3f400000;
+  assign _zz_when_De10MemBackend_l248_3 = 32'h3f800000;
+  assign _zz_when_De10MemBackend_l248_4 = {1'd0, _zz_when_De10MemBackend_l248_3};
+  assign _zz_io_mem_address_1 = _zz__zz_io_mem_address_1[31:0];
+  assign _zz_io_mem_burstCount_1 = {1'd0, _zz__zz_io_mem_burstCount_1};
+  assign _zz_when_De10MemBackend_l223 = (io_bmb_cmd_payload_fragment_opcode == 1'b1);
+  assign _zz_when_De10MemBackend_l248_5 = (((_zz_when_De10MemBackend_l248 && (_zz_when_De10MemBackend_l248_1 != 11'h0)) && (((_zz_when_De10MemBackend_l248_2 <= _zz_io_mem_address) && (_zz_io_mem_address < _zz_when_De10MemBackend_l248_3)) && (_zz__zz_when_De10MemBackend_l248_5 <= _zz_when_De10MemBackend_l248_4))) && (_zz_io_mem_burstCount == _zz_when_De10MemBackend_l248_1));
+  assign _zz_io_publicationBusy_1 = ((_zz_when_De10MemBackend_l248 || (_zz_when_De10MemBackend_l287 != 12'h0)) || (streamFifo_41_io_occupancy != 12'h0));
+  assign io_publicationBusy = ((((_zz_io_publicationBusy || _zz_io_bmb_rsp_valid) || _zz_io_publicationBusy_1) || io_bmb_cmd_valid) || io_mem_readDataValid);
+  assign _zz_when_De10MemBackend_l223_1 = (_zz_io_bmb_rsp_valid && (! io_bmb_rsp_ready));
+  assign _zz_when_De10MemBackend_l283_1 = (((((! _zz_io_publicationBusy) && (! _zz_when_De10MemBackend_l223_1)) && (_zz_when_De10MemBackend_l287 == 12'h0)) && (! io_mem_readDataValid)) && _zz_when_De10MemBackend_l248_5);
+  assign _zz_when_De10MemBackend_l283_2 = (_zz_when_De10MemBackend_l283_1 && io_mem_waitRequestn);
+  assign _zz_when_De10MemBackend_l283_3 = (_zz_when_De10MemBackend_l283_2 || 1'b0);
+  assign _zz_when_De10MemBackend_l223_2 = (((((io_bmb_cmd_valid && _zz_when_De10MemBackend_l223) && (_zz_io_mem_burstCount_1 != 11'h0)) && (((_zz_when_De10MemBackend_l248_2 <= _zz_io_mem_address_1) && (_zz_io_mem_address_1 < _zz_when_De10MemBackend_l248_3)) && (_zz__zz_when_De10MemBackend_l223_2 <= _zz_when_De10MemBackend_l248_4))) && (! _zz_io_publicationBusy_1)) && (! _zz_when_De10MemBackend_l223_1));
+  assign _zz_when_De10MemBackend_l223_3 = (_zz_when_De10MemBackend_l223_2 && io_mem_waitRequestn);
+  assign _zz_1 = (((((io_bmb_cmd_valid && (! _zz_when_De10MemBackend_l223)) && (_zz_io_mem_burstCount_1 != 11'h0)) && (((_zz_when_De10MemBackend_l248_2 <= _zz_io_mem_address_1) && (_zz_io_mem_address_1 < _zz_when_De10MemBackend_l248_3)) && (_zz__zz_1 <= _zz_when_De10MemBackend_l248_4))) && (! _zz_when_De10MemBackend_l248)) && (_zz__zz_1_5 <= 13'h0800));
   always @(*) begin
-    io_mem_address = translatedAddress;
-    if(queuedReadRequest) begin
-      io_mem_address = queuedReadCmd_address;
+    io_mem_address = _zz_io_mem_address_1;
+    if(_zz_when_De10MemBackend_l283_1) begin
+      io_mem_address = _zz_io_mem_address;
     end
   end
 
   always @(*) begin
     io_mem_read = 1'b0;
-    if(queuedReadRequest) begin
+    if(_zz_when_De10MemBackend_l283_1) begin
       io_mem_read = 1'b1;
     end
   end
 
   always @(*) begin
     io_mem_write = 1'b0;
-    if(writeRequest) begin
+    if(_zz_when_De10MemBackend_l223_2) begin
       io_mem_write = 1'b1;
     end
   end
 
   always @(*) begin
     io_mem_burstCount = 11'h001;
-    if(writeRequest) begin
+    if(_zz_when_De10MemBackend_l223_2) begin
       io_mem_burstCount = 11'h001;
     end
-    if(queuedReadRequest) begin
-      io_mem_burstCount = queuedReadCmd_burstCount;
+    if(_zz_when_De10MemBackend_l283_1) begin
+      io_mem_burstCount = _zz_io_mem_burstCount;
     end
   end
 
   always @(*) begin
     io_mem_byteEnable = 4'b0000;
-    if(writeRequest) begin
+    if(_zz_when_De10MemBackend_l223_2) begin
       io_mem_byteEnable = io_bmb_cmd_payload_fragment_mask;
     end
-    if(queuedReadRequest) begin
-      io_mem_byteEnable = fullMask;
+    if(_zz_when_De10MemBackend_l283_1) begin
+      io_mem_byteEnable = 4'b1111;
     end
   end
 
   assign io_mem_writeData = io_bmb_cmd_payload_fragment_data;
   always @(*) begin
     io_bmb_cmd_ready = 1'b0;
-    if(acceptWriteBeat) begin
+    if(_zz_when_De10MemBackend_l223_3) begin
       io_bmb_cmd_ready = 1'b1;
     end
-    if(queueAcceptedReadCmd) begin
+    if(_zz_1) begin
       io_bmb_cmd_ready = 1'b1;
     end
   end
 
-  assign io_bmb_rsp_valid = (writeRspPending || readRspNow);
-  assign io_bmb_rsp_payload_last = (writeRspPending ? 1'b1 : readRspFifo_io_pop_payload_last);
+  assign io_bmb_rsp_valid = (_zz_io_bmb_rsp_valid || (streamFifo_41_io_pop_valid && (! _zz_io_bmb_rsp_valid)));
+  assign io_bmb_rsp_payload_last = (_zz_io_bmb_rsp_valid ? 1'b1 : streamFifo_41_io_pop_payload_last);
   assign io_bmb_rsp_payload_fragment_opcode = 1'b0;
-  assign io_bmb_rsp_payload_fragment_data = (writeRspPending ? 32'h0 : readRspFifo_io_pop_payload_data);
-  assign io_bmb_rsp_payload_fragment_context = (writeRspPending ? writeRspContext : readRspFifo_io_pop_payload_context);
-  assign readRspFifo_io_pop_ready = ((! writeRspPending) && io_bmb_rsp_ready);
-  assign readRspFifo_io_push_payload_last = (readRspBurstBeatsLeft == 11'h001);
+  assign io_bmb_rsp_payload_fragment_data = (_zz_io_bmb_rsp_valid ? 32'h0 : streamFifo_41_io_pop_payload_data);
+  assign io_bmb_rsp_payload_fragment_context = (_zz_io_bmb_rsp_valid ? _zz_io_bmb_rsp_payload_fragment_context : streamFifo_41_io_pop_payload_context);
+  assign streamFifo_41_io_pop_ready = ((! _zz_io_bmb_rsp_valid) && io_bmb_rsp_ready);
+  assign streamFifo_41_io_push_payload_last = (_zz_when_De10MemBackend_l275 == 11'h001);
   assign io_bmb_rsp_fire = (io_bmb_rsp_valid && io_bmb_rsp_ready);
-  assign when_De10MemBackend_l216 = ((writeRspPending && io_bmb_rsp_fire) && (! (acceptWriteBeat && io_bmb_cmd_payload_last)));
-  assign when_De10MemBackend_l241 = (queuedReadCmdValid && (! queuedReadCmdSafe));
-  assign when_De10MemBackend_l268 = (readRspBurstBeatsLeft == 11'h001);
-  assign when_De10MemBackend_l276 = (((! readRspBurstActive) && (! readLaunch)) && (! io_mem_readDataValid));
-  assign when_De10MemBackend_l280 = (((outstandingReadBeats == 12'h0) && (! readLaunch)) && (! io_mem_readDataValid));
+  assign when_De10MemBackend_l223 = ((_zz_io_bmb_rsp_valid && io_bmb_rsp_fire) && (! (_zz_when_De10MemBackend_l223_3 && io_bmb_cmd_payload_last)));
+  assign when_De10MemBackend_l248 = (_zz_when_De10MemBackend_l248 && (! _zz_when_De10MemBackend_l248_5));
+  assign when_De10MemBackend_l275 = (_zz_when_De10MemBackend_l275 == 11'h001);
+  assign when_De10MemBackend_l283 = (((! _zz_when_De10MemBackend_l283) && (! _zz_when_De10MemBackend_l283_3)) && (! io_mem_readDataValid));
+  assign when_De10MemBackend_l287 = (((_zz_when_De10MemBackend_l287 == 12'h0) && (! _zz_when_De10MemBackend_l283_3)) && (! io_mem_readDataValid));
   always @(posedge clk or posedge reset) begin
     if(reset) begin
-      writeBurstActive <= 1'b0;
-      writeRspPending <= 1'b0;
-      writeRspContext <= 4'b0000;
-      readRspBurstActive <= 1'b0;
-      readRspBurstBeatsLeft <= 11'h0;
-      readRspBurstContext <= 4'b0000;
-      outstandingReadBeats <= 12'h0;
-      queuedReadCmdValid <= 1'b0;
+      _zz_io_publicationBusy <= 1'b0;
+      _zz_io_bmb_rsp_valid <= 1'b0;
+      _zz_io_bmb_rsp_payload_fragment_context <= 4'b0000;
+      _zz_when_De10MemBackend_l283 <= 1'b0;
+      _zz_when_De10MemBackend_l275 <= 11'h0;
+      _zz_io_push_payload_context <= 4'b0000;
+      _zz_when_De10MemBackend_l287 <= 12'h0;
+      _zz_when_De10MemBackend_l248 <= 1'b0;
     end else begin
-      if(when_De10MemBackend_l216) begin
-        writeRspPending <= 1'b0;
+      if(when_De10MemBackend_l223) begin
+        _zz_io_bmb_rsp_valid <= 1'b0;
       end
-      if(acceptWriteBeat) begin
-        writeBurstActive <= (! io_bmb_cmd_payload_last);
+      if(_zz_when_De10MemBackend_l223_3) begin
+        _zz_io_publicationBusy <= (! io_bmb_cmd_payload_last);
         if(io_bmb_cmd_payload_last) begin
-          writeRspPending <= 1'b1;
-          writeRspContext <= io_bmb_cmd_payload_fragment_context;
+          _zz_io_bmb_rsp_valid <= 1'b1;
+          _zz_io_bmb_rsp_payload_fragment_context <= io_bmb_cmd_payload_fragment_context;
         end
       end
-      if(queueAcceptedReadCmd) begin
-        queuedReadCmdValid <= 1'b1;
+      if(_zz_1) begin
+        _zz_when_De10MemBackend_l248 <= 1'b1;
       end
-      if(when_De10MemBackend_l241) begin
-        queuedReadCmdValid <= 1'b0;
+      if(when_De10MemBackend_l248) begin
+        _zz_when_De10MemBackend_l248 <= 1'b0;
       end else begin
-        if(launchQueuedRead) begin
-          queuedReadCmdValid <= 1'b0;
+        if(_zz_when_De10MemBackend_l283_2) begin
+          _zz_when_De10MemBackend_l248 <= 1'b0;
         end
       end
-      if(readLaunch) begin
-        outstandingReadBeats <= (outstandingReadBeats + _zz_outstandingReadBeats);
-        readRspBurstActive <= 1'b1;
-        readRspBurstBeatsLeft <= queuedReadCmd_beatCount;
-        readRspBurstContext <= queuedReadCmd_context;
+      if(_zz_when_De10MemBackend_l283_3) begin
+        _zz_when_De10MemBackend_l287 <= (_zz_when_De10MemBackend_l287 + _zz__zz_when_De10MemBackend_l287);
+        _zz_when_De10MemBackend_l283 <= 1'b1;
+        _zz_when_De10MemBackend_l275 <= _zz_when_De10MemBackend_l248_1;
+        _zz_io_push_payload_context <= _zz_io_push_payload_context_1;
       end
       if(io_mem_readDataValid) begin
-        outstandingReadBeats <= (outstandingReadBeats - 12'h001);
-        if(when_De10MemBackend_l268) begin
-          readRspBurstActive <= 1'b0;
-          readRspBurstBeatsLeft <= 11'h0;
+        _zz_when_De10MemBackend_l287 <= (_zz_when_De10MemBackend_l287 - 12'h001);
+        if(when_De10MemBackend_l275) begin
+          _zz_when_De10MemBackend_l283 <= 1'b0;
+          _zz_when_De10MemBackend_l275 <= 11'h0;
         end else begin
-          readRspBurstBeatsLeft <= (readRspBurstBeatsLeft - 11'h001);
+          _zz_when_De10MemBackend_l275 <= (_zz_when_De10MemBackend_l275 - 11'h001);
         end
       end
-      if(when_De10MemBackend_l276) begin
-        outstandingReadBeats <= 12'h0;
+      if(when_De10MemBackend_l283) begin
+        _zz_when_De10MemBackend_l287 <= 12'h0;
       end
-      if(when_De10MemBackend_l280) begin
-        readRspBurstActive <= 1'b0;
-        readRspBurstBeatsLeft <= 11'h0;
+      if(when_De10MemBackend_l287) begin
+        _zz_when_De10MemBackend_l283 <= 1'b0;
+        _zz_when_De10MemBackend_l275 <= 11'h0;
       end
     end
   end
 
   always @(posedge clk) begin
-    if(queueAcceptedReadCmd) begin
-      queuedReadCmd_address <= cmdPayload_address;
-      queuedReadCmd_beatCount <= cmdPayload_beatCount;
-      queuedReadCmd_burstCount <= cmdPayload_burstCount;
-      queuedReadCmd_context <= cmdPayload_context;
+    if(_zz_1) begin
+      _zz_io_mem_address <= _zz_io_mem_address_1;
+      _zz_when_De10MemBackend_l248_1 <= _zz_io_mem_burstCount_1;
+      _zz_io_mem_burstCount <= _zz_io_mem_burstCount_1;
+      _zz_io_push_payload_context_1 <= io_bmb_cmd_payload_fragment_context;
     end
   end
 
@@ -35683,7 +35711,7 @@ module AddressRemapper (
 
 endmodule
 
-module StreamFifo_38 (
+module StreamFifo_40 (
   input  wire          io_push_valid,
   output wire          io_push_ready,
   input  wire [31:0]   io_push_payload_data,
@@ -35863,7 +35891,157 @@ module StreamFifo_38 (
 
 endmodule
 
-//StreamFifo_37 replaced by StreamFifo_33
+module De10PipelinedWordReader (
+  input  wire          io_bmb_cmd_valid,
+  output wire          io_bmb_cmd_ready,
+  input  wire          io_bmb_cmd_payload_last,
+  input  wire [0:0]    io_bmb_cmd_payload_fragment_opcode,
+  input  wire [25:0]   io_bmb_cmd_payload_fragment_address,
+  input  wire [10:0]   io_bmb_cmd_payload_fragment_length,
+  input  wire [31:0]   io_bmb_cmd_payload_fragment_data,
+  input  wire [3:0]    io_bmb_cmd_payload_fragment_mask,
+  input  wire [3:0]    io_bmb_cmd_payload_fragment_context,
+  output wire          io_bmb_rsp_valid,
+  input  wire          io_bmb_rsp_ready,
+  output wire          io_bmb_rsp_payload_last,
+  output wire [0:0]    io_bmb_rsp_payload_fragment_opcode,
+  output wire [31:0]   io_bmb_rsp_payload_fragment_data,
+  output wire [3:0]    io_bmb_rsp_payload_fragment_context,
+  output wire          io_mem_read,
+  output wire          io_mem_write,
+  input  wire          io_mem_waitRequestn,
+  output wire [31:0]   io_mem_address,
+  output wire [10:0]   io_mem_burstCount,
+  output wire [3:0]    io_mem_byteEnable,
+  output wire [31:0]   io_mem_writeData,
+  input  wire          io_mem_readDataValid,
+  input  wire [31:0]   io_mem_readData,
+  output wire          io_publicationBusy,
+  input  wire          clk,
+  input  wire          reset
+);
+
+  wire                commands_io_push_valid;
+  wire       [31:0]   commands_io_push_payload_address;
+  wire                commands_io_pop_ready;
+  wire                contexts_io_push_valid;
+  wire                responses_io_push_valid;
+  wire       [3:0]    responses_io_push_payload_context;
+  wire                commands_io_push_ready;
+  wire                commands_io_pop_valid;
+  wire       [31:0]   commands_io_pop_payload_address;
+  wire       [3:0]    commands_io_pop_payload_context;
+  wire       [3:0]    commands_io_occupancy;
+  wire       [3:0]    commands_io_availability;
+  wire                contexts_io_push_ready;
+  wire                contexts_io_pop_valid;
+  wire       [3:0]    contexts_io_pop_payload;
+  wire       [3:0]    contexts_io_occupancy;
+  wire       [3:0]    contexts_io_availability;
+  wire                responses_io_push_ready;
+  wire                responses_io_pop_valid;
+  wire       [31:0]   responses_io_pop_payload_data;
+  wire       [3:0]    responses_io_pop_payload_context;
+  wire       [3:0]    responses_io_occupancy;
+  wire       [3:0]    responses_io_availability;
+  wire       [31:0]   _zz_io_push_payload_address;
+  reg        [3:0]    inFlight;
+  wire                supported;
+  wire                creditAvailable;
+  wire       [25:0]   localAddress;
+  wire                launched;
+  wire                immediateResponse;
+  wire                io_bmb_cmd_fire;
+  wire                io_bmb_rsp_fire;
+  wire                when_De10PipelinedWordReader_l79;
+
+  assign _zz_io_push_payload_address = {6'd0, localAddress};
+  StreamFifo_37 commands (
+    .io_push_valid           (commands_io_push_valid                  ), //i
+    .io_push_ready           (commands_io_push_ready                  ), //o
+    .io_push_payload_address (commands_io_push_payload_address[31:0]  ), //i
+    .io_push_payload_context (io_bmb_cmd_payload_fragment_context[3:0]), //i
+    .io_pop_valid            (commands_io_pop_valid                   ), //o
+    .io_pop_ready            (commands_io_pop_ready                   ), //i
+    .io_pop_payload_address  (commands_io_pop_payload_address[31:0]   ), //o
+    .io_pop_payload_context  (commands_io_pop_payload_context[3:0]    ), //o
+    .io_flush                (1'b0                                    ), //i
+    .io_occupancy            (commands_io_occupancy[3:0]              ), //o
+    .io_availability         (commands_io_availability[3:0]           ), //o
+    .clk                     (clk                                     ), //i
+    .reset                   (reset                                   )  //i
+  );
+  StreamFifo_38 contexts (
+    .io_push_valid   (contexts_io_push_valid              ), //i
+    .io_push_ready   (contexts_io_push_ready              ), //o
+    .io_push_payload (commands_io_pop_payload_context[3:0]), //i
+    .io_pop_valid    (contexts_io_pop_valid               ), //o
+    .io_pop_ready    (io_mem_readDataValid                ), //i
+    .io_pop_payload  (contexts_io_pop_payload[3:0]        ), //o
+    .io_flush        (1'b0                                ), //i
+    .io_occupancy    (contexts_io_occupancy[3:0]          ), //o
+    .io_availability (contexts_io_availability[3:0]       ), //o
+    .clk             (clk                                 ), //i
+    .reset           (reset                               )  //i
+  );
+  StreamFifo_39 responses (
+    .io_push_valid           (responses_io_push_valid               ), //i
+    .io_push_ready           (responses_io_push_ready               ), //o
+    .io_push_payload_data    (io_mem_readData[31:0]                 ), //i
+    .io_push_payload_context (responses_io_push_payload_context[3:0]), //i
+    .io_pop_valid            (responses_io_pop_valid                ), //o
+    .io_pop_ready            (io_bmb_rsp_ready                      ), //i
+    .io_pop_payload_data     (responses_io_pop_payload_data[31:0]   ), //o
+    .io_pop_payload_context  (responses_io_pop_payload_context[3:0] ), //o
+    .io_flush                (1'b0                                  ), //i
+    .io_occupancy            (responses_io_occupancy[3:0]           ), //o
+    .io_availability         (responses_io_availability[3:0]        ), //o
+    .clk                     (clk                                   ), //i
+    .reset                   (reset                                 )  //i
+  );
+  assign supported = (((io_bmb_cmd_payload_fragment_opcode == 1'b0) && (io_bmb_cmd_payload_fragment_length == 11'h003)) && (io_bmb_cmd_payload_fragment_address[1 : 0] == 2'b00));
+  assign creditAvailable = (inFlight < 4'b1000);
+  assign localAddress = (io_bmb_cmd_payload_fragment_address & 26'h03fffff);
+  assign commands_io_push_valid = ((io_bmb_cmd_valid && supported) && creditAvailable);
+  assign commands_io_push_payload_address = (_zz_io_push_payload_address + 32'h3f400000);
+  assign io_bmb_cmd_ready = ((commands_io_push_ready && supported) && creditAvailable);
+  assign io_mem_read = (commands_io_pop_valid && contexts_io_push_ready);
+  assign io_mem_write = 1'b0;
+  assign io_mem_address = commands_io_pop_payload_address;
+  assign io_mem_burstCount = 11'h001;
+  assign io_mem_byteEnable = 4'b1111;
+  assign io_mem_writeData = 32'h0;
+  assign launched = (io_mem_read && io_mem_waitRequestn);
+  assign commands_io_pop_ready = (contexts_io_push_ready && io_mem_waitRequestn);
+  assign immediateResponse = (io_mem_readDataValid && (! contexts_io_pop_valid));
+  assign contexts_io_push_valid = (launched && (! immediateResponse));
+  assign responses_io_push_valid = (io_mem_readDataValid && (contexts_io_pop_valid || launched));
+  assign responses_io_push_payload_context = (contexts_io_pop_valid ? contexts_io_pop_payload : commands_io_pop_payload_context);
+  assign io_bmb_rsp_valid = responses_io_pop_valid;
+  assign io_bmb_rsp_payload_last = 1'b1;
+  assign io_bmb_rsp_payload_fragment_opcode = 1'b0;
+  assign io_bmb_rsp_payload_fragment_data = responses_io_pop_payload_data;
+  assign io_bmb_rsp_payload_fragment_context = responses_io_pop_payload_context;
+  assign io_bmb_cmd_fire = (io_bmb_cmd_valid && io_bmb_cmd_ready);
+  assign io_bmb_rsp_fire = (io_bmb_rsp_valid && io_bmb_rsp_ready);
+  assign when_De10PipelinedWordReader_l79 = (io_bmb_cmd_fire != io_bmb_rsp_fire);
+  assign io_publicationBusy = ((((((inFlight != 4'b0000) || io_bmb_cmd_valid) || commands_io_pop_valid) || contexts_io_pop_valid) || responses_io_pop_valid) || io_mem_readDataValid);
+  always @(posedge clk or posedge reset) begin
+    if(reset) begin
+      inFlight <= 4'b0000;
+    end else begin
+      if(when_De10PipelinedWordReader_l79) begin
+        if(io_bmb_cmd_fire) begin
+          inFlight <= (inFlight + 4'b0001);
+        end else begin
+          inFlight <= (inFlight - 4'b0001);
+        end
+      end
+    end
+  end
+
+
+endmodule
 
 //StreamFifo_36 replaced by StreamFifo_33
 
@@ -37376,13 +37554,13 @@ module FramebufferPlaneBuffer (
   wire       [3:0]    slot1Fifo_io_pop_payload_mask;
   wire       [5:0]    slot1Fifo_io_occupancy;
   wire       [5:0]    slot1Fifo_io_availability;
-  wire                streamFifo_39_io_push_ready;
-  wire                streamFifo_39_io_pop_valid;
-  wire       [25:0]   streamFifo_39_io_pop_payload_address;
-  wire       [31:0]   streamFifo_39_io_pop_payload_data;
-  wire       [3:0]    streamFifo_39_io_pop_payload_mask;
-  wire       [3:0]    streamFifo_39_io_occupancy;
-  wire       [3:0]    streamFifo_39_io_availability;
+  wire                streamFifo_41_io_push_ready;
+  wire                streamFifo_41_io_pop_valid;
+  wire       [25:0]   streamFifo_41_io_pop_payload_address;
+  wire       [31:0]   streamFifo_41_io_pop_payload_data;
+  wire       [3:0]    streamFifo_41_io_pop_payload_mask;
+  wire       [3:0]    streamFifo_41_io_occupancy;
+  wire       [3:0]    streamFifo_41_io_availability;
   reg                 _zz__zz_io_busy_3;
   reg        [6:0]    _zz__zz_when_FramebufferPlaneBuffer_l466_2;
   reg        [25:0]   _zz__zz_when_FramebufferPlaneBuffer_l277;
@@ -37656,20 +37834,20 @@ module FramebufferPlaneBuffer (
     .clk                     (clk                                    ), //i
     .reset                   (reset                                  )  //i
   );
-  StreamFifo_28 streamFifo_39 (
+  StreamFifo_28 streamFifo_41 (
     .io_push_valid           (1'b0                                      ), //i
-    .io_push_ready           (streamFifo_39_io_push_ready               ), //o
+    .io_push_ready           (streamFifo_41_io_push_ready               ), //o
     .io_push_payload_address (26'bxxxxxxxxxxxxxxxxxxxxxxxxxx            ), //i
     .io_push_payload_data    (32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx      ), //i
     .io_push_payload_mask    (4'bxxxx                                   ), //i
-    .io_pop_valid            (streamFifo_39_io_pop_valid                ), //o
+    .io_pop_valid            (streamFifo_41_io_pop_valid                ), //o
     .io_pop_ready            (1'b0                                      ), //i
-    .io_pop_payload_address  (streamFifo_39_io_pop_payload_address[25:0]), //o
-    .io_pop_payload_data     (streamFifo_39_io_pop_payload_data[31:0]   ), //o
-    .io_pop_payload_mask     (streamFifo_39_io_pop_payload_mask[3:0]    ), //o
+    .io_pop_payload_address  (streamFifo_41_io_pop_payload_address[25:0]), //o
+    .io_pop_payload_data     (streamFifo_41_io_pop_payload_data[31:0]   ), //o
+    .io_pop_payload_mask     (streamFifo_41_io_pop_payload_mask[3:0]    ), //o
     .io_flush                (1'b0                                      ), //i
-    .io_occupancy            (streamFifo_39_io_occupancy[3:0]           ), //o
-    .io_availability         (streamFifo_39_io_availability[3:0]        ), //o
+    .io_occupancy            (streamFifo_41_io_occupancy[3:0]           ), //o
+    .io_availability         (streamFifo_41_io_availability[3:0]        ), //o
     .clk                     (clk                                       ), //i
     .reset                   (reset                                     )  //i
   );
@@ -38226,7 +38404,7 @@ module FramebufferPlaneBuffer (
   assign when_FramebufferPlaneBuffer_l275_2 = (_zz_when_FramebufferPlaneBuffer_l466_2 == 7'h01);
   assign when_FramebufferPlaneBuffer_l277_2 = (_zz_when_FramebufferPlaneBuffer_l277_2_1 == 6'h0);
   assign when_FramebufferPlaneBuffer_l280_2 = (_zz_when_FramebufferPlaneBuffer_l280_2_1 == _zz_when_FramebufferPlaneBuffer_l280);
-  assign io_busy = ((((_zz_io_busy_2 != DrainState1_Idle) || io_writeReq_m2sPipe_valid) || (streamFifo_39_io_occupancy != 4'b0000)) || (io_flush && _zz_io_busy_3));
+  assign io_busy = ((((_zz_io_busy_2 != DrainState1_Idle) || io_writeReq_m2sPipe_valid) || (streamFifo_41_io_occupancy != 4'b0000)) || (io_flush && _zz_io_busy_3));
   always @(posedge clk or posedge reset) begin
     if(reset) begin
       _zz_io_busy <= 1'b0;
@@ -110136,6 +110314,506 @@ module StreamFifo (
       end
       if(io_flush) begin
         logic_pop_sync_popReg <= 5'h0;
+      end
+    end
+  end
+
+  always @(posedge clk) begin
+    if(logic_pop_addressGen_ready) begin
+      logic_pop_addressGen_rData <= logic_pop_addressGen_payload;
+    end
+  end
+
+
+endmodule
+
+module StreamFifo_39 (
+  input  wire          io_push_valid,
+  output wire          io_push_ready,
+  input  wire [31:0]   io_push_payload_data,
+  input  wire [3:0]    io_push_payload_context,
+  output wire          io_pop_valid,
+  input  wire          io_pop_ready,
+  output wire [31:0]   io_pop_payload_data,
+  output wire [3:0]    io_pop_payload_context,
+  input  wire          io_flush,
+  output wire [3:0]    io_occupancy,
+  output wire [3:0]    io_availability,
+  input  wire          clk,
+  input  wire          reset
+);
+
+  reg        [35:0]   logic_ram_spinal_port1;
+  wire       [35:0]   _zz_logic_ram_port;
+  reg                 _zz_1;
+  wire                logic_ptr_doPush;
+  wire                logic_ptr_doPop;
+  wire                logic_ptr_full;
+  wire                logic_ptr_empty;
+  reg        [3:0]    logic_ptr_push;
+  reg        [3:0]    logic_ptr_pop;
+  wire       [3:0]    logic_ptr_occupancy;
+  wire       [3:0]    logic_ptr_popOnIo;
+  wire                when_Stream_l1455;
+  reg                 logic_ptr_wentUp;
+  wire                io_push_fire;
+  wire                logic_push_onRam_write_valid;
+  wire       [2:0]    logic_push_onRam_write_payload_address;
+  wire       [31:0]   logic_push_onRam_write_payload_data_data;
+  wire       [3:0]    logic_push_onRam_write_payload_data_context;
+  wire                logic_pop_addressGen_valid;
+  reg                 logic_pop_addressGen_ready;
+  wire       [2:0]    logic_pop_addressGen_payload;
+  wire                logic_pop_addressGen_fire;
+  wire                logic_pop_sync_readArbitation_valid;
+  wire                logic_pop_sync_readArbitation_ready;
+  wire       [2:0]    logic_pop_sync_readArbitation_payload;
+  reg                 logic_pop_addressGen_rValid;
+  reg        [2:0]    logic_pop_addressGen_rData;
+  wire                when_Stream_l477;
+  wire                logic_pop_sync_readPort_cmd_valid;
+  wire       [2:0]    logic_pop_sync_readPort_cmd_payload;
+  wire       [31:0]   logic_pop_sync_readPort_rsp_data;
+  wire       [3:0]    logic_pop_sync_readPort_rsp_context;
+  wire       [35:0]   _zz_logic_pop_sync_readPort_rsp_data;
+  wire                logic_pop_addressGen_toFlowFire_valid;
+  wire       [2:0]    logic_pop_addressGen_toFlowFire_payload;
+  wire                logic_pop_sync_readArbitation_translated_valid;
+  wire                logic_pop_sync_readArbitation_translated_ready;
+  wire       [31:0]   logic_pop_sync_readArbitation_translated_payload_data;
+  wire       [3:0]    logic_pop_sync_readArbitation_translated_payload_context;
+  wire                logic_pop_sync_readArbitation_fire;
+  reg        [3:0]    logic_pop_sync_popReg;
+  reg [35:0] logic_ram [0:7];
+
+  assign _zz_logic_ram_port = {logic_push_onRam_write_payload_data_context,logic_push_onRam_write_payload_data_data};
+  always @(posedge clk) begin
+    if(_zz_1) begin
+      logic_ram[logic_push_onRam_write_payload_address] <= _zz_logic_ram_port;
+    end
+  end
+
+  always @(posedge clk) begin
+    if(logic_pop_sync_readPort_cmd_valid) begin
+      logic_ram_spinal_port1 <= logic_ram[logic_pop_sync_readPort_cmd_payload];
+    end
+  end
+
+  always @(*) begin
+    _zz_1 = 1'b0;
+    if(logic_push_onRam_write_valid) begin
+      _zz_1 = 1'b1;
+    end
+  end
+
+  assign when_Stream_l1455 = (logic_ptr_doPush != logic_ptr_doPop);
+  assign logic_ptr_full = (((logic_ptr_push ^ logic_ptr_popOnIo) ^ 4'b1000) == 4'b0000);
+  assign logic_ptr_empty = (logic_ptr_push == logic_ptr_pop);
+  assign logic_ptr_occupancy = (logic_ptr_push - logic_ptr_popOnIo);
+  assign io_push_ready = (! logic_ptr_full);
+  assign io_push_fire = (io_push_valid && io_push_ready);
+  assign logic_ptr_doPush = io_push_fire;
+  assign logic_push_onRam_write_valid = io_push_fire;
+  assign logic_push_onRam_write_payload_address = logic_ptr_push[2:0];
+  assign logic_push_onRam_write_payload_data_data = io_push_payload_data;
+  assign logic_push_onRam_write_payload_data_context = io_push_payload_context;
+  assign logic_pop_addressGen_valid = (! logic_ptr_empty);
+  assign logic_pop_addressGen_payload = logic_ptr_pop[2:0];
+  assign logic_pop_addressGen_fire = (logic_pop_addressGen_valid && logic_pop_addressGen_ready);
+  assign logic_ptr_doPop = logic_pop_addressGen_fire;
+  always @(*) begin
+    logic_pop_addressGen_ready = logic_pop_sync_readArbitation_ready;
+    if(when_Stream_l477) begin
+      logic_pop_addressGen_ready = 1'b1;
+    end
+  end
+
+  assign when_Stream_l477 = (! logic_pop_sync_readArbitation_valid);
+  assign logic_pop_sync_readArbitation_valid = logic_pop_addressGen_rValid;
+  assign logic_pop_sync_readArbitation_payload = logic_pop_addressGen_rData;
+  assign _zz_logic_pop_sync_readPort_rsp_data = logic_ram_spinal_port1;
+  assign logic_pop_sync_readPort_rsp_data = _zz_logic_pop_sync_readPort_rsp_data[31 : 0];
+  assign logic_pop_sync_readPort_rsp_context = _zz_logic_pop_sync_readPort_rsp_data[35 : 32];
+  assign logic_pop_addressGen_toFlowFire_valid = logic_pop_addressGen_fire;
+  assign logic_pop_addressGen_toFlowFire_payload = logic_pop_addressGen_payload;
+  assign logic_pop_sync_readPort_cmd_valid = logic_pop_addressGen_toFlowFire_valid;
+  assign logic_pop_sync_readPort_cmd_payload = logic_pop_addressGen_toFlowFire_payload;
+  assign logic_pop_sync_readArbitation_translated_valid = logic_pop_sync_readArbitation_valid;
+  assign logic_pop_sync_readArbitation_ready = logic_pop_sync_readArbitation_translated_ready;
+  assign logic_pop_sync_readArbitation_translated_payload_data = logic_pop_sync_readPort_rsp_data;
+  assign logic_pop_sync_readArbitation_translated_payload_context = logic_pop_sync_readPort_rsp_context;
+  assign io_pop_valid = logic_pop_sync_readArbitation_translated_valid;
+  assign logic_pop_sync_readArbitation_translated_ready = io_pop_ready;
+  assign io_pop_payload_data = logic_pop_sync_readArbitation_translated_payload_data;
+  assign io_pop_payload_context = logic_pop_sync_readArbitation_translated_payload_context;
+  assign logic_pop_sync_readArbitation_fire = (logic_pop_sync_readArbitation_valid && logic_pop_sync_readArbitation_ready);
+  assign logic_ptr_popOnIo = logic_pop_sync_popReg;
+  assign io_occupancy = logic_ptr_occupancy;
+  assign io_availability = (4'b1000 - logic_ptr_occupancy);
+  always @(posedge clk or posedge reset) begin
+    if(reset) begin
+      logic_ptr_push <= 4'b0000;
+      logic_ptr_pop <= 4'b0000;
+      logic_ptr_wentUp <= 1'b0;
+      logic_pop_addressGen_rValid <= 1'b0;
+      logic_pop_sync_popReg <= 4'b0000;
+    end else begin
+      if(when_Stream_l1455) begin
+        logic_ptr_wentUp <= logic_ptr_doPush;
+      end
+      if(io_flush) begin
+        logic_ptr_wentUp <= 1'b0;
+      end
+      if(logic_ptr_doPush) begin
+        logic_ptr_push <= (logic_ptr_push + 4'b0001);
+      end
+      if(logic_ptr_doPop) begin
+        logic_ptr_pop <= (logic_ptr_pop + 4'b0001);
+      end
+      if(io_flush) begin
+        logic_ptr_push <= 4'b0000;
+        logic_ptr_pop <= 4'b0000;
+      end
+      if(logic_pop_addressGen_ready) begin
+        logic_pop_addressGen_rValid <= logic_pop_addressGen_valid;
+      end
+      if(io_flush) begin
+        logic_pop_addressGen_rValid <= 1'b0;
+      end
+      if(logic_pop_sync_readArbitation_fire) begin
+        logic_pop_sync_popReg <= logic_ptr_pop;
+      end
+      if(io_flush) begin
+        logic_pop_sync_popReg <= 4'b0000;
+      end
+    end
+  end
+
+  always @(posedge clk) begin
+    if(logic_pop_addressGen_ready) begin
+      logic_pop_addressGen_rData <= logic_pop_addressGen_payload;
+    end
+  end
+
+
+endmodule
+
+module StreamFifo_38 (
+  input  wire          io_push_valid,
+  output wire          io_push_ready,
+  input  wire [3:0]    io_push_payload,
+  output wire          io_pop_valid,
+  input  wire          io_pop_ready,
+  output wire [3:0]    io_pop_payload,
+  input  wire          io_flush,
+  output wire [3:0]    io_occupancy,
+  output wire [3:0]    io_availability,
+  input  wire          clk,
+  input  wire          reset
+);
+
+  reg        [3:0]    logic_ram_spinal_port1;
+  reg                 _zz_1;
+  wire                logic_ptr_doPush;
+  wire                logic_ptr_doPop;
+  wire                logic_ptr_full;
+  wire                logic_ptr_empty;
+  reg        [3:0]    logic_ptr_push;
+  reg        [3:0]    logic_ptr_pop;
+  wire       [3:0]    logic_ptr_occupancy;
+  wire       [3:0]    logic_ptr_popOnIo;
+  wire                when_Stream_l1455;
+  reg                 logic_ptr_wentUp;
+  wire                io_push_fire;
+  wire                logic_push_onRam_write_valid;
+  wire       [2:0]    logic_push_onRam_write_payload_address;
+  wire       [3:0]    logic_push_onRam_write_payload_data;
+  wire                logic_pop_addressGen_valid;
+  reg                 logic_pop_addressGen_ready;
+  wire       [2:0]    logic_pop_addressGen_payload;
+  wire                logic_pop_addressGen_fire;
+  wire                logic_pop_sync_readArbitation_valid;
+  wire                logic_pop_sync_readArbitation_ready;
+  wire       [2:0]    logic_pop_sync_readArbitation_payload;
+  reg                 logic_pop_addressGen_rValid;
+  reg        [2:0]    logic_pop_addressGen_rData;
+  wire                when_Stream_l477;
+  wire                logic_pop_sync_readPort_cmd_valid;
+  wire       [2:0]    logic_pop_sync_readPort_cmd_payload;
+  wire       [3:0]    logic_pop_sync_readPort_rsp;
+  wire                logic_pop_addressGen_toFlowFire_valid;
+  wire       [2:0]    logic_pop_addressGen_toFlowFire_payload;
+  wire                logic_pop_sync_readArbitation_translated_valid;
+  wire                logic_pop_sync_readArbitation_translated_ready;
+  wire       [3:0]    logic_pop_sync_readArbitation_translated_payload;
+  wire                logic_pop_sync_readArbitation_fire;
+  reg        [3:0]    logic_pop_sync_popReg;
+  reg [3:0] logic_ram [0:7];
+
+  always @(posedge clk) begin
+    if(_zz_1) begin
+      logic_ram[logic_push_onRam_write_payload_address] <= logic_push_onRam_write_payload_data;
+    end
+  end
+
+  always @(posedge clk) begin
+    if(logic_pop_sync_readPort_cmd_valid) begin
+      logic_ram_spinal_port1 <= logic_ram[logic_pop_sync_readPort_cmd_payload];
+    end
+  end
+
+  always @(*) begin
+    _zz_1 = 1'b0;
+    if(logic_push_onRam_write_valid) begin
+      _zz_1 = 1'b1;
+    end
+  end
+
+  assign when_Stream_l1455 = (logic_ptr_doPush != logic_ptr_doPop);
+  assign logic_ptr_full = (((logic_ptr_push ^ logic_ptr_popOnIo) ^ 4'b1000) == 4'b0000);
+  assign logic_ptr_empty = (logic_ptr_push == logic_ptr_pop);
+  assign logic_ptr_occupancy = (logic_ptr_push - logic_ptr_popOnIo);
+  assign io_push_ready = (! logic_ptr_full);
+  assign io_push_fire = (io_push_valid && io_push_ready);
+  assign logic_ptr_doPush = io_push_fire;
+  assign logic_push_onRam_write_valid = io_push_fire;
+  assign logic_push_onRam_write_payload_address = logic_ptr_push[2:0];
+  assign logic_push_onRam_write_payload_data = io_push_payload;
+  assign logic_pop_addressGen_valid = (! logic_ptr_empty);
+  assign logic_pop_addressGen_payload = logic_ptr_pop[2:0];
+  assign logic_pop_addressGen_fire = (logic_pop_addressGen_valid && logic_pop_addressGen_ready);
+  assign logic_ptr_doPop = logic_pop_addressGen_fire;
+  always @(*) begin
+    logic_pop_addressGen_ready = logic_pop_sync_readArbitation_ready;
+    if(when_Stream_l477) begin
+      logic_pop_addressGen_ready = 1'b1;
+    end
+  end
+
+  assign when_Stream_l477 = (! logic_pop_sync_readArbitation_valid);
+  assign logic_pop_sync_readArbitation_valid = logic_pop_addressGen_rValid;
+  assign logic_pop_sync_readArbitation_payload = logic_pop_addressGen_rData;
+  assign logic_pop_sync_readPort_rsp = logic_ram_spinal_port1;
+  assign logic_pop_addressGen_toFlowFire_valid = logic_pop_addressGen_fire;
+  assign logic_pop_addressGen_toFlowFire_payload = logic_pop_addressGen_payload;
+  assign logic_pop_sync_readPort_cmd_valid = logic_pop_addressGen_toFlowFire_valid;
+  assign logic_pop_sync_readPort_cmd_payload = logic_pop_addressGen_toFlowFire_payload;
+  assign logic_pop_sync_readArbitation_translated_valid = logic_pop_sync_readArbitation_valid;
+  assign logic_pop_sync_readArbitation_ready = logic_pop_sync_readArbitation_translated_ready;
+  assign logic_pop_sync_readArbitation_translated_payload = logic_pop_sync_readPort_rsp;
+  assign io_pop_valid = logic_pop_sync_readArbitation_translated_valid;
+  assign logic_pop_sync_readArbitation_translated_ready = io_pop_ready;
+  assign io_pop_payload = logic_pop_sync_readArbitation_translated_payload;
+  assign logic_pop_sync_readArbitation_fire = (logic_pop_sync_readArbitation_valid && logic_pop_sync_readArbitation_ready);
+  assign logic_ptr_popOnIo = logic_pop_sync_popReg;
+  assign io_occupancy = logic_ptr_occupancy;
+  assign io_availability = (4'b1000 - logic_ptr_occupancy);
+  always @(posedge clk or posedge reset) begin
+    if(reset) begin
+      logic_ptr_push <= 4'b0000;
+      logic_ptr_pop <= 4'b0000;
+      logic_ptr_wentUp <= 1'b0;
+      logic_pop_addressGen_rValid <= 1'b0;
+      logic_pop_sync_popReg <= 4'b0000;
+    end else begin
+      if(when_Stream_l1455) begin
+        logic_ptr_wentUp <= logic_ptr_doPush;
+      end
+      if(io_flush) begin
+        logic_ptr_wentUp <= 1'b0;
+      end
+      if(logic_ptr_doPush) begin
+        logic_ptr_push <= (logic_ptr_push + 4'b0001);
+      end
+      if(logic_ptr_doPop) begin
+        logic_ptr_pop <= (logic_ptr_pop + 4'b0001);
+      end
+      if(io_flush) begin
+        logic_ptr_push <= 4'b0000;
+        logic_ptr_pop <= 4'b0000;
+      end
+      if(logic_pop_addressGen_ready) begin
+        logic_pop_addressGen_rValid <= logic_pop_addressGen_valid;
+      end
+      if(io_flush) begin
+        logic_pop_addressGen_rValid <= 1'b0;
+      end
+      if(logic_pop_sync_readArbitation_fire) begin
+        logic_pop_sync_popReg <= logic_ptr_pop;
+      end
+      if(io_flush) begin
+        logic_pop_sync_popReg <= 4'b0000;
+      end
+    end
+  end
+
+  always @(posedge clk) begin
+    if(logic_pop_addressGen_ready) begin
+      logic_pop_addressGen_rData <= logic_pop_addressGen_payload;
+    end
+  end
+
+
+endmodule
+
+module StreamFifo_37 (
+  input  wire          io_push_valid,
+  output wire          io_push_ready,
+  input  wire [31:0]   io_push_payload_address,
+  input  wire [3:0]    io_push_payload_context,
+  output wire          io_pop_valid,
+  input  wire          io_pop_ready,
+  output wire [31:0]   io_pop_payload_address,
+  output wire [3:0]    io_pop_payload_context,
+  input  wire          io_flush,
+  output wire [3:0]    io_occupancy,
+  output wire [3:0]    io_availability,
+  input  wire          clk,
+  input  wire          reset
+);
+
+  reg        [35:0]   logic_ram_spinal_port1;
+  wire       [35:0]   _zz_logic_ram_port;
+  reg                 _zz_1;
+  wire                logic_ptr_doPush;
+  wire                logic_ptr_doPop;
+  wire                logic_ptr_full;
+  wire                logic_ptr_empty;
+  reg        [3:0]    logic_ptr_push;
+  reg        [3:0]    logic_ptr_pop;
+  wire       [3:0]    logic_ptr_occupancy;
+  wire       [3:0]    logic_ptr_popOnIo;
+  wire                when_Stream_l1455;
+  reg                 logic_ptr_wentUp;
+  wire                io_push_fire;
+  wire                logic_push_onRam_write_valid;
+  wire       [2:0]    logic_push_onRam_write_payload_address;
+  wire       [31:0]   logic_push_onRam_write_payload_data_address;
+  wire       [3:0]    logic_push_onRam_write_payload_data_context;
+  wire                logic_pop_addressGen_valid;
+  reg                 logic_pop_addressGen_ready;
+  wire       [2:0]    logic_pop_addressGen_payload;
+  wire                logic_pop_addressGen_fire;
+  wire                logic_pop_sync_readArbitation_valid;
+  wire                logic_pop_sync_readArbitation_ready;
+  wire       [2:0]    logic_pop_sync_readArbitation_payload;
+  reg                 logic_pop_addressGen_rValid;
+  reg        [2:0]    logic_pop_addressGen_rData;
+  wire                when_Stream_l477;
+  wire                logic_pop_sync_readPort_cmd_valid;
+  wire       [2:0]    logic_pop_sync_readPort_cmd_payload;
+  wire       [31:0]   logic_pop_sync_readPort_rsp_address;
+  wire       [3:0]    logic_pop_sync_readPort_rsp_context;
+  wire       [35:0]   _zz_logic_pop_sync_readPort_rsp_address;
+  wire                logic_pop_addressGen_toFlowFire_valid;
+  wire       [2:0]    logic_pop_addressGen_toFlowFire_payload;
+  wire                logic_pop_sync_readArbitation_translated_valid;
+  wire                logic_pop_sync_readArbitation_translated_ready;
+  wire       [31:0]   logic_pop_sync_readArbitation_translated_payload_address;
+  wire       [3:0]    logic_pop_sync_readArbitation_translated_payload_context;
+  wire                logic_pop_sync_readArbitation_fire;
+  reg        [3:0]    logic_pop_sync_popReg;
+  reg [35:0] logic_ram [0:7];
+
+  assign _zz_logic_ram_port = {logic_push_onRam_write_payload_data_context,logic_push_onRam_write_payload_data_address};
+  always @(posedge clk) begin
+    if(_zz_1) begin
+      logic_ram[logic_push_onRam_write_payload_address] <= _zz_logic_ram_port;
+    end
+  end
+
+  always @(posedge clk) begin
+    if(logic_pop_sync_readPort_cmd_valid) begin
+      logic_ram_spinal_port1 <= logic_ram[logic_pop_sync_readPort_cmd_payload];
+    end
+  end
+
+  always @(*) begin
+    _zz_1 = 1'b0;
+    if(logic_push_onRam_write_valid) begin
+      _zz_1 = 1'b1;
+    end
+  end
+
+  assign when_Stream_l1455 = (logic_ptr_doPush != logic_ptr_doPop);
+  assign logic_ptr_full = (((logic_ptr_push ^ logic_ptr_popOnIo) ^ 4'b1000) == 4'b0000);
+  assign logic_ptr_empty = (logic_ptr_push == logic_ptr_pop);
+  assign logic_ptr_occupancy = (logic_ptr_push - logic_ptr_popOnIo);
+  assign io_push_ready = (! logic_ptr_full);
+  assign io_push_fire = (io_push_valid && io_push_ready);
+  assign logic_ptr_doPush = io_push_fire;
+  assign logic_push_onRam_write_valid = io_push_fire;
+  assign logic_push_onRam_write_payload_address = logic_ptr_push[2:0];
+  assign logic_push_onRam_write_payload_data_address = io_push_payload_address;
+  assign logic_push_onRam_write_payload_data_context = io_push_payload_context;
+  assign logic_pop_addressGen_valid = (! logic_ptr_empty);
+  assign logic_pop_addressGen_payload = logic_ptr_pop[2:0];
+  assign logic_pop_addressGen_fire = (logic_pop_addressGen_valid && logic_pop_addressGen_ready);
+  assign logic_ptr_doPop = logic_pop_addressGen_fire;
+  always @(*) begin
+    logic_pop_addressGen_ready = logic_pop_sync_readArbitation_ready;
+    if(when_Stream_l477) begin
+      logic_pop_addressGen_ready = 1'b1;
+    end
+  end
+
+  assign when_Stream_l477 = (! logic_pop_sync_readArbitation_valid);
+  assign logic_pop_sync_readArbitation_valid = logic_pop_addressGen_rValid;
+  assign logic_pop_sync_readArbitation_payload = logic_pop_addressGen_rData;
+  assign _zz_logic_pop_sync_readPort_rsp_address = logic_ram_spinal_port1;
+  assign logic_pop_sync_readPort_rsp_address = _zz_logic_pop_sync_readPort_rsp_address[31 : 0];
+  assign logic_pop_sync_readPort_rsp_context = _zz_logic_pop_sync_readPort_rsp_address[35 : 32];
+  assign logic_pop_addressGen_toFlowFire_valid = logic_pop_addressGen_fire;
+  assign logic_pop_addressGen_toFlowFire_payload = logic_pop_addressGen_payload;
+  assign logic_pop_sync_readPort_cmd_valid = logic_pop_addressGen_toFlowFire_valid;
+  assign logic_pop_sync_readPort_cmd_payload = logic_pop_addressGen_toFlowFire_payload;
+  assign logic_pop_sync_readArbitation_translated_valid = logic_pop_sync_readArbitation_valid;
+  assign logic_pop_sync_readArbitation_ready = logic_pop_sync_readArbitation_translated_ready;
+  assign logic_pop_sync_readArbitation_translated_payload_address = logic_pop_sync_readPort_rsp_address;
+  assign logic_pop_sync_readArbitation_translated_payload_context = logic_pop_sync_readPort_rsp_context;
+  assign io_pop_valid = logic_pop_sync_readArbitation_translated_valid;
+  assign logic_pop_sync_readArbitation_translated_ready = io_pop_ready;
+  assign io_pop_payload_address = logic_pop_sync_readArbitation_translated_payload_address;
+  assign io_pop_payload_context = logic_pop_sync_readArbitation_translated_payload_context;
+  assign logic_pop_sync_readArbitation_fire = (logic_pop_sync_readArbitation_valid && logic_pop_sync_readArbitation_ready);
+  assign logic_ptr_popOnIo = logic_pop_sync_popReg;
+  assign io_occupancy = logic_ptr_occupancy;
+  assign io_availability = (4'b1000 - logic_ptr_occupancy);
+  always @(posedge clk or posedge reset) begin
+    if(reset) begin
+      logic_ptr_push <= 4'b0000;
+      logic_ptr_pop <= 4'b0000;
+      logic_ptr_wentUp <= 1'b0;
+      logic_pop_addressGen_rValid <= 1'b0;
+      logic_pop_sync_popReg <= 4'b0000;
+    end else begin
+      if(when_Stream_l1455) begin
+        logic_ptr_wentUp <= logic_ptr_doPush;
+      end
+      if(io_flush) begin
+        logic_ptr_wentUp <= 1'b0;
+      end
+      if(logic_ptr_doPush) begin
+        logic_ptr_push <= (logic_ptr_push + 4'b0001);
+      end
+      if(logic_ptr_doPop) begin
+        logic_ptr_pop <= (logic_ptr_pop + 4'b0001);
+      end
+      if(io_flush) begin
+        logic_ptr_push <= 4'b0000;
+        logic_ptr_pop <= 4'b0000;
+      end
+      if(logic_pop_addressGen_ready) begin
+        logic_pop_addressGen_rValid <= logic_pop_addressGen_valid;
+      end
+      if(io_flush) begin
+        logic_pop_addressGen_rValid <= 1'b0;
+      end
+      if(logic_pop_sync_readArbitation_fire) begin
+        logic_pop_sync_popReg <= logic_ptr_pop;
+      end
+      if(io_flush) begin
+        logic_pop_sync_popReg <= 4'b0000;
       end
     end
   end

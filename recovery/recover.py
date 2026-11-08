@@ -11,7 +11,7 @@ import subprocess
 import tarfile
 
 ROOT = Path(__file__).resolve().parents[1]
-BACKUP = ROOT / 'recovery/known-good-16fps'
+BACKUP = ROOT / 'recovery/known-good-25fps'
 BUILD = ROOT / 'build/recovery'
 
 
@@ -128,6 +128,8 @@ def generate_rtl(args):
         marker = json.loads((source / '.platform-source.json').read_text(encoding='utf-8-sig'))
         if marker.get('commit') != '92c56afa0e98763ccd794cd39512cad2822bd86e':
             raise RuntimeError('Prepared hardware revision differs from the backup')
+        if marker.get('patch_sha256') != digest(ROOT / 'fpga/patches/spinal/hardware-headless-fence.patch'):
+            raise RuntimeError('Prepared hardware uses an older patch; preserve it and prepare this backup in a fresh clone')
     else:
         source = prepare('hardware')
     java = args.java_home.resolve()

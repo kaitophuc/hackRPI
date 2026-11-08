@@ -3,8 +3,8 @@
 The DE10-Standard runs the AERO game with ARM HPS simulation, SpinalVoodoo FPGA
 rasterization and Arduino tilt controls. The browser at
 <http://169.254.170.29:8081/> displays exact captured 320x240 RGB565 pixels.
-The latest continuous visible-play test measured **16.27 displayed FPS**;
-the 27 FPS minimum remains unmet. The selected queued renderer passed 360
+The latest continuous visible-play test measured **25.22 displayed FPS**,
+accepted by the user as sufficient. The selected depth-read RTL passed 360
 frame comparisons against 28 pre-change FPGA references with zero additional
 pixel differences. The existing CPU-vs-FPGA reference mismatch is documented.
 

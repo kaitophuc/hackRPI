@@ -9,3 +9,5 @@ fpga/experiments/rtl_profile/*.patch -whitespace
 fpga/experiments/rtl_profile/evidence/*.tar.gz binary
 recovery/known-good-16fps/*.sof binary
 recovery/known-good-16fps/*.tar.gz binary
+recovery/known-good-25fps/*.sof binary
+recovery/known-good-25fps/*.tar.gz binary

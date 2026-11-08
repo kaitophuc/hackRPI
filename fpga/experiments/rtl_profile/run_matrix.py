@@ -13,11 +13,12 @@ ROOT = HERE.parents[2]
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--candidate-rtl', type=Path, required=True)
+    parser.add_argument('--baseline-rtl', type=Path, default=ROOT / 'fpga/hardware/spinal_standard/rtl/SpinalStandardCore.v')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
-    baseline = ROOT / 'fpga/hardware/spinal_standard/rtl/SpinalStandardCore.v'
+    baseline = args.baseline_rtl.resolve()
     variants = [('baseline', baseline), ('candidate', args.candidate_rtl.resolve())]
     cases = [
         ('flat', 'same', 16, 0, 16, 8, 2),
