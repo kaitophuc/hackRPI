@@ -1,0 +1,20 @@
+Fitter Status : Successful - Sun Nov  8 08:37:15 2026
+Quartus Prime Version : 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
+Revision Name : Spinal_Standard_GPU
+Top-level Entity Name : DE10_Standard_GHRD
+Family : Cyclone V
+Device : 5CSXFC6D6F31C6
+Timing Models : Final
+Logic utilization (in ALMs) : 32,918 / 41,910 ( 79 % )
+Total registers : 51509
+Total pins : 338 / 499 ( 68 % )
+Total virtual pins : 0
+Total block memory bits : 1,033,160 / 5,662,720 ( 18 % )
+Total RAM Blocks : 286 / 553 ( 52 % )
+Total DSP Blocks : 62 / 112 ( 55 % )
+Total HSSI RX PCSs : 0 / 9 ( 0 % )
+Total HSSI PMA RX Deserializers : 0 / 9 ( 0 % )
+Total HSSI TX PCSs : 0 / 9 ( 0 % )
+Total HSSI PMA TX Serializers : 0 / 9 ( 0 % )
+Total PLLs : 0 / 15 ( 0 % )
+Total DLLs : 1 / 4 ( 25 % )

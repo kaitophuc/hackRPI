@@ -1,0 +1,853 @@
+{
+  "scenes": [
+    {
+      "frames": 15,
+      "pixel_hashes": [
+        "ecd55e995b5a8d2dd68f166810aaa7b372f9d86be4df88abf4c46a22a3495072"
+      ],
+      "median": {
+        "submit_wall_ms": 27.319908142089844,
+        "gpu_busy_ms": 25.571400000000001,
+        "submit_thread_cpu_ms": 27.140999999999998,
+        "command_ms": 27.100000000000001,
+        "triangles": 1403
+      },
+      "observations": [
+        {
+          "command_ms": 27.120999999999999,
+          "gpu_busy_ms": 25.5761,
+          "submit_thread_cpu_ms": 27.158999999999999,
+          "submit_wall_ms": 27.33612060546875,
+          "triangles": 1403
+        },
+        {
+          "command_ms": 27.148,
+          "gpu_busy_ms": 25.5671,
+          "submit_thread_cpu_ms": 27.166,
+          "submit_wall_ms": 27.37116813659668,
+          "triangles": 1403
+        },
+        {
+          "command_ms": 27.096,
+          "gpu_busy_ms": 25.568760000000001,
+          "submit_thread_cpu_ms": 27.140999999999998,
+          "submit_wall_ms": 27.317047119140625,
+          "triangles": 1403
+        },
+        {
+          "command_ms": 27.102,
+          "gpu_busy_ms": 25.56034,
+          "submit_thread_cpu_ms": 27.146999999999998,
+          "submit_wall_ms": 27.319908142089844,
+          "triangles": 1403
+        },
+        {
+          "command_ms": 27.097999999999999,
+          "gpu_busy_ms": 25.571400000000001,
+          "submit_thread_cpu_ms": 27.135999999999999,
+          "submit_wall_ms": 27.310848236083984,
+          "triangles": 1403
+        },
+        {
+          "command_ms": 27.102,
+          "gpu_busy_ms": 25.577819999999999,
+          "submit_thread_cpu_ms": 27.140000000000001,
+          "submit_wall_ms": 27.316808700561523,
+          "triangles": 1403
+        },
+        {
+          "command_ms": 27.093,
+          "gpu_busy_ms": 25.573599999999999,
+          "submit_thread_cpu_ms": 27.129999999999999,
+          "submit_wall_ms": 27.327775955200195,
+          "triangles": 1403
+        },
+        {
+          "command_ms": 27.097000000000001,
+          "gpu_busy_ms": 25.581340000000001,
+          "submit_thread_cpu_ms": 27.135000000000002,
+          "submit_wall_ms": 27.312040328979492,
+          "triangles": 1403
+        },
+        {
+          "command_ms": 27.093,
+          "gpu_busy_ms": 25.576000000000001,
+          "submit_thread_cpu_ms": 27.134,
+          "submit_wall_ms": 27.311086654663086,
+          "triangles": 1403
+        },
+        {
+          "command_ms": 27.097000000000001,
+          "gpu_busy_ms": 25.575119999999998,
+          "submit_thread_cpu_ms": 27.134,
+          "submit_wall_ms": 27.308940887451172,
+          "triangles": 1403
+        },
+        {
+          "command_ms": 27.131,
+          "gpu_busy_ms": 25.577539999999999,
+          "submit_thread_cpu_ms": 27.172999999999998,
+          "submit_wall_ms": 27.349948883056641,
+          "triangles": 1403
+        },
+        {
+          "command_ms": 27.100000000000001,
+          "gpu_busy_ms": 25.57058,
+          "submit_thread_cpu_ms": 27.145,
+          "submit_wall_ms": 27.324199676513672,
+          "triangles": 1403
+        },
+        {
+          "command_ms": 27.106999999999999,
+          "gpu_busy_ms": 25.555,
+          "submit_thread_cpu_ms": 27.152999999999999,
+          "submit_wall_ms": 27.328968048095703,
+          "triangles": 1403
+        },
+        {
+          "command_ms": 27.113,
+          "gpu_busy_ms": 25.561160000000001,
+          "submit_thread_cpu_ms": 27.155999999999999,
+          "submit_wall_ms": 27.334928512573242,
+          "triangles": 1403
+        },
+        {
+          "command_ms": 27.088000000000001,
+          "gpu_busy_ms": 25.565439999999999,
+          "submit_thread_cpu_ms": 27.126999999999999,
+          "submit_wall_ms": 27.303934097290039,
+          "triangles": 1403
+        }
+      ],
+      "scene": "tick-1200.rpl"
+    },
+    {
+      "frames": 15,
+      "pixel_hashes": [
+        "b5dfdc30ebbeb8648122cd6e92987fae28497c67f06d76e1f2b25e1c36072391"
+      ],
+      "median": {
+        "submit_wall_ms": 45.114040374755859,
+        "gpu_busy_ms": 39.279539999999997,
+        "submit_thread_cpu_ms": 44.918999999999997,
+        "command_ms": 44.881,
+        "triangles": 4086
+      },
+      "observations": [
+        {
+          "command_ms": 45.462000000000003,
+          "gpu_busy_ms": 39.279400000000003,
+          "submit_thread_cpu_ms": 44.911999999999999,
+          "submit_wall_ms": 45.695066452026367,
+          "triangles": 4086
+        },
+        {
+          "command_ms": 44.863999999999997,
+          "gpu_busy_ms": 39.277560000000001,
+          "submit_thread_cpu_ms": 44.853000000000002,
+          "submit_wall_ms": 45.091867446899414,
+          "triangles": 4086
+        },
+        {
+          "command_ms": 44.872,
+          "gpu_busy_ms": 39.281640000000003,
+          "submit_thread_cpu_ms": 44.848999999999997,
+          "submit_wall_ms": 45.100927352905273,
+          "triangles": 4086
+        },
+        {
+          "command_ms": 44.917999999999999,
+          "gpu_busy_ms": 39.280320000000003,
+          "submit_thread_cpu_ms": 44.957000000000001,
+          "submit_wall_ms": 45.142889022827148,
+          "triangles": 4086
+        },
+        {
+          "command_ms": 44.856000000000002,
+          "gpu_busy_ms": 39.272779999999997,
+          "submit_thread_cpu_ms": 44.893999999999998,
+          "submit_wall_ms": 45.114040374755859,
+          "triangles": 4086
+        },
+        {
+          "command_ms": 44.835000000000001,
+          "gpu_busy_ms": 39.265279999999997,
+          "submit_thread_cpu_ms": 44.875,
+          "submit_wall_ms": 45.062065124511719,
+          "triangles": 4086
+        },
+        {
+          "command_ms": 44.880000000000003,
+          "gpu_busy_ms": 39.288580000000003,
+          "submit_thread_cpu_ms": 44.918999999999997,
+          "submit_wall_ms": 45.10498046875,
+          "triangles": 4086
+        },
+        {
+          "command_ms": 44.881,
+          "gpu_busy_ms": 39.270339999999997,
+          "submit_thread_cpu_ms": 44.926000000000002,
+          "submit_wall_ms": 45.114040374755859,
+          "triangles": 4086
+        },
+        {
+          "command_ms": 44.896000000000001,
+          "gpu_busy_ms": 39.292740000000002,
+          "submit_thread_cpu_ms": 44.936999999999998,
+          "submit_wall_ms": 45.124053955078125,
+          "triangles": 4086
+        },
+        {
+          "command_ms": 44.868000000000002,
+          "gpu_busy_ms": 39.279539999999997,
+          "submit_thread_cpu_ms": 44.906999999999996,
+          "submit_wall_ms": 45.094013214111328,
+          "triangles": 4086
+        },
+        {
+          "command_ms": 44.893999999999998,
+          "gpu_busy_ms": 39.279380000000003,
+          "submit_thread_cpu_ms": 44.939,
+          "submit_wall_ms": 45.13096809387207,
+          "triangles": 4086
+        },
+        {
+          "command_ms": 44.887,
+          "gpu_busy_ms": 39.28022,
+          "submit_thread_cpu_ms": 44.926000000000002,
+          "submit_wall_ms": 45.115947723388672,
+          "triangles": 4086
+        },
+        {
+          "command_ms": 44.917999999999999,
+          "gpu_busy_ms": 39.28942,
+          "submit_thread_cpu_ms": 44.959000000000003,
+          "submit_wall_ms": 45.147895812988281,
+          "triangles": 4086
+        },
+        {
+          "command_ms": 44.893999999999998,
+          "gpu_busy_ms": 39.280380000000001,
+          "submit_thread_cpu_ms": 44.938000000000002,
+          "submit_wall_ms": 45.125007629394531,
+          "triangles": 4086
+        },
+        {
+          "command_ms": 44.862000000000002,
+          "gpu_busy_ms": 39.275880000000001,
+          "submit_thread_cpu_ms": 44.899999999999999,
+          "submit_wall_ms": 45.088052749633789,
+          "triangles": 4086
+        }
+      ],
+      "scene": "tick-180.rpl"
+    },
+    {
+      "frames": 15,
+      "pixel_hashes": [
+        "86bff3d17a37f4b8bff8c965378fa7b011e202ea4e37711eb668312ff0cb858b"
+      ],
+      "median": {
+        "submit_wall_ms": 44.827938079833984,
+        "gpu_busy_ms": 38.79616,
+        "submit_thread_cpu_ms": 44.640000000000001,
+        "command_ms": 44.597999999999999,
+        "triangles": 4122
+      },
+      "observations": [
+        {
+          "command_ms": 44.704000000000001,
+          "gpu_busy_ms": 38.8035,
+          "submit_thread_cpu_ms": 44.700000000000003,
+          "submit_wall_ms": 44.9371337890625,
+          "triangles": 4122
+        },
+        {
+          "command_ms": 44.597999999999999,
+          "gpu_busy_ms": 38.800820000000002,
+          "submit_thread_cpu_ms": 44.637,
+          "submit_wall_ms": 44.826030731201172,
+          "triangles": 4122
+        },
+        {
+          "command_ms": 44.567999999999998,
+          "gpu_busy_ms": 38.784239999999997,
+          "submit_thread_cpu_ms": 44.606000000000002,
+          "submit_wall_ms": 44.792890548706055,
+          "triangles": 4122
+        },
+        {
+          "command_ms": 44.651000000000003,
+          "gpu_busy_ms": 38.81082,
+          "submit_thread_cpu_ms": 44.695,
+          "submit_wall_ms": 44.883966445922852,
+          "triangles": 4122
+        },
+        {
+          "command_ms": 44.604999999999997,
+          "gpu_busy_ms": 38.795479999999998,
+          "submit_thread_cpu_ms": 44.645000000000003,
+          "submit_wall_ms": 44.832944869995117,
+          "triangles": 4122
+        },
+        {
+          "command_ms": 44.582000000000001,
+          "gpu_busy_ms": 38.795099999999998,
+          "submit_thread_cpu_ms": 44.621000000000002,
+          "submit_wall_ms": 44.806003570556641,
+          "triangles": 4122
+        },
+        {
+          "command_ms": 44.643000000000001,
+          "gpu_busy_ms": 38.802140000000001,
+          "submit_thread_cpu_ms": 44.686999999999998,
+          "submit_wall_ms": 44.876813888549805,
+          "triangles": 4122
+        },
+        {
+          "command_ms": 44.628,
+          "gpu_busy_ms": 38.792720000000003,
+          "submit_thread_cpu_ms": 44.667000000000002,
+          "submit_wall_ms": 44.857025146484375,
+          "triangles": 4122
+        },
+        {
+          "command_ms": 44.590000000000003,
+          "gpu_busy_ms": 38.788379999999997,
+          "submit_thread_cpu_ms": 44.628999999999998,
+          "submit_wall_ms": 44.814109802246094,
+          "triangles": 4122
+        },
+        {
+          "command_ms": 44.636000000000003,
+          "gpu_busy_ms": 38.801659999999998,
+          "submit_thread_cpu_ms": 44.680999999999997,
+          "submit_wall_ms": 44.865131378173828,
+          "triangles": 4122
+        },
+        {
+          "command_ms": 44.567,
+          "gpu_busy_ms": 38.786760000000001,
+          "submit_thread_cpu_ms": 44.603999999999999,
+          "submit_wall_ms": 44.791936874389648,
+          "triangles": 4122
+        },
+        {
+          "command_ms": 44.668999999999997,
+          "gpu_busy_ms": 38.796399999999998,
+          "submit_thread_cpu_ms": 44.707000000000001,
+          "submit_wall_ms": 44.89588737487793,
+          "triangles": 4122
+        },
+        {
+          "command_ms": 44.597000000000001,
+          "gpu_busy_ms": 38.79616,
+          "submit_thread_cpu_ms": 44.640000000000001,
+          "submit_wall_ms": 44.827938079833984,
+          "triangles": 4122
+        },
+        {
+          "command_ms": 44.581000000000003,
+          "gpu_busy_ms": 38.792940000000002,
+          "submit_thread_cpu_ms": 44.619999999999997,
+          "submit_wall_ms": 44.814109802246094,
+          "triangles": 4122
+        },
+        {
+          "command_ms": 44.594000000000001,
+          "gpu_busy_ms": 38.801200000000001,
+          "submit_thread_cpu_ms": 44.633000000000003,
+          "submit_wall_ms": 44.823884963989258,
+          "triangles": 4122
+        }
+      ],
+      "scene": "tick-2.rpl"
+    },
+    {
+      "frames": 15,
+      "pixel_hashes": [
+        "6b2ead7bbc14aa039320a02ddeeb69f43c1d9d26c837b6c24c9206fb4ba3a06e"
+      ],
+      "median": {
+        "submit_wall_ms": 42.710065841674805,
+        "gpu_busy_ms": 37.459519999999998,
+        "submit_thread_cpu_ms": 42.505000000000003,
+        "command_ms": 42.466000000000001,
+        "triangles": 4045
+      },
+      "observations": [
+        {
+          "command_ms": 42.457999999999998,
+          "gpu_busy_ms": 37.474620000000002,
+          "submit_thread_cpu_ms": 42.457000000000001,
+          "submit_wall_ms": 42.687177658081055,
+          "triangles": 4045
+        },
+        {
+          "command_ms": 42.594999999999999,
+          "gpu_busy_ms": 37.462519999999998,
+          "submit_thread_cpu_ms": 42.569000000000003,
+          "submit_wall_ms": 42.821884155273438,
+          "triangles": 4045
+        },
+        {
+          "command_ms": 42.488999999999997,
+          "gpu_busy_ms": 37.459859999999999,
+          "submit_thread_cpu_ms": 42.529000000000003,
+          "submit_wall_ms": 42.71697998046875,
+          "triangles": 4045
+        },
+        {
+          "command_ms": 42.514000000000003,
+          "gpu_busy_ms": 37.467559999999999,
+          "submit_thread_cpu_ms": 42.558999999999997,
+          "submit_wall_ms": 42.745828628540039,
+          "triangles": 4045
+        },
+        {
+          "command_ms": 42.463999999999999,
+          "gpu_busy_ms": 37.459519999999998,
+          "submit_thread_cpu_ms": 42.503999999999998,
+          "submit_wall_ms": 42.692899703979492,
+          "triangles": 4045
+        },
+        {
+          "command_ms": 42.5,
+          "gpu_busy_ms": 37.464820000000003,
+          "submit_thread_cpu_ms": 42.543999999999997,
+          "submit_wall_ms": 42.726993560791016,
+          "triangles": 4045
+        },
+        {
+          "command_ms": 42.439,
+          "gpu_busy_ms": 37.444839999999999,
+          "submit_thread_cpu_ms": 42.478000000000002,
+          "submit_wall_ms": 42.663097381591797,
+          "triangles": 4045
+        },
+        {
+          "command_ms": 42.454000000000001,
+          "gpu_busy_ms": 37.451979999999999,
+          "submit_thread_cpu_ms": 42.494,
+          "submit_wall_ms": 42.719841003417969,
+          "triangles": 4045
+        },
+        {
+          "command_ms": 42.466000000000001,
+          "gpu_busy_ms": 37.468000000000004,
+          "submit_thread_cpu_ms": 42.505000000000003,
+          "submit_wall_ms": 42.693853378295898,
+          "triangles": 4045
+        },
+        {
+          "command_ms": 42.460999999999999,
+          "gpu_busy_ms": 37.460920000000002,
+          "submit_thread_cpu_ms": 42.502000000000002,
+          "submit_wall_ms": 42.686939239501953,
+          "triangles": 4045
+        },
+        {
+          "command_ms": 42.491,
+          "gpu_busy_ms": 37.454540000000001,
+          "submit_thread_cpu_ms": 42.530000000000001,
+          "submit_wall_ms": 42.71697998046875,
+          "triangles": 4045
+        },
+        {
+          "command_ms": 42.478999999999999,
+          "gpu_busy_ms": 37.4542,
+          "submit_thread_cpu_ms": 42.521000000000001,
+          "submit_wall_ms": 42.710065841674805,
+          "triangles": 4045
+        },
+        {
+          "command_ms": 42.484000000000002,
+          "gpu_busy_ms": 37.459139999999998,
+          "submit_thread_cpu_ms": 42.529000000000003,
+          "submit_wall_ms": 42.718172073364258,
+          "triangles": 4045
+        },
+        {
+          "command_ms": 42.457000000000001,
+          "gpu_busy_ms": 37.451360000000001,
+          "submit_thread_cpu_ms": 42.497,
+          "submit_wall_ms": 42.686939239501953,
+          "triangles": 4045
+        },
+        {
+          "command_ms": 42.460000000000001,
+          "gpu_busy_ms": 37.456940000000003,
+          "submit_thread_cpu_ms": 42.505000000000003,
+          "submit_wall_ms": 42.693138122558594,
+          "triangles": 4045
+        }
+      ],
+      "scene": "tick-360.rpl"
+    },
+    {
+      "frames": 15,
+      "pixel_hashes": [
+        "8bb678b117ab075f96b8779122a91d402a0d493ac36c2388786b57d371f09e2f"
+      ],
+      "median": {
+        "submit_wall_ms": 39.489030838012695,
+        "gpu_busy_ms": 34.915439999999997,
+        "submit_thread_cpu_ms": 39.280000000000001,
+        "command_ms": 39.259,
+        "triangles": 3707
+      },
+      "observations": [
+        {
+          "command_ms": 39.259999999999998,
+          "gpu_busy_ms": 34.920900000000003,
+          "submit_thread_cpu_ms": 39.240000000000002,
+          "submit_wall_ms": 39.494037628173828,
+          "triangles": 3707
+        },
+        {
+          "command_ms": 39.195999999999998,
+          "gpu_busy_ms": 34.90804,
+          "submit_thread_cpu_ms": 39.237000000000002,
+          "submit_wall_ms": 39.422035217285156,
+          "triangles": 3707
+        },
+        {
+          "command_ms": 39.283000000000001,
+          "gpu_busy_ms": 34.92454,
+          "submit_thread_cpu_ms": 39.264000000000003,
+          "submit_wall_ms": 39.510965347290039,
+          "triangles": 3707
+        },
+        {
+          "command_ms": 39.261000000000003,
+          "gpu_busy_ms": 34.920780000000001,
+          "submit_thread_cpu_ms": 39.299999999999997,
+          "submit_wall_ms": 39.489030838012695,
+          "triangles": 3707
+        },
+        {
+          "command_ms": 39.253,
+          "gpu_busy_ms": 34.922939999999997,
+          "submit_thread_cpu_ms": 39.292000000000002,
+          "submit_wall_ms": 39.483070373535156,
+          "triangles": 3707
+        },
+        {
+          "command_ms": 39.241,
+          "gpu_busy_ms": 34.91404,
+          "submit_thread_cpu_ms": 39.280000000000001,
+          "submit_wall_ms": 39.465904235839844,
+          "triangles": 3707
+        },
+        {
+          "command_ms": 39.259,
+          "gpu_busy_ms": 34.907359999999997,
+          "submit_thread_cpu_ms": 39.304000000000002,
+          "submit_wall_ms": 39.492130279541016,
+          "triangles": 3707
+        },
+        {
+          "command_ms": 39.277000000000001,
+          "gpu_busy_ms": 34.915300000000002,
+          "submit_thread_cpu_ms": 39.322000000000003,
+          "submit_wall_ms": 39.507865905761719,
+          "triangles": 3707
+        },
+        {
+          "command_ms": 39.228999999999999,
+          "gpu_busy_ms": 34.906979999999997,
+          "submit_thread_cpu_ms": 39.274000000000001,
+          "submit_wall_ms": 39.458990097045898,
+          "triangles": 3707
+        },
+        {
+          "command_ms": 39.252000000000002,
+          "gpu_busy_ms": 34.915439999999997,
+          "submit_thread_cpu_ms": 39.292000000000002,
+          "submit_wall_ms": 39.479970932006836,
+          "triangles": 3707
+        },
+        {
+          "command_ms": 39.235999999999997,
+          "gpu_busy_ms": 34.915500000000002,
+          "submit_thread_cpu_ms": 39.276000000000003,
+          "submit_wall_ms": 39.463996887207031,
+          "triangles": 3707
+        },
+        {
+          "command_ms": 39.286999999999999,
+          "gpu_busy_ms": 34.908839999999998,
+          "submit_thread_cpu_ms": 39.326999999999998,
+          "submit_wall_ms": 39.513111114501953,
+          "triangles": 3707
+        },
+        {
+          "command_ms": 39.201000000000001,
+          "gpu_busy_ms": 34.90992,
+          "submit_thread_cpu_ms": 39.241999999999997,
+          "submit_wall_ms": 39.428949356079102,
+          "triangles": 3707
+        },
+        {
+          "command_ms": 40.255000000000003,
+          "gpu_busy_ms": 35.002980000000001,
+          "submit_thread_cpu_ms": 37.997999999999998,
+          "submit_wall_ms": 40.482044219970703,
+          "triangles": 3707
+        },
+        {
+          "command_ms": 39.290999999999997,
+          "gpu_busy_ms": 34.922359999999998,
+          "submit_thread_cpu_ms": 39.329999999999998,
+          "submit_wall_ms": 39.519071578979492,
+          "triangles": 3707
+        }
+      ],
+      "scene": "tick-600.rpl"
+    },
+    {
+      "frames": 15,
+      "pixel_hashes": [
+        "ffb33dc5f387ba1e99596316b55c0547243c73deee4426930d952a7c9c380197"
+      ],
+      "median": {
+        "submit_wall_ms": 44.882059097290039,
+        "gpu_busy_ms": 38.484900000000003,
+        "submit_thread_cpu_ms": 44.691000000000003,
+        "command_ms": 44.655999999999999,
+        "triangles": 4271
+      },
+      "observations": [
+        {
+          "command_ms": 45.243000000000002,
+          "gpu_busy_ms": 38.484479999999998,
+          "submit_thread_cpu_ms": 44.691000000000003,
+          "submit_wall_ms": 45.475959777832031,
+          "triangles": 4271
+        },
+        {
+          "command_ms": 45.615000000000002,
+          "gpu_busy_ms": 38.521799999999999,
+          "submit_thread_cpu_ms": 44.741,
+          "submit_wall_ms": 45.84503173828125,
+          "triangles": 4271
+        },
+        {
+          "command_ms": 44.68,
+          "gpu_busy_ms": 38.488320000000002,
+          "submit_thread_cpu_ms": 44.677,
+          "submit_wall_ms": 44.907093048095703,
+          "triangles": 4271
+        },
+        {
+          "command_ms": 44.661999999999999,
+          "gpu_busy_ms": 38.484059999999999,
+          "submit_thread_cpu_ms": 44.707000000000001,
+          "submit_wall_ms": 44.894933700561523,
+          "triangles": 4271
+        },
+        {
+          "command_ms": 44.634,
+          "gpu_busy_ms": 38.490580000000001,
+          "submit_thread_cpu_ms": 44.673000000000002,
+          "submit_wall_ms": 44.859886169433594,
+          "triangles": 4271
+        },
+        {
+          "command_ms": 44.643999999999998,
+          "gpu_busy_ms": 38.489820000000002,
+          "submit_thread_cpu_ms": 44.683999999999997,
+          "submit_wall_ms": 44.869899749755859,
+          "triangles": 4271
+        },
+        {
+          "command_ms": 44.661000000000001,
+          "gpu_busy_ms": 38.483719999999998,
+          "submit_thread_cpu_ms": 44.707000000000001,
+          "submit_wall_ms": 44.895172119140625,
+          "triangles": 4271
+        },
+        {
+          "command_ms": 44.622999999999998,
+          "gpu_busy_ms": 38.476179999999999,
+          "submit_thread_cpu_ms": 44.662999999999997,
+          "submit_wall_ms": 44.851064682006836,
+          "triangles": 4271
+        },
+        {
+          "command_ms": 44.655999999999999,
+          "gpu_busy_ms": 38.493699999999997,
+          "submit_thread_cpu_ms": 44.697000000000003,
+          "submit_wall_ms": 44.882059097290039,
+          "triangles": 4271
+        },
+        {
+          "command_ms": 44.670999999999999,
+          "gpu_busy_ms": 38.482300000000002,
+          "submit_thread_cpu_ms": 44.716999999999999,
+          "submit_wall_ms": 44.901847839355469,
+          "triangles": 4271
+        },
+        {
+          "command_ms": 44.639000000000003,
+          "gpu_busy_ms": 38.490519999999997,
+          "submit_thread_cpu_ms": 44.68,
+          "submit_wall_ms": 44.870138168334961,
+          "triangles": 4271
+        },
+        {
+          "command_ms": 44.628,
+          "gpu_busy_ms": 38.477119999999999,
+          "submit_thread_cpu_ms": 44.667999999999999,
+          "submit_wall_ms": 44.852972030639648,
+          "triangles": 4271
+        },
+        {
+          "command_ms": 44.648000000000003,
+          "gpu_busy_ms": 38.484900000000003,
+          "submit_thread_cpu_ms": 44.694000000000003,
+          "submit_wall_ms": 44.876813888549805,
+          "triangles": 4271
+        },
+        {
+          "command_ms": 44.624000000000002,
+          "gpu_busy_ms": 38.473959999999998,
+          "submit_thread_cpu_ms": 44.664000000000001,
+          "submit_wall_ms": 44.851779937744141,
+          "triangles": 4271
+        },
+        {
+          "command_ms": 44.665999999999997,
+          "gpu_busy_ms": 38.491979999999998,
+          "submit_thread_cpu_ms": 44.704000000000001,
+          "submit_wall_ms": 44.89588737487793,
+          "triangles": 4271
+        }
+      ],
+      "scene": "tick-90.rpl"
+    },
+    {
+      "frames": 15,
+      "pixel_hashes": [
+        "eb0d5c40e616fdef720a533412f10e10eda917cafec88f7aad078fbc6daffab9"
+      ],
+      "median": {
+        "submit_wall_ms": 34.250974655151367,
+        "gpu_busy_ms": 31.964320000000001,
+        "submit_thread_cpu_ms": 34.066000000000003,
+        "command_ms": 34.027000000000001,
+        "triangles": 2532
+      },
+      "observations": [
+        {
+          "command_ms": 34.033999999999999,
+          "gpu_busy_ms": 31.973759999999999,
+          "submit_thread_cpu_ms": 34.073999999999998,
+          "submit_wall_ms": 34.256935119628906,
+          "triangles": 2532
+        },
+        {
+          "command_ms": 34.695999999999998,
+          "gpu_busy_ms": 31.97606,
+          "submit_thread_cpu_ms": 34.119,
+          "submit_wall_ms": 34.920930862426758,
+          "triangles": 2532
+        },
+        {
+          "command_ms": 34.043999999999997,
+          "gpu_busy_ms": 31.97372,
+          "submit_thread_cpu_ms": 34.036999999999999,
+          "submit_wall_ms": 34.273862838745117,
+          "triangles": 2532
+        },
+        {
+          "command_ms": 34.027999999999999,
+          "gpu_busy_ms": 31.976959999999998,
+          "submit_thread_cpu_ms": 34.066000000000003,
+          "submit_wall_ms": 34.250974655151367,
+          "triangles": 2532
+        },
+        {
+          "command_ms": 34.026000000000003,
+          "gpu_busy_ms": 31.967739999999999,
+          "submit_thread_cpu_ms": 34.07,
+          "submit_wall_ms": 34.25288200378418,
+          "triangles": 2532
+        },
+        {
+          "command_ms": 33.994,
+          "gpu_busy_ms": 31.953900000000001,
+          "submit_thread_cpu_ms": 34.033000000000001,
+          "submit_wall_ms": 34.218072891235352,
+          "triangles": 2532
+        },
+        {
+          "command_ms": 33.994,
+          "gpu_busy_ms": 31.964079999999999,
+          "submit_thread_cpu_ms": 34.033999999999999,
+          "submit_wall_ms": 34.214973449707031,
+          "triangles": 2532
+        },
+        {
+          "command_ms": 34.055,
+          "gpu_busy_ms": 31.980920000000001,
+          "submit_thread_cpu_ms": 34.100999999999999,
+          "submit_wall_ms": 34.28196907043457,
+          "triangles": 2532
+        },
+        {
+          "command_ms": 34.027000000000001,
+          "gpu_busy_ms": 31.964320000000001,
+          "submit_thread_cpu_ms": 34.066000000000003,
+          "submit_wall_ms": 34.250020980834961,
+          "triangles": 2532
+        },
+        {
+          "command_ms": 33.997,
+          "gpu_busy_ms": 31.954280000000001,
+          "submit_thread_cpu_ms": 34.045000000000002,
+          "submit_wall_ms": 34.224987030029297,
+          "triangles": 2532
+        },
+        {
+          "command_ms": 33.991,
+          "gpu_busy_ms": 31.9588,
+          "submit_thread_cpu_ms": 34.029000000000003,
+          "submit_wall_ms": 34.209966659545898,
+          "triangles": 2532
+        },
+        {
+          "command_ms": 34.012,
+          "gpu_busy_ms": 31.955880000000001,
+          "submit_thread_cpu_ms": 34.049999999999997,
+          "submit_wall_ms": 34.230947494506836,
+          "triangles": 2532
+        },
+        {
+          "command_ms": 34.055,
+          "gpu_busy_ms": 31.960760000000001,
+          "submit_thread_cpu_ms": 34.101999999999997,
+          "submit_wall_ms": 34.286975860595703,
+          "triangles": 2532
+        },
+        {
+          "command_ms": 34.008000000000003,
+          "gpu_busy_ms": 31.9529,
+          "submit_thread_cpu_ms": 34.046999999999997,
+          "submit_wall_ms": 34.22999382019043,
+          "triangles": 2532
+        },
+        {
+          "command_ms": 34.031999999999996,
+          "gpu_busy_ms": 31.97128,
+          "submit_thread_cpu_ms": 34.078000000000003,
+          "submit_wall_ms": 34.258127212524414,
+          "triangles": 2532
+        }
+      ],
+      "scene": "tick-900.rpl"
+    }
+  ],
+  "diagnostic_not_rendering": false,
+  "label": "rtl-baseline"
+}

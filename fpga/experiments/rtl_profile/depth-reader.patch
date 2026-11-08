@@ -1,0 +1,60 @@
+--- a/src/voodoo/de10/De10MemBackend.scala
++++ b/src/voodoo/de10/De10MemBackend.scala
+@@ -56,7 +56,8 @@
+     bmbParams: BmbParameter,
+     avalonAddressWidth: Int,
+     addressBase: BigInt,
+-    addressMask: BigInt
++    addressMask: BigInt,
++    wordReadSlots: Int = 0
+ ) extends Component {
+   De10BmbToAvalonMm.requireSingleSource(bmbParams)
+ 
+@@ -66,6 +67,12 @@
+     val publicationBusy = out Bool ()
+   }
+ 
++  if (wordReadSlots > 0) {
++    val reader = De10PipelinedWordReader(bmbParams, avalonAddressWidth, addressBase, addressMask, wordReadSlots)
++    io.bmb <> reader.io.bmb
++    io.mem <> reader.io.mem
++    io.publicationBusy := reader.io.publicationBusy
++  } else new Area {
+   val writeBurstActive = RegInit(False)
+   val writeRspPending = RegInit(False)
+   val writeRspContext = bmbParams.access.contextWidth > 0 generate Reg(
+@@ -457,6 +464,7 @@
+   }
+ }
+ 
++  }
+ case class De10MemBackend(c: Config) extends Component {
+   val io = new Bundle {
+     val publicationBusy = out Bool ()
+@@ -484,13 +492,14 @@
+     val memTex = master(AvalonMM(De10MemBackend.avalonConfig(De10MemBackend.physicalAddressWidth)))
+   }
+ 
+-  private def fbBridge(pipeInput: Boolean = false) = {
++  private def fbBridge(pipeInput: Boolean = false, wordReadSlots: Int = 0) = {
+     val sourceRemover = BmbSourceRemover(Core.fbMemBmbParams(c))
+     val bridge = De10BmbToAvalonMm(
+       bmbParams = De10BmbToAvalonMm.singleSourceBridgeParams(Core.fbMemBmbParams(c)),
+       avalonAddressWidth = De10MemBackend.physicalAddressWidth,
+       addressBase = De10AddressMap.fbMemBase,
+-      addressMask = De10AddressMap.fbMemMask
++      addressMask = De10AddressMap.fbMemMask,
++      wordReadSlots = wordReadSlots
+     )
+     if (pipeInput) {
+       bridge.io.bmb.cmd << sourceRemover.io.output.cmd.m2sPipe()
+@@ -522,7 +531,8 @@
+   val (fbColorWriteSourceRemover, fbColorWriteBridge) = fbBridge()
+   val (fbAuxWriteSourceRemover, fbAuxWriteBridge) = fbBridge()
+   val (fbColorReadSourceRemover, fbColorReadBridge) = fbBridge(pipeInput = true)
+-  val (fbAuxReadSourceRemover, fbAuxReadBridge) = fbBridge(pipeInput = true)
++  val (fbAuxReadSourceRemover, fbAuxReadBridge) = fbBridge(pipeInput = true,
++    wordReadSlots = if (c.useFbReadCache) 0 else 8)
+   val (texSourceRemover, texBridgeInst) = texBridge()
+   io.publicationBusy := Seq(
+     fbWriteBridge, fbColorWriteBridge, fbAuxWriteBridge,

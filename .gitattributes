@@ -5,3 +5,5 @@
 fpga/hardware/** -text -whitespace
 fpga/patches/** -text -whitespace
 fpga/licenses/** -text -whitespace
+fpga/experiments/rtl_profile/*.patch -whitespace
+fpga/experiments/rtl_profile/evidence/*.tar.gz binary

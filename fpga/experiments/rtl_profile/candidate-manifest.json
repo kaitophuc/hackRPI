@@ -1,0 +1,11 @@
+{
+  "baseline_revision": "a0d3a3d834dbc5be2c7387b8332ee4caf03b39eb",
+  "upstream_revision": "92c56afa0e98763ccd794cd39512cad2822bd86e",
+  "accepted_hardware_patch_sha256": "338b9f321e447aae38ed3c6a6590978007beeb285e3404311f1dd49da2b028f0",
+  "baseline_backend_sha256": "73d1f3eebdbbe44ddfb5c78ba6315e70777f880ba9f5b0cefe86828baf17754b",
+  "candidate_files_lf_sha256": {
+    "src/voodoo/de10/De10MemBackend.scala": "f9b4ac85b4122db2031426732cc1307678cfbca67741f6044ebf3b139301a3fc",
+    "src/voodoo/de10/De10PipelinedWordReader.scala": "39fed2236638d6fdc9dbeb7bd54b0c4e9beebf372eccc7d6dc5b298e8cba13f6"
+  },
+  "candidate_patch_sha256": "47c1ac0bb54a7a79a21d5a4e10a710a4e3cd75e906b1b636403b378da479c3f2"
+}

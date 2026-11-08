@@ -1,0 +1,358 @@
+{
+  "timing_passed": true,
+  "timing_entries": [
+    {
+      "type": "Slow 1100mV 85C Model Setup 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 1.73,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Setup 'CLOCK_50'",
+      "slack": 2.217,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Setup 'altera_reserved_tck'",
+      "slack": 10.3,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Hold 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 0.143,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Hold 'CLOCK_50'",
+      "slack": 0.222,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Hold 'altera_reserved_tck'",
+      "slack": 0.427,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Recovery 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 3.375,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Recovery 'CLOCK_50'",
+      "slack": 11.424,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Recovery 'altera_reserved_tck'",
+      "slack": 18.455,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Removal 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 0.47,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Removal 'CLOCK_50'",
+      "slack": 0.548,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Removal 'altera_reserved_tck'",
+      "slack": 0.738,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Minimum Pulse Width 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|pll_write_clk_dq_write_clk'",
+      "slack": 0.608,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Minimum Pulse Width 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 0.623,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Minimum Pulse Width 'CLOCK_50'",
+      "slack": 8.87,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 85C Model Minimum Pulse Width 'altera_reserved_tck'",
+      "slack": 18.794,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Setup 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 1.727,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Setup 'CLOCK_50'",
+      "slack": 2.393,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Setup 'altera_reserved_tck'",
+      "slack": 10.44,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Hold 'CLOCK_50'",
+      "slack": 0.098,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Hold 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 0.162,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Hold 'altera_reserved_tck'",
+      "slack": 0.438,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Recovery 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 3.468,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Recovery 'CLOCK_50'",
+      "slack": 11.837,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Recovery 'altera_reserved_tck'",
+      "slack": 18.568,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Removal 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 0.46,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Removal 'CLOCK_50'",
+      "slack": 0.504,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Removal 'altera_reserved_tck'",
+      "slack": 0.708,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Minimum Pulse Width 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|pll_write_clk_dq_write_clk'",
+      "slack": 0.613,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Minimum Pulse Width 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 0.63,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Minimum Pulse Width 'CLOCK_50'",
+      "slack": 8.906,
+      "tns": 0.0
+    },
+    {
+      "type": "Slow 1100mV 0C Model Minimum Pulse Width 'altera_reserved_tck'",
+      "slack": 18.748,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Setup 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 2.11,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Setup 'CLOCK_50'",
+      "slack": 9.503,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Setup 'altera_reserved_tck'",
+      "slack": 12.357,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Hold 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 0.084,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Hold 'CLOCK_50'",
+      "slack": 0.13,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Hold 'altera_reserved_tck'",
+      "slack": 0.166,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Recovery 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 3.727,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Recovery 'CLOCK_50'",
+      "slack": 14.227,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Recovery 'altera_reserved_tck'",
+      "slack": 19.451,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Removal 'CLOCK_50'",
+      "slack": 0.286,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Removal 'altera_reserved_tck'",
+      "slack": 0.357,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Removal 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 0.497,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Minimum Pulse Width 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|pll_write_clk_dq_write_clk'",
+      "slack": 0.883,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Minimum Pulse Width 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 0.891,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Minimum Pulse Width 'CLOCK_50'",
+      "slack": 8.479,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 85C Model Minimum Pulse Width 'altera_reserved_tck'",
+      "slack": 18.629,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Setup 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 2.11,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Setup 'CLOCK_50'",
+      "slack": 10.625,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Setup 'altera_reserved_tck'",
+      "slack": 12.535,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Hold 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 0.077,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Hold 'CLOCK_50'",
+      "slack": 0.086,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Hold 'altera_reserved_tck'",
+      "slack": 0.152,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Recovery 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 3.825,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Recovery 'CLOCK_50'",
+      "slack": 14.97,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Recovery 'altera_reserved_tck'",
+      "slack": 19.579,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Removal 'CLOCK_50'",
+      "slack": 0.256,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Removal 'altera_reserved_tck'",
+      "slack": 0.332,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Removal 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 0.473,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Minimum Pulse Width 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|pll_write_clk_dq_write_clk'",
+      "slack": 0.887,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Minimum Pulse Width 'spinal_system:u0|spinal_system_hps_0:hps_0|spinal_system_hps_0_hps_io:hps_io|spinal_system_hps_0_hps_io_border:border|hps_sdram:hps_sdram_inst|hps_sdram_pll:pll|afi_clk_write_clk'",
+      "slack": 0.894,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Minimum Pulse Width 'CLOCK_50'",
+      "slack": 8.432,
+      "tns": 0.0
+    },
+    {
+      "type": "Fast 1100mV 0C Model Minimum Pulse Width 'altera_reserved_tck'",
+      "slack": 18.59,
+      "tns": 0.0
+    }
+  ],
+  "minimum_slack": 0.077,
+  "hps_ddr_pins_verified": 72,
+  "sof_sha256": "1af55209f870b807422caf18b2966a65745adcf6e22eef640f6de7b3260ab767",
+  "core_sha256": "2f3d411cf012c127a523243746bd1b4591d67bf81ab0c584282261d335002a94",
+  "clock_mhz": 50,
+  "all_compiled_pin_assignments_identical": true,
+  "compiled_pin_assignment_count": 410,
+  "unchanged_unconstrained_summary": {
+    "Illegal Clocks": [
+      0,
+      0
+    ],
+    "Unconstrained Clocks            ": [
+      3,
+      3
+    ],
+    "Unconstrained Input Ports       ": [
+      32,
+      32
+    ],
+    "Unconstrained Input Port Paths  ": [
+      88,
+      88
+    ],
+    "Unconstrained Output Ports      ": [
+      48,
+      48
+    ],
+    "Unconstrained Output Port Paths ": [
+      156,
+      156
+    ]
+  }
+}

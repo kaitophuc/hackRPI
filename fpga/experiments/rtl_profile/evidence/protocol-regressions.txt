@@ -1,0 +1,5 @@
+PASS depth reader contexts=5 latency=16: 64 ordered responses, cycles=201, maxDDRPending=8
+PASS depth reader contexts=0 latency=0: 64 ordered responses, cycles=115, maxDDRPending=0
+Total number of tests run: 12
+Tests: succeeded 12, failed 0, canceled 0, ignored 0, pending 0
+All tests passed.

@@ -1,0 +1,12 @@
+PASS automatic fence: masks, request stalls, delayed response
+PASS explicit fence: immediate response and request hold/release
+PASS fence mismatch detection
+PASS unsupported write burst detection
+PASS fence timeout without false completion
+PASS sidecar drain, barrier, ready, sequence, release
+PASS sidecar timeout refuses publication
+PASS sidecar barrier error refuses publication
+PASS sidecar rejects completion with outstanding writer
+PASS sidecar rejects partial command write
+PASS integrated sidecar/fence publication
+fpga\verification\spinal\tb_publication.sv:144: $finish called at 3100000 (1ps)
