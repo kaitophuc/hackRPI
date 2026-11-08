@@ -121,6 +121,34 @@ def build_game(output, compiler):
     print('Built and self-tested', output, flush=True)
 
 
+def generate_rtl(args):
+    verify()
+    source = ROOT / 'fpga/build/spinal-hardware-src'
+    if source.exists():
+        marker = json.loads((source / '.platform-source.json').read_text(encoding='utf-8-sig'))
+        if marker.get('commit') != '92c56afa0e98763ccd794cd39512cad2822bd86e':
+            raise RuntimeError('Prepared hardware revision differs from the backup')
+    else:
+        source = prepare('hardware')
+    java = args.java_home.resolve()
+    cli = args.scala_cli.resolve()
+    if not (java / 'bin/java.exe').is_file() and not (java / 'bin/java').is_file():
+        raise RuntimeError('JDK executable missing under --java-home')
+    if not cli.is_file():
+        raise RuntimeError('Scala CLI executable missing at --scala-cli')
+    output = BUILD / 'generated-rtl'
+    output.mkdir(parents=True, exist_ok=True)
+    environment = dict(os.environ, JAVA_HOME=str(java), SPINAL_STANDARD_RTL=str(output),
+                       COURSIER_REPOSITORIES='https://repo.maven.apache.org/maven2',
+                       PATH=str(java / 'bin') + os.pathsep + os.environ.get('PATH', ''))
+    if args.cache:
+        environment['COURSIER_CACHE'] = str(args.cache.resolve())
+    run([cli, 'run', 'project.scala', 'src', ROOT / 'fpga/hardware/spinal_standard/SpinalStandardGen.scala',
+         '--server=false', '--jvm', 'system', '--main-class', 'voodoo.de10.SpinalStandardGen'],
+        cwd=source, env=environment)
+    print('Generated RTL from the bundled source:', output, flush=True)
+
+
 def copy_archive(target, source, seen):
     for member in source:
         safe_member(member)
@@ -223,6 +251,10 @@ def main():
     build = commands.add_parser('build-game', help='Compile and self-test C# without PowerShell policy changes')
     build.add_argument('--output', type=Path, default=ROOT / 'combat/dist/Flighting.Headless.exe')
     build.add_argument('--compiler', type=Path)
+    rtl = commands.add_parser('generate-rtl', help='Compile the bundled Scala RTL using an installed JDK 17 and Scala CLI 1.9.1')
+    rtl.add_argument('--java-home', type=Path, required=True)
+    rtl.add_argument('--scala-cli', type=Path, required=True)
+    rtl.add_argument('--cache', type=Path, help='Optional existing Coursier dependency cache')
     pack = commands.add_parser('bundle', help='Create the ready-to-run board payload without modifying the board')
     pack.add_argument('--rebuild-native', action='store_true')
     deploy = commands.add_parser('install', help='Install saved runtime on the current board Linux image')
@@ -240,6 +272,8 @@ def main():
         prepare(args.kind)
     elif args.command == 'build-game':
         build_game(args.output, args.compiler)
+    elif args.command == 'generate-rtl':
+        generate_rtl(args)
     elif args.command == 'bundle':
         bundle(args.rebuild_native)
     elif args.command == 'install':

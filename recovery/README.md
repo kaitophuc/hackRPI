@@ -105,12 +105,21 @@ python recovery/recover.py prepare --kind hardware
 ```
 
 This restores `fpga/build/spinal-hardware-src` from the bundled source and applies
-the accepted hardware patch. Follow
-[the generator](../fpga/hardware/spinal_standard/generate-rtl.ps1) and
-[the build script](../fpga/hardware/spinal_standard/build.ps1) with the separately
-installed pinned toolchain. The accepted generated Verilog and ROM files are
+the accepted hardware patch. To compile it with separately installed JDK 17 and
+Scala CLI 1.9.1, supply their installation paths:
+
+```powershell
+python recovery/recover.py generate-rtl --java-home C:/Tools/jdk-17 --scala-cli C:/Tools/scala-cli/scala-cli.exe
+```
+
+Generation writes into `build/recovery/generated-rtl`, preserving the accepted
+snapshot. Maven dependencies are downloaded into Coursier's normal cache; an
+existing cache may be selected with `--cache`. The accepted generated Verilog and ROM files are
 already tracked in `fpga/hardware/spinal_standard/rtl`; running the saved game
-does not require synthesis.
+does not require synthesis. To synthesize the already tracked accepted RTL,
+use [the Quartus build script](../fpga/hardware/spinal_standard/build.ps1) with
+`-SkipRtlGeneration` and the installed `-QuartusRoot` path. This separates a
+recovery using the exact tested SOF from a new synthesis result.
 
 ## What is preserved
 
