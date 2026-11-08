@@ -92,7 +92,7 @@ compiled simulators stay under ignored `build/`. Golden references and source
 patches are tracked. Simulation uses the entire accepted core, not a replacement
 rasterizer; only its external Avalon memories are modeled.
 
-## Hardware gates and remaining work
+## Hardware and board validation
 
 Quartus 25.1std.0 full compilation passed. The fitted candidate uses 32,918 ALMs,
 51,509 registers, 286 RAM blocks and the unchanged 62 DSP blocks. All constrained
@@ -112,7 +112,33 @@ but could not run without a simulator license.
 Candidate SOF SHA256:
 `1af55209f870b807422caf18b2966a65745adcf6e22eef640f6de7b3260ab767`.
 
-Board validation still requires zero additional
-differences against the 28 references, controlled before/after timings, and
-30–60 seconds of actual displayed FPS with the Arduino and one visible browser.
-The original CPU/FPGA image mismatch is a separate unresolved issue.
+The candidate is programmed on the board. All 360 queued-frame comparisons
+against 28 saved references passed with zero additional pixel differences.
+The controlled seven-scene board comparison also retained every pixel hash.
+For example, tick 180 command submission fell from 44.881 to 25.140 ms and
+publication-busy time from 39.280 to 18.090 ms. That counter includes fences
+and backpressure; it is not a measurement of pure raster time.
+
+The real-browser test acknowledged 757 canvas updates over 30.016 continuous
+active seconds: **25.220 displayed FPS**. GPU completion was 27.219 FPS and
+server collection was 26.819 FPS. One browser stayed visible, the Arduino
+stayed fresh, and simulation advanced at 60.001 Hz. Earlier paused intervals
+were discarded. No competing profile ran during the active window.
+
+The earlier accepted image measured 16.266 displayed FPS, but its human-play
+window had a median 3,279 triangles compared with 1,371 here. Their ratio is
+not a controlled speedup. The same-scene native comparison above establishes
+the RTL improvement independently.
+
+**The 27 displayed-FPS minimum is still unmet.** CPU preparation and frame
+delivery require further measured work. Resolution, scenery, animation, game
+executable and native library are unchanged. The original CPU/FPGA image
+mismatch remains a separate unresolved issue.
+
+`images/Spinal_Standard_GPU.sof` preserves this tested candidate. The fixed
+`de10-known-good-16fps` tag retains the complete accepted recovery bundle and
+its previous FPGA image. The candidate uses that same game/runtime software;
+it is an experimental image rather than a replacement for that recovery tag.
+`candidate-manifest.json` records the image, generated RTL and runtime hashes.
+`evidence/visible-fps.json` contains the complete browser capture, including
+the selected active samples and excluded paused intervals.

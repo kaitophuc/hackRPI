@@ -1,0 +1,8 @@
+{
+  "sof_sha256": "1af55209f870b807422caf18b2966a65745adcf6e22eef640f6de7b3260ab767", 
+  "reference_scenes": 28, 
+  "passed": true, 
+  "zero_additional_pixel_differences": true, 
+  "queued_frames": 360, 
+  "library_sha256": "515618d24ac54cc0ca10aca2df7a1d75574b7f7c2653a740764d1360e1b75dbd"
+}

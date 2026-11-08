@@ -7,5 +7,12 @@
     "src/voodoo/de10/De10MemBackend.scala": "f9b4ac85b4122db2031426732cc1307678cfbca67741f6044ebf3b139301a3fc",
     "src/voodoo/de10/De10PipelinedWordReader.scala": "39fed2236638d6fdc9dbeb7bd54b0c4e9beebf372eccc7d6dc5b298e8cba13f6"
   },
-  "candidate_patch_sha256": "47c1ac0bb54a7a79a21d5a4e10a710a4e3cd75e906b1b636403b378da479c3f2"
+  "candidate_patch_sha256": "47c1ac0bb54a7a79a21d5a4e10a710a4e3cd75e906b1b636403b378da479c3f2",
+  "candidate_core_sha256": "2f3d411cf012c127a523243746bd1b4591d67bf81ab0c584282261d335002a94",
+  "candidate_sof_sha256": "1af55209f870b807422caf18b2966a65745adcf6e22eef640f6de7b3260ab767",
+  "unchanged_game_executable_sha256": "c42205b3a28856372f6bc0f3540fbdc4862421353b24075a5808fc38b0b9a502",
+  "unchanged_native_library_sha256": "515618d24ac54cc0ca10aca2df7a1d75574b7f7c2653a740764d1360e1b75dbd",
+  "recovery_tag": "de10-known-good-16fps",
+  "displayed_fps": 25.21988272915944,
+  "displayed_fps_target_met": false
 }

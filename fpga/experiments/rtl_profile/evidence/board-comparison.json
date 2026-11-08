@@ -1,0 +1,62 @@
+{
+  "controlled_scene_comparison": true,
+  "not_displayed_fps": true,
+  "scenes": [
+    {
+      "scene": "tick-1200.rpl",
+      "command_ms_before": 27.1,
+      "command_ms_after": 11.443,
+      "gpu_busy_ms_before": 25.5714,
+      "gpu_busy_ms_after": 9.69414,
+      "pixels_identical": true
+    },
+    {
+      "scene": "tick-180.rpl",
+      "command_ms_before": 44.881,
+      "command_ms_after": 25.14,
+      "gpu_busy_ms_before": 39.27954,
+      "gpu_busy_ms_after": 18.0901,
+      "pixels_identical": true
+    },
+    {
+      "scene": "tick-2.rpl",
+      "command_ms_before": 44.598,
+      "command_ms_after": 25.211,
+      "gpu_busy_ms_before": 38.79616,
+      "gpu_busy_ms_after": 18.00744,
+      "pixels_identical": true
+    },
+    {
+      "scene": "tick-360.rpl",
+      "command_ms_before": 42.466,
+      "command_ms_after": 24.668,
+      "gpu_busy_ms_before": 37.45952,
+      "gpu_busy_ms_after": 18.03734,
+      "pixels_identical": true
+    },
+    {
+      "scene": "tick-600.rpl",
+      "command_ms_before": 39.259,
+      "command_ms_after": 22.411,
+      "gpu_busy_ms_before": 34.91544,
+      "gpu_busy_ms_after": 16.55882,
+      "pixels_identical": true
+    },
+    {
+      "scene": "tick-90.rpl",
+      "command_ms_before": 44.656,
+      "command_ms_after": 25.929,
+      "gpu_busy_ms_before": 38.4849,
+      "gpu_busy_ms_after": 18.2647,
+      "pixels_identical": true
+    },
+    {
+      "scene": "tick-900.rpl",
+      "command_ms_before": 34.027,
+      "command_ms_after": 16.84,
+      "gpu_busy_ms_before": 31.96432,
+      "gpu_busy_ms_after": 13.65738,
+      "pixels_identical": true
+    }
+  ]
+}
