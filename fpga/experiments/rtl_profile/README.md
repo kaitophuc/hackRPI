@@ -165,6 +165,23 @@ golden frames. It restores normal services in `finally`. The existing
 combined-load output directory. Results are saved in
 `evidence/vertex-{on,load-on}-pipelined-rtl.json`.
 
+A subsequent three-second CPU sample of the selected software on the paused
+3,642-triangle scene located 26.55% of all game-thread CPU-clock samples in
+native `_trisetup`, 10.68% in preparation, and 10.60% in readback. These are
+software CPU-clock samples, not exclusive stage timings or an FPS estimate.
+`sample_selected_cpu.py` captures the selected process without restarting it;
+the existing `analyze_cpu.py` resolves native addresses.
+
+The broader setup-register cache was rebuilt separately against the selected
+native source, retaining depth bypass, O3 flags and readback scheduling. A
+seven-scene before/cache/after sample retained every pixel hash, but command
+medians differed by less than 1% relative to the initial baseline (with drift
+in the later baseline). It was not integrated and no full-game speedup is
+claimed. `sample_setup_cache.py` reproduces the isolated build/sample and
+restores services; the optional `FLIGHTING_PROFILE_DIR` keeps its results in
+RAM. See `evidence/setup-cache-on-pipelined-rtl.json` and
+`evidence/selected-cpu-on-pipelined-rtl.json`.
+
 ## Follow-up depth-pair sample: synthesis in progress
 
 `FramebufferPlanePairReader.scala` combines consecutive opposite halfwords of

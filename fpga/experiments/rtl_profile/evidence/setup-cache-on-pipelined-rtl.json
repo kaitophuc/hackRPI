@@ -1,0 +1,181 @@
+{
+  "production_unchanged": true,
+  "scenes": [
+    {
+      "cached": {
+        "command_ms": 11.138,
+        "gpu_busy_ms": 9.56652,
+        "submit_thread_cpu_ms": 11.178,
+        "submit_wall_ms": 11.358976364135742,
+        "triangles": 1403
+      },
+      "pixels_identical": true,
+      "scene": "tick-1200.rpl",
+      "after": {
+        "command_ms": 11.393,
+        "gpu_busy_ms": 9.69696,
+        "submit_thread_cpu_ms": 11.433,
+        "submit_wall_ms": 11.610031127929688,
+        "triangles": 1403
+      },
+      "before": {
+        "command_ms": 11.062,
+        "gpu_busy_ms": 9.52484,
+        "submit_thread_cpu_ms": 11.101,
+        "submit_wall_ms": 11.280059814453125,
+        "triangles": 1403
+      }
+    },
+    {
+      "cached": {
+        "command_ms": 23.962,
+        "gpu_busy_ms": 17.56926,
+        "submit_thread_cpu_ms": 24.003,
+        "submit_wall_ms": 24.190902709960938,
+        "triangles": 4086
+      },
+      "pixels_identical": true,
+      "scene": "tick-180.rpl",
+      "after": {
+        "command_ms": 25.143,
+        "gpu_busy_ms": 18.09272,
+        "submit_thread_cpu_ms": 25.187,
+        "submit_wall_ms": 25.376081466674805,
+        "triangles": 4086
+      },
+      "before": {
+        "command_ms": 24.162,
+        "gpu_busy_ms": 17.68166,
+        "submit_thread_cpu_ms": 24.208,
+        "submit_wall_ms": 24.398088455200195,
+        "triangles": 4086
+      }
+    },
+    {
+      "cached": {
+        "command_ms": 24.057,
+        "gpu_busy_ms": 17.48404,
+        "submit_thread_cpu_ms": 24.097,
+        "submit_wall_ms": 24.284839630126953,
+        "triangles": 4122
+      },
+      "pixels_identical": true,
+      "scene": "tick-2.rpl",
+      "after": {
+        "command_ms": 26.074,
+        "gpu_busy_ms": 18.03244,
+        "submit_thread_cpu_ms": 26.032,
+        "submit_wall_ms": 26.311159133911133,
+        "triangles": 4122
+      },
+      "before": {
+        "command_ms": 24.264,
+        "gpu_busy_ms": 17.60984,
+        "submit_thread_cpu_ms": 24.305,
+        "submit_wall_ms": 24.49202537536621,
+        "triangles": 4122
+      }
+    },
+    {
+      "cached": {
+        "command_ms": 23.517,
+        "gpu_busy_ms": 17.53386,
+        "submit_thread_cpu_ms": 23.557,
+        "submit_wall_ms": 23.75006675720215,
+        "triangles": 4045
+      },
+      "pixels_identical": true,
+      "scene": "tick-360.rpl",
+      "after": {
+        "command_ms": 25.512,
+        "gpu_busy_ms": 18.06368,
+        "submit_thread_cpu_ms": 25.471,
+        "submit_wall_ms": 25.755882263183594,
+        "triangles": 4045
+      },
+      "before": {
+        "command_ms": 23.695,
+        "gpu_busy_ms": 17.62574,
+        "submit_thread_cpu_ms": 23.736,
+        "submit_wall_ms": 23.923158645629883,
+        "triangles": 4045
+      }
+    },
+    {
+      "cached": {
+        "command_ms": 21.323,
+        "gpu_busy_ms": 16.10406,
+        "submit_thread_cpu_ms": 21.362,
+        "submit_wall_ms": 21.551132202148438,
+        "triangles": 3707
+      },
+      "pixels_identical": true,
+      "scene": "tick-600.rpl",
+      "after": {
+        "command_ms": 23.198,
+        "gpu_busy_ms": 16.58814,
+        "submit_thread_cpu_ms": 23.155,
+        "submit_wall_ms": 23.43893051147461,
+        "triangles": 3707
+      },
+      "before": {
+        "command_ms": 21.514,
+        "gpu_busy_ms": 16.1604,
+        "submit_thread_cpu_ms": 21.556,
+        "submit_wall_ms": 21.75283432006836,
+        "triangles": 3707
+      }
+    },
+    {
+      "cached": {
+        "command_ms": 24.681,
+        "gpu_busy_ms": 17.71628,
+        "submit_thread_cpu_ms": 24.71,
+        "submit_wall_ms": 24.90711212158203,
+        "triangles": 4271
+      },
+      "pixels_identical": true,
+      "scene": "tick-90.rpl",
+      "after": {
+        "command_ms": 26.827,
+        "gpu_busy_ms": 18.29154,
+        "submit_thread_cpu_ms": 26.787,
+        "submit_wall_ms": 27.07815170288086,
+        "triangles": 4271
+      },
+      "before": {
+        "command_ms": 24.889,
+        "gpu_busy_ms": 17.84138,
+        "submit_thread_cpu_ms": 24.934,
+        "submit_wall_ms": 25.123119354248047,
+        "triangles": 4271
+      }
+    },
+    {
+      "cached": {
+        "command_ms": 16.212,
+        "gpu_busy_ms": 13.38288,
+        "submit_thread_cpu_ms": 16.252,
+        "submit_wall_ms": 16.434907913208008,
+        "triangles": 2532
+      },
+      "pixels_identical": true,
+      "scene": "tick-900.rpl",
+      "after": {
+        "command_ms": 16.888,
+        "gpu_busy_ms": 13.65978,
+        "submit_thread_cpu_ms": 16.904,
+        "submit_wall_ms": 17.112016677856445,
+        "triangles": 2532
+      },
+      "before": {
+        "command_ms": 16.236,
+        "gpu_busy_ms": 13.36736,
+        "submit_thread_cpu_ms": 16.275,
+        "submit_wall_ms": 16.474008560180664,
+        "triangles": 2532
+      }
+    }
+  ],
+  "not_displayed_fps": true
+}

@@ -88,4 +88,4 @@ try:
 finally:
     if active:check(lib.fg_pipeline_stop())
     if opened:lib.fg_close()
-with open(folder+'/'+label+'-setup-cost.json','w') as f:json.dump(dict(label=label,diagnostic_not_rendering='ram-only' in label,scenes=results),f,indent=2)
+with open(os.environ.get('FLIGHTING_PROFILE_DIR',folder)+'/'+label+'-setup-cost.json','w') as f:json.dump(dict(label=label,diagnostic_not_rendering='ram-only' in label,scenes=results),f,indent=2)

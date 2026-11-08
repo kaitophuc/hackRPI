@@ -1,0 +1,145 @@
+{
+  "total_samples": 3838,
+  "threads": {
+    "1926": 1476,
+    "1947": 449,
+    "1949": 1698,
+    "1948": 109,
+    "1946": 106
+  },
+  "libraries": [
+    {
+      "name": "/root/hackrpi/combat/dist/libflighting_spinal_bridge.so",
+      "samples": 2472,
+      "percent": 64.41
+    },
+    {
+      "name": "[JIT/anonymous]",
+      "samples": 926,
+      "percent": 24.13
+    },
+    {
+      "name": "/root/hackrpi/runtime/usr/bin/mono-sgen",
+      "samples": 291,
+      "percent": 7.58
+    },
+    {
+      "name": "/lib/libc-2.20.so",
+      "samples": 122,
+      "percent": 3.18
+    },
+    {
+      "name": "/lib/libpthread-2.20.so",
+      "samples": 23,
+      "percent": 0.6
+    },
+    {
+      "name": "/lib/ld-2.20.so",
+      "samples": 4,
+      "percent": 0.1
+    }
+  ],
+  "native_functions": [
+    {
+      "name": "_trisetup",
+      "samples": 1019,
+      "percent_all_threads": 26.55
+    },
+    {
+      "name": "pipe_prepare_add",
+      "samples": 410,
+      "percent_all_threads": 10.68
+    },
+    {
+      "name": "pipe_copy",
+      "samples": 407,
+      "percent_all_threads": 10.6
+    },
+    {
+      "name": "__wrap_grDrawTriangle",
+      "samples": 187,
+      "percent_all_threads": 4.87
+    },
+    {
+      "name": "gpu_mmio_write32",
+      "samples": 130,
+      "percent_all_threads": 3.39
+    },
+    {
+      "name": "pipe_project",
+      "samples": 98,
+      "percent_all_threads": 2.55
+    },
+    {
+      "name": "pipe_no_coverage.isra.0.part.1",
+      "samples": 80,
+      "percent_all_threads": 2.08
+    },
+    {
+      "name": "fg_pipeline_submit",
+      "samples": 70,
+      "percent_all_threads": 1.82
+    },
+    {
+      "name": "fg_clip_triangle",
+      "samples": 29,
+      "percent_all_threads": 0.76
+    },
+    {
+      "name": "_init",
+      "samples": 24,
+      "percent_all_threads": 0.63
+    },
+    {
+      "name": "grDrawTriangle",
+      "samples": 8,
+      "percent_all_threads": 0.21
+    },
+    {
+      "name": "grTexFilterMode",
+      "samples": 2,
+      "percent_all_threads": 0.05
+    },
+    {
+      "name": "sst1InitReturnStatus",
+      "samples": 1,
+      "percent_all_threads": 0.03
+    },
+    {
+      "name": "grTexMipMapMode",
+      "samples": 1,
+      "percent_all_threads": 0.03
+    },
+    {
+      "name": "grBufferClear",
+      "samples": 1,
+      "percent_all_threads": 0.03
+    },
+    {
+      "name": "grColorCombine",
+      "samples": 1,
+      "percent_all_threads": 0.03
+    },
+    {
+      "name": "grDepthBufferMode",
+      "samples": 1,
+      "percent_all_threads": 0.03
+    },
+    {
+      "name": "__wrap_fprintf",
+      "samples": 1,
+      "percent_all_threads": 0.03
+    },
+    {
+      "name": "_grUpdateParamIndex",
+      "samples": 1,
+      "percent_all_threads": 0.03
+    },
+    {
+      "name": "grTexSource",
+      "samples": 1,
+      "percent_all_threads": 0.03
+    }
+  ],
+  "managed_functions": []
+}
