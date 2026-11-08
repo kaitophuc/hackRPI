@@ -55,7 +55,7 @@ public static class SceneryTests {
                 assert(legacy.World.City!=null&&!legacy.World.Repeating,"existing format-4 replays retain the fixed Hanoi map");
         } finally {File.Delete(replay);}
 #if DESKTOP
-        assert(MainForm.RenderInterval(true,true)==.2&&MainForm.RenderInterval(false,false)==.5&&MainForm.RenderInterval(false,true)==1.0/60,"paused and unfocused windows render less often while active rendering remains 60 Hz");
+        assert(MainForm.RenderInterval(true,true)==.2&&MainForm.RenderInterval(false,false)==.5&&MainForm.RenderInterval(false,true)==1.0/30&&MainForm.RenderInterval(false,true,60)==1.0/60,"idle redraws slow down; active rendering defaults to 30 Hz with a configurable 60 Hz option");
 #endif
     }
 }

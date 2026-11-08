@@ -21,11 +21,12 @@ public static class Scenes {
     }
     static Vertex V(Camera c,V3 p,double r,double g,double b,double u=0,double v=0) { return new Vertex(c.Project(p),r,g,b,u,v); }
     static void Triangle(Draw d,Camera c,V3 a,V3 b,V3 z,double r,double g,double bl) { d.Tri(V(c,a,r,g,bl),V(c,b,r,g,bl),V(c,z,r,g,bl)); }
-    public static Frame Build(int scene,int w,int h,int complexity,World world,Aircraft aircraft,Telemetry metrics,bool paused,bool wire,bool hud,CombatState combat=null) {
-        Frame frame=new Frame {Width=w,Height=h,Scene=scene,Tick=aircraft.Tick,Wireframe=wire};
+    public static Frame Build(int scene,int w,int h,int complexity,World world,Aircraft aircraft,Telemetry metrics,bool paused,bool wire,bool hud,CombatState combat=null,bool lowDetail=false,Frame reuse=null) {
+        Frame frame=reuse??new Frame();frame.Reset();frame.Width=w;frame.Height=h;frame.Scene=scene;frame.Tick=aircraft.Tick;frame.Wireframe=wire;
+        lowDetail=lowDetail&&world.Endless;
         Camera camera=new Camera {Eye=new V3(0,0,3),Target=new V3(0,0,0),Up=new V3(0,1,0),Aspect=(double)w/h};frame.Camera=camera;
         double t=aircraft.Tick/60.0;
-        Draw draw=new Draw(Names[scene-1]);frame.Draws.Add(draw);
+        Draw draw=frame.AddDraw(Names[scene-1]);
         if(scene==1) {
             draw.Tri(V(camera,new V3(-1,-.75,0),1,.22,.17),V(camera,new V3(1,-.75,0),.2,1,.55),V(camera,new V3(0,.95,0),.2,.4,1));
         } else if(scene==2) {
@@ -44,9 +45,9 @@ public static class Scenes {
             if(world.Endless) {camera=EndlessRun.Camera(w,h);frame.Camera=camera;}
             else {camera.Eye=aircraft.Position-aircraft.Forward*15+new V3(0,6,0);camera.Target=aircraft.Position+aircraft.Forward*32;camera.Far=1800;}
             frame.Clear=world.City==null?unchecked((int)0xff7ea9b5):unchecked((int)0xffaab6a5);
-            Terrain(draw,camera,world,aircraft,complexity);
-            Draw plane=new Draw("WWII-style propeller fighter");frame.Draws.Add(plane);Plane(plane,camera,aircraft);
-            if(combat!=null)CombatGeometry(frame,camera,combat);
+            Terrain(draw,camera,world,aircraft,complexity,lowDetail);
+            Draw plane=frame.AddDraw("WWII-style propeller fighter");Fighter(plane,camera,aircraft,false,lowDetail?1:0);
+            if(combat!=null)CombatGeometry(frame,camera,combat,lowDetail);
         } else {
             Triangle(draw,camera,new V3(-1,-.7,.4),new V3(1,-.7,.4),new V3(0,1,.4),.85,.32,.2);
             Hud diagnostic=new Hud(frame);
@@ -55,6 +56,7 @@ public static class Scenes {
             diagnostic.Text(205,235,"X RIGHT / Y DOWN",0xe2eee9,1.2);
         }
         if(hud) {
+            if(scene==6&&world.Endless&&h<=240) {CompactOverlay(frame,world,aircraft,metrics,paused,combat);return frame;}
             Overlay(frame,world,aircraft,metrics,paused,scene==6&&combat!=null);
             if(scene==6&&combat!=null)CombatOverlay(frame,aircraft,combat,world.Endless);
         }
@@ -70,8 +72,8 @@ public static class Scenes {
             draw.Tri(a,b,c);draw.Tri(a,c,d);
         }
     }
-    static void Terrain(Draw draw,Camera camera,World world,Aircraft aircraft,int n) {
-        if(world.Repeating) {world.City.Append(draw,camera,world,aircraft,n);return;}
+    static void Terrain(Draw draw,Camera camera,World world,Aircraft aircraft,int n,bool lowDetail=false) {
+        if(world.Repeating) {world.City.Append(draw,camera,world,aircraft,n,lowDetail);return;}
         const double cell=30;double startX=Math.Floor(aircraft.Position.X/cell)*cell-n*cell*.5,startZ=Math.Floor(aircraft.Position.Z/cell)*cell-n*cell*.5;
         for(int z=0;z<n;z++)for(int x=0;x<n;x++) {
             double px=startX+x*cell,pz=startZ+z*cell;
@@ -95,19 +97,63 @@ public static class Scenes {
         Fighter(d,c,a,false);
     }
     static Draw friendlyFighterMesh,hostileFighterMesh;
-    static void Fighter(Draw d,Camera c,Aircraft a,bool hostile) {
+    static readonly Draw[,] lowFighterMeshes=new Draw[2,2];
+    static void Fighter(Draw d,Camera c,Aircraft a,bool hostile,int lod=0) {
         // Share immutable local-space meshes across enemies and frames. Only the
         // existing aircraft transform and camera projection change each frame.
-        Draw mesh=hostile?hostileFighterMesh:friendlyFighterMesh;
+        Draw mesh=lod==0?(hostile?hostileFighterMesh:friendlyFighterMesh):lowFighterMeshes[hostile?1:0,lod-1];
         if(mesh==null) {
-            mesh=new Draw("fighter mesh");BuildFighter(mesh,null,null,hostile);
-            if(hostile)hostileFighterMesh=mesh;else friendlyFighterMesh=mesh;
+            mesh=new Draw("fighter mesh");
+            if(lod==0) {BuildFighter(mesh,null,null,hostile);if(hostile)hostileFighterMesh=mesh;else friendlyFighterMesh=mesh;}
+            else {BuildLowFighter(mesh,hostile,lod==2);lowFighterMeshes[hostile?1:0,lod-1]=mesh;}
         }
         d.Cull=false;int offset=d.Vertices.Count;V3 right=a.Right,up=a.Up,forward=a.Forward;CameraProjection projection=c.Prepare();
         foreach(Vertex source in mesh.Vertices) {
             Vertex v=source;v.P=projection.Project(a.Position+right*source.P.X+up*source.P.Y+forward*source.P.Z);d.Vertices.Add(v);
         }
         foreach(int index in mesh.Indices)d.Indices.Add(index+offset);
+    }
+    static void BuildLowFighter(Draw d,bool hostile,bool distant) {
+        int olive=hostile?0x626969:0x536044,under=hostile?0x9da8ab:0xa5b2a9;
+        double[][] body={new double[]{-2.8,.06,.07,.12},new double[]{-1.6,.25,.27,.10},new double[]{0,.43,.44,.07},
+            new double[]{1.7,.36,.36,.06},new double[]{2.72,.24,.25,.06}};
+        int sides=distant?4:6;
+        for(int ring=0;ring<body.Length-1;ring++)for(int j=0;j<sides;j++) {
+            double p=j*Math.PI*2/sides,q=(j+1)*Math.PI*2/sides;
+            PlaneQuad(d,null,null,BodyPoint(body[ring],p),BodyPoint(body[ring+1],p),BodyPoint(body[ring+1],q),BodyPoint(body[ring],q),Math.Cos(p+Math.PI/sides)<0?under:olive);
+        }
+        for(int side=-1;side<=1;side+=2) {
+            int stride=distant?3:1;
+            for(int span=0;span<FighterWing.Length-1;span+=stride) {
+                double x=FighterWing[span][0],y=FighterWing[Math.Min(span+stride,FighterWing.Length-1)][0];
+                PlaneQuad(d,null,null,WingPoint(side,x,0,true),WingPoint(side,y,0,true),WingPoint(side,y,1,true),WingPoint(side,x,1,true),(span+side)%3==0?0x78634a:olive);
+                if(!distant)PlaneQuad(d,null,null,WingPoint(side,x,0,false)-new V3(0,.035,0),WingPoint(side,x,1,false)-new V3(0,.035,0),WingPoint(side,y,1,false)-new V3(0,.035,0),WingPoint(side,y,0,false)-new V3(0,.035,0),under);
+            }
+            PlaneQuad(d,null,null,new V3(side*.08,.17,-1.85),new V3(side*1.35,.23,-2.32),new V3(side*1.15,.23,-2.7),new V3(side*.08,.17,-2.7),olive);
+            if(!distant) {
+                int[] colors=hostile?new int[]{0xa74135,0xe4dfce,0x303b43}:new int[]{0x253e5b,0xe4dfce,0xa74135};
+                for(int ring=0;ring<3;ring++)for(int j=0;j<6;j++) {
+                    double p=j*Math.PI/3,q=(j+1)*Math.PI/3,r=.37*(1-ring*.28);
+                    PlaneTri(d,null,null,WingPaint(side*2.55,-.4)+new V3(0,ring*.008,0),WingPaint(side*2.55+Math.Cos(p)*r,-.4+Math.Sin(p)*r)+new V3(0,ring*.008,0),WingPaint(side*2.55+Math.Cos(q)*r,-.4+Math.Sin(q)*r)+new V3(0,ring*.008,0),colors[ring]);
+                }
+            }
+        }
+        PlaneQuad(d,null,null,new V3(0,.17,-2.76),new V3(0,1.48,-2.52),new V3(0,1.7,-2.25),new V3(0,.20,-1.65),olive);
+        double[][] canopy={new double[]{-1,.14,.11,.43},new double[]{-.1,.29,.56,.46},new double[]{.78,.17,.15,.46}};
+        for(int ring=0;ring<2;ring++)for(int j=0;j<3;j++) {
+            double p=-Math.PI/2+j*Math.PI/3,q=p+Math.PI/3;
+            PlaneQuad(d,null,null,CanopyPoint(canopy[ring],p,0),CanopyPoint(canopy[ring+1],p,0),CanopyPoint(canopy[ring+1],q,0),CanopyPoint(canopy[ring],q,0),j==1?0x668e9e:0x304f60);
+        }
+        for(int j=0;j<sides;j++) {
+            double p=j*Math.PI*2/sides,q=(j+1)*Math.PI*2/sides;
+            PlaneTri(d,null,null,new V3(0,.06,3),BodyPoint(body[4],p),BodyPoint(body[4],q),hostile?0xa84036:0xddbb65);
+            PlaneTri(d,null,null,new V3(0,.12,-2.8),BodyPoint(body[0],q),BodyPoint(body[0],p),olive);
+        }
+        for(int blade=0;blade<3;blade++) {
+            double angle=blade*Math.PI*2/3+.25;
+            PlaneQuad(d,null,null,PropPoint(.15,-.06,angle),PropPoint(1.05,-.06,angle),PropPoint(1.05,.06,angle),PropPoint(.15,.06,angle),0x262d29);
+            if(!distant)PlaneQuad(d,null,null,PropPoint(.9,-.06,angle)+new V3(0,0,.01),PropPoint(1.05,-.06,angle)+new V3(0,0,.01),PropPoint(1.05,.06,angle)+new V3(0,0,.01),PropPoint(.9,.06,angle)+new V3(0,0,.01),0xe3bd55);
+        }
     }
     static void BuildFighter(Draw d,Camera c,Aircraft a,bool hostile) {
         // Original WWII-inspired fighter mesh. All detail is opaque, vertex-colored
@@ -240,32 +286,73 @@ public static class Scenes {
         }
     }
     static int Tint(int color,double shade) {return ((int)(((color>>16)&255)*shade)<<16)|((int)(((color>>8)&255)*shade)<<8)|(int)((color&255)*shade);}
-    static void CombatGeometry(Frame frame,Camera camera,CombatState combat) {
-        Draw enemies=new Draw("hostile WWII fighters") {Cull=false};
-        foreach(EnemyFighter enemy in combat.Enemies)Fighter(enemies,camera,enemy.Body,true);
-        if(enemies.Indices.Count>0)frame.Draws.Add(enemies);
-        Draw tracers=new Draw("opaque bullet tracers and hit bursts") {Cull=false};
+    static void CombatGeometry(Frame frame,Camera camera,CombatState combat,bool lowDetail=false) {
+        Draw enemies=frame.AddDraw("hostile WWII fighters");enemies.Cull=false;
+        CameraProjection projection=camera.Prepare();
+        foreach(EnemyFighter enemy in combat.Enemies) {
+            if(!projection.VisibleSphere(enemy.Body.Position,5))continue;
+            Fighter(enemies,camera,enemy.Body,true,lowDetail?((enemy.Body.Position-camera.Eye).Length>100?2:1):0);
+        }
+        if(enemies.Indices.Count==0)frame.Draws.Remove(enemies);
+        Draw tracers=frame.AddDraw("opaque bullet tracers and hit bursts");tracers.Cull=false;
         foreach(Projectile shot in combat.Shots) {
             V3 direction=shot.Velocity.Unit,side=V3.Cross(direction,new V3(0,1,0)).Unit*.12,up=V3.Cross(side.Unit,direction)*.12;
             V3 p=shot.Position,q=p-direction*4;
+            if(!projection.VisibleSphere(p,5))continue;
+            if(lowDetail)side=V3.Cross(direction,camera.Eye-p).Unit*.12;
             double r=shot.Hostile?1:1,g=shot.Hostile?.23:.88,b=shot.Hostile?.14:.35;
             Triangle(tracers,camera,p+side,q+side,q-side,r,g,b);Triangle(tracers,camera,p+side,q-side,p-side,r,g,b);
-            Triangle(tracers,camera,p+up,q+up,q-up,r,g,b);Triangle(tracers,camera,p+up,q-up,p-up,r,g,b);
+            if(!lowDetail) {Triangle(tracers,camera,p+up,q+up,q-up,r,g,b);Triangle(tracers,camera,p+up,q-up,p-up,r,g,b);}
         }
         foreach(HitBurst burst in combat.Bursts) {
             double age=burst.Age/35.0;
-            for(int i=0;i<8;i++) {
+            if(!projection.VisibleSphere(burst.Position,10))continue;
+            for(int i=0;i<8;i+=lowDetail?2:1) {
                 double angle=i*Math.PI/4;V3 outward=new V3(Math.Cos(angle),Math.Sin(angle),Math.Sin(angle*2)*.6);
                 V3 center=burst.Position+outward*(1+age*7),tip=center+outward*(1.4-age);
                 V3 side=V3.Cross(outward,new V3(0,0,1)).Unit*(.7*(1-age)+.1);
                 Triangle(tracers,camera,tip,center+side,center-side,1,.55*(1-age)+.15,.10);
             }
         }
-        if(tracers.Indices.Count>0)frame.Draws.Add(tracers);
+        if(tracers.Indices.Count==0)frame.Draws.Remove(tracers);
     }
     // Logical HUD coordinates are also used by desktop hit testing after letterboxing.
     public const int ReplayX=242,ReplayY=249,ReplayWidth=156,ReplayHeight=34;
     public static bool ReplayHit(double x,double y) {return x>=ReplayX&&x<ReplayX+ReplayWidth&&y>=ReplayY&&y<ReplayY+ReplayHeight;}
+    public static bool CompactReplayHit(double x,double y) {return x>=121&&x<199&&y>=150&&y<172;}
+    static void CompactOverlay(Frame frame,World world,Aircraft player,Telemetry metrics,bool paused,CombatState combat) {
+        Hud h=new Hud(frame,320,240);
+        h.Rect(0,0,320,38,0x101d2d);h.Text(6,4,"ENDLESS FLIGHT",0x65d6c2,1);
+        h.Text(174,4,((long)world.ScrollDistance)+" M",0xb8cbd3,1);
+        h.Text(6,17,"HP "+player.Health,player.Health>30?0x65d6c2:0xff7764,1);
+        h.Rect(6,29,90,3,0x30444f);if(player.Health>0)h.Rect(6,29,90*player.Health/100.0,3,0x65d6c2);
+        h.Text(110,17,"KILLS "+(combat==null?0:combat.Kills),0xe2eee9,1);
+        h.Text(210,17,"HOSTILES "+(combat==null?0:combat.Enemies.Count),0xffb586,1);
+        h.Rect(0,219,320,21,0x101d2d);
+        h.Text(6,223,"TILT/WASD DODGE  F/MOUSE FIRE  P PAUSE",0xb8cbd3,1);
+        if(paused&&(combat==null||!combat.GameOver)) {
+            string message=metrics.Status=="CLICK CALIBRATE / PLAY"?"CLICK CALIBRATE / PLAY":"PAUSED - P TO RESUME";
+            h.Rect(55,44,210,15,0x152a39);h.Text(160-message.Length*3,48,message,0xffcb75,1);
+        }
+        if(combat==null)return;
+        foreach(EnemyFighter enemy in combat.Enemies) {
+            V4 p=frame.Camera.Project(enemy.Body.Position);if(p.W<=0||Math.Abs(p.X)>p.W||Math.Abs(p.Y)>p.W)continue;
+            double x=(p.X/p.W*.5+.5)*320,y=(.5-p.Y/p.W*.5)*240;
+            if(y>47&&y<212) {h.Rect(x-3,y-6,7,1,0xff8169);h.Rect(x-3,y-6,1,3,0xff8169);h.Rect(x+3,y-6,1,3,0xff8169);}
+        }
+        V4 aim=frame.Camera.Project(player.Position+player.Forward*120);
+        if(aim.W>0) {
+            double x=(aim.X/aim.W*.5+.5)*320,y=(.5-aim.Y/aim.W*.5)*240;
+            h.Rect(x-4,y,3,1,0xffd47e);h.Rect(x+2,y,3,1,0xffd47e);h.Rect(x,y-4,1,3,0xffd47e);h.Rect(x,y+2,1,3,0xffd47e);
+        }
+        if(combat.HitFlash>0&&!combat.GameOver) {h.Rect(0,38,2,181,0xce5144);h.Rect(318,38,2,181,0xce5144);h.Text(125,63,"HIT -"+combat.LastDamage+" HP",0xffccad,1);}
+        if(!combat.GameOver)return;
+        h.Rect(61,78,198,109,0x0c1726);h.Rect(61,78,198,2,0xe4735e);
+        h.Text(106,90,"GAME OVER",0xff8b73,2);
+        h.Text(100,119,"ENEMIES DOWN: "+combat.Kills,0xe2eee9,1);
+        h.Rect(121,150,78,22,0x65d6c2);h.Text(142,157,"REPLAY",0x102330,1);
+        h.Text(118,178,"OR PRESS ENTER",0x8aabbb,1);
+    }
     static void CombatOverlay(Frame frame,Aircraft player,CombatState combat,bool endless=false) {
         Hud h=new Hud(frame);
         h.Rect(178,58,448,36,0x152a39);
@@ -334,15 +421,35 @@ public static class Scenes {
     static string Fmt(double x) {return x.ToString("F0",CultureInfo.InvariantCulture);}
 }
 public sealed class Hud {
-    readonly Draw draw;readonly Dictionary<char,string> font=Font();
-    public Hud(Frame f) {draw=new Draw("opaque HUD / clip coordinates") {Depth=false,Cull=false};f.Draws.Add(draw);}
-    Vertex P(double x,double y,int color) {return new Vertex(new V4(x/320-1,1-y/200,0,1),((color>>16)&255)/255.0,((color>>8)&255)/255.0,(color&255)/255.0);}
-    public void Rect(double x,double y,double w,double h,int c) {Vertex a=P(x,y,c),b=P(x+w,y,c),z=P(x+w,y+h,c),d=P(x,y+h,c);draw.Tri(a,b,z);draw.Tri(a,z,d);}
+    readonly Draw draw;readonly double halfWidth,halfHeight;
+    struct GlyphRect {public int X,Y,W,H;public GlyphRect(int x,int y,int w,int h) {X=x;Y=y;W=w;H=h;}}
+    static readonly Dictionary<char,GlyphRect[]> font=CompileFont();
+    static Dictionary<char,GlyphRect[]> CompileFont() {
+        var compiled=new Dictionary<char,GlyphRect[]>();
+        foreach(var pair in Font()) {
+            string[] rows=pair.Value.Split('/');var rects=new List<GlyphRect>();
+            for(int row=0;row<7;row++)for(int col=0;col<5;) {
+                if(rows[row][col]!='1') {col++;continue;}
+                int start=col;while(col<5&&rows[row][col]=='1')col++;
+                int match=-1;for(int i=0;i<rects.Count;i++) {GlyphRect r=rects[i];if(r.X==start&&r.W==col-start&&r.Y+r.H==row) {match=i;break;}}
+                if(match<0)rects.Add(new GlyphRect(start,row,col-start,1));
+                else {GlyphRect r=rects[match];r.H++;rects[match]=r;}
+            }
+            compiled[pair.Key]=rects.ToArray();
+        }
+        return compiled;
+    }
+    public Hud(Frame f,double width=640,double height=400) {halfWidth=width/2;halfHeight=height/2;draw=f.AddDraw("opaque HUD / clip coordinates");draw.Depth=false;draw.Cull=false;}
+    Vertex P(double x,double y,int color) {return new Vertex(new V4(x/halfWidth-1,1-y/halfHeight,0,1),((color>>16)&255)/255.0,((color>>8)&255)/255.0,(color&255)/255.0);}
+    public void Rect(double x,double y,double w,double h,int c) {Vertex a=P(x,y,c),b=P(x+w,y,c),z=P(x+w,y+h,c),d=P(x,y+h,c);int n=draw.Vertices.Count;draw.Vertices.Add(a);draw.Vertices.Add(b);draw.Vertices.Add(z);draw.Vertices.Add(d);draw.Indices.Add(n);draw.Indices.Add(n+1);draw.Indices.Add(n+2);draw.Indices.Add(n);draw.Indices.Add(n+2);draw.Indices.Add(n+3);}
     public void Text(double x,double y,string text,int color,double scale) {
-        foreach(char raw in text.ToUpperInvariant()) {string glyph;char ch=raw;if(!font.TryGetValue(ch,out glyph))glyph=font['?'];
-            string[] rows=glyph.Split('/');for(int row=0;row<7;row++) {int run=-1;for(int col=0;col<=5;col++) {bool set=col<5&&rows[row][col]=='1';if(set&&run<0)run=col;if(!set&&run>=0) {Rect(x+run*scale,y+row*scale,(col-run)*scale,scale,color);run=-1;}}}x+=6*scale;
+        foreach(char raw in text) {
+            GlyphRect[] glyph;if(!font.TryGetValue(Char.ToUpperInvariant(raw),out glyph))glyph=font['?'];
+            foreach(GlyphRect r in glyph)Rect(x+r.X*scale,y+r.Y*scale,r.W*scale,r.H*scale,color);
+            x+=6*scale;
         }
     }
+
     static Dictionary<char,string> Font() {
         const string data="A=01110/10001/10001/11111/10001/10001/10001;B=11110/10001/10001/11110/10001/10001/11110;C=01111/10000/10000/10000/10000/10000/01111;D=11110/10001/10001/10001/10001/10001/11110;E=11111/10000/10000/11110/10000/10000/11111;F=11111/10000/10000/11110/10000/10000/10000;G=01111/10000/10000/10111/10001/10001/01111;H=10001/10001/10001/11111/10001/10001/10001;I=11111/00100/00100/00100/00100/00100/11111;J=00111/00010/00010/00010/10010/10010/01100;K=10001/10010/10100/11000/10100/10010/10001;L=10000/10000/10000/10000/10000/10000/11111;M=10001/11011/10101/10101/10001/10001/10001;N=10001/11001/10101/10011/10001/10001/10001;O=01110/10001/10001/10001/10001/10001/01110;P=11110/10001/10001/11110/10000/10000/10000;Q=01110/10001/10001/10001/10101/10010/01101;R=11110/10001/10001/11110/10100/10010/10001;S=01111/10000/10000/01110/00001/00001/11110;T=11111/00100/00100/00100/00100/00100/00100;U=10001/10001/10001/10001/10001/10001/01110;V=10001/10001/10001/10001/10001/01010/00100;W=10001/10001/10001/10001/10101/11011/10001;X=10001/10001/01010/00100/01010/10001/10001;Y=10001/10001/01010/00100/00100/00100/00100;Z=11111/00001/00010/00100/01000/10000/11111;0=01110/10001/10011/10101/11001/10001/01110;1=00100/01100/00100/00100/00100/00100/01110;2=01110/10001/00001/00010/00100/01000/11111;3=11110/00001/00001/01110/00001/00001/11110;4=00010/00110/01010/10010/11111/00010/00010;5=11111/10000/10000/11110/00001/00001/11110;6=01110/10000/10000/11110/10001/10001/01110;7=11111/00001/00010/00100/01000/01000/01000;8=01110/10001/10001/01110/10001/10001/01110;9=01110/10001/10001/01111/00001/00001/01110; =00000/00000/00000/00000/00000/00000/00000;.=00000/00000/00000/00000/00000/00110/00110;-=00000/00000/00000/11111/00000/00000/00000;/=00001/00010/00010/00100/01000/01000/10000;:=00000/00110/00110/00000/00110/00110/00000;+=00000/00100/00100/11111/00100/00100/00000;%=11001/11010/00100/00100/01000/10110/00110;?=01110/10001/00001/00010/00100/00000/00100";
         var f=new Dictionary<char,string>();foreach(string item in data.Split(';'))f[item[0]]=item.Substring(2);return f;

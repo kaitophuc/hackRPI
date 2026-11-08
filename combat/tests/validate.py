@@ -32,7 +32,7 @@ result = run("--self-test")
 checks.append(result.stdout.strip())
 result = run("--desktop-smoke", "--out", OUT / "desktop.png")
 checks.append(result.stdout.strip())
-replay = ROOT / "tests" / "sample-flight.csv"
+replay = OUT / "sample-flight.csv"
 run("--headless", "--scripted", "--ticks", 600, "--no-hud", "--record", replay,
     "--capture", OUT / "recorded", "--out", OUT / "recorded.ppm")
 run("--headless", "--replay", replay, "--no-hud", "--out", OUT / "replayed.ppm")
@@ -85,7 +85,7 @@ run("--backend", "invalid", expected=1)
 run("--width", 0, expected=1)
 checks.append("PASS: unsupported backend and invalid resolution rejected")
 
-combat_replay = ROOT / "tests" / "combat-flight.csv"
+combat_replay = OUT / "combat-flight.csv"
 rows = ["FLIGHTING_REPLAY,6,1337,60"]
 for tick in range(1200):
     vertical = 0 if tick < 100 else (1 if ((tick-100)//60) % 2 == 0 else -1)
@@ -100,10 +100,12 @@ run("--headless", "--replay", combat_replay, "--no-hud", "--out", OUT / "combat-
 assert same(OUT / "combat.ppm.combat.txt", OUT / "combat-replayed.ppm.combat.txt")
 assert same(OUT / "combat.ppm", OUT / "combat-replayed.ppm")
 checks.append(f"PASS: playable fire/dodge replay survives 1200 ticks, {combat[2]} kills, {combat[1]} HP; combat state repeatable")
-run("--headless", "--ticks", 3600, "--out", OUT / "idle-game-over.ppm",
+# Half-speed enemy bullets allow a longer idle survival time.
+idle_tick_limit = 7200
+run("--headless", "--ticks", idle_tick_limit, "--out", OUT / "idle-game-over.ppm",
     "--capture", OUT / "game-over")
 idle = list(map(int, (OUT / "idle-game-over.ppm.combat.txt").read_text().split(",")))
-assert idle[1] == 0 and idle[8] == 1 and idle[0] < 3600, "Enemy fire did not produce a game over"
+assert idle[1] == 0 and idle[8] == 1 and idle[0] < idle_tick_limit, "Enemy fire did not produce a game over"
 checks.append(f"PASS: actual enemy fire drains 100 HP and freezes idle flight at tick {idle[0]}")
 
 # Real process/loopback watchdog test. A restricted host may forbid sockets;
@@ -167,6 +169,6 @@ report = dict(checks=checks, udp=udp_status,
               aircraft_state=(OUT / "recorded.ppm.state.txt").read_text().strip(),
               combat_summary=(OUT / "combat.ppm.combat.txt").read_text().strip(),
               board="UNTESTED", rasterix="UNTESTED; missing bridge failure verified")
-(ROOT / "tests" / "validation-results.json").write_text(json.dumps(report, indent=2))
+(OUT / "validation-results.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 print("\n".join(checks))
-print("Saved tests/validation-results.json")
+print("Saved captures/validation/validation-results.json")

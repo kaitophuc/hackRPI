@@ -13,7 +13,7 @@ public sealed class HanoiCity {
     public const double LakeX=-85,LakeZ=-60,LakeRadiusX=59,LakeRadiusZ=94,Water=.65;
     public const double BridgeZ=-385;
     readonly uint seed;
-    int detail=-1;
+    int detail=-1;bool lowDetail;
     List<Chunk> chunks;
     readonly Dictionary<int,List<Chunk>> cachedLevels=new Dictionary<int,List<Chunk>>();
     readonly Dictionary<int,List<Chunk>[]> sectionLevels=new Dictionary<int,List<Chunk>[]>();
@@ -58,8 +58,9 @@ public sealed class HanoiCity {
         return h;
     }
     uint Hash(int x,int z) {unchecked {uint h=seed^(uint)x*374761393u^(uint)z*668265263u;h=(h^(h>>13))*1274126177u;return h^(h>>16);}}
-    public void Append(Draw target,Camera camera,World world,Aircraft player,int complexity) {
-        int level=complexity<10?0:complexity<26?1:2;
+    public void Append(Draw target,Camera camera,World world,Aircraft player,int complexity,bool low=false) {
+        lowDetail=low&&world.Endless;
+        int level=(complexity<10?0:complexity<26?1:2)+(lowDetail?3:0);
         if(chunks==null||detail!=level) {
             if(!cachedLevels.TryGetValue(level,out chunks))Build(world,level);
             detail=level;
@@ -94,7 +95,7 @@ public sealed class HanoiCity {
             V3 offset=new V3(tx*TileWidth,0,tz*TileLength);bool tileVisible=false;
             foreach(Chunk chunk in chunks) {
                 V3 center=chunk.Center+offset,delta=center-camera.Eye;double distance=V3.Dot(delta,delta);
-                double limit=(chunk.Landmark?1300:range)+chunk.Radius;
+                double limit=(lowDetail?(chunk.Landmark?950:550):(chunk.Landmark?1300:range))+chunk.Radius;
                 if(distance>limit*limit||!projection.VisibleSphere(center,chunk.Radius))continue;
                 visible.Add(new VisibleChunk {Chunk=chunk,Offset=offset,Distance=distance});tileVisible=true;
             }
@@ -120,7 +121,7 @@ public sealed class HanoiCity {
             bool sectionVisible=false;V3 offset=new V3(0,0,slot.OffsetZ);
             foreach(Chunk chunk in sections[slot.Source]) {
                 V3 center=chunk.Center+offset,delta=center-camera.Eye;double distance=V3.Dot(delta,delta);
-                double limit=(chunk.Landmark?1300:range)+chunk.Radius;
+                double limit=(lowDetail?(chunk.Landmark?950:550):(chunk.Landmark?1300:range))+chunk.Radius;
                 if(distance>limit*limit||!projection.VisibleSphere(center,chunk.Radius))continue;
                 visible.Add(new VisibleChunk {Chunk=chunk,Offset=offset,Distance=distance});sectionVisible=true;
             }
@@ -158,10 +159,10 @@ public sealed class HanoiCity {
         }
     }
     void LoopGround(World world) {
-        const double cell=55;
+        double cell=lowDetail?110:55;int subdivisions=lowDetail?1:2;
         for(double z=TileMinZ;z<TileMinZ+TileLength;z+=110)for(double x=TileMinX;x<TileMinX+TileWidth;x+=110) {
             Begin("cached repeating ground",x+55,z+55,80,true);
-            for(int iz=0;iz<2;iz++)for(int ix=0;ix<2;ix++) {
+            for(int iz=0;iz<subdivisions;iz++)for(int ix=0;ix<subdivisions;ix++) {
                 double px=x+ix*cell,pz=z+iz*cell;
                 V3 a=new V3(px,world.SceneryHeight(px,pz)-.1,pz),b=new V3(px+cell,world.SceneryHeight(px+cell,pz)-.1,pz),
                     c=new V3(px+cell,world.SceneryHeight(px+cell,pz+cell)-.1,pz+cell),d=new V3(px,world.SceneryHeight(px,pz+cell)-.1,pz+cell);
@@ -182,17 +183,19 @@ public sealed class HanoiCity {
     static int Shade(int c,double s) {return ((int)(((c>>16)&255)*s)<<16)|((int)(((c>>8)&255)*s)<<8)|(int)((c&255)*s);}
     void Box(double x,double y,double z,double w,double h,double length,int color) {
         double l=x-w/2,r=x+w/2,f=z-length/2,b=z+length/2,t=y+h;
-        Quad(new V3(l,y,f),new V3(r,y,f),new V3(r,t,f),new V3(l,t,f),Shade(color,.82));
+        // The endless camera stays at X=0, above the roofs, looking along -Z.
+        // Cache only faces it can see; legacy free flight keeps every face.
+        if(!lowDetail)Quad(new V3(l,y,f),new V3(r,y,f),new V3(r,t,f),new V3(l,t,f),Shade(color,.82));
         Quad(new V3(r,y,b),new V3(l,y,b),new V3(l,t,b),new V3(r,t,b),color);
-        Quad(new V3(l,y,b),new V3(l,y,f),new V3(l,t,f),new V3(l,t,b),Shade(color,.70));
-        Quad(new V3(r,y,f),new V3(r,y,b),new V3(r,t,b),new V3(r,t,f),Shade(color,.90));
+        if(!lowDetail||r>=0)Quad(new V3(l,y,b),new V3(l,y,f),new V3(l,t,f),new V3(l,t,b),Shade(color,.70));
+        if(!lowDetail||l<=0)Quad(new V3(r,y,f),new V3(r,y,b),new V3(r,t,b),new V3(r,t,f),Shade(color,.90));
         Quad(new V3(l,t,f),new V3(r,t,f),new V3(r,t,b),new V3(l,t,b),Shade(color,1.0));
     }
     void Roof(double x,double y,double z,double w,double length,double rise,int color) {
         double l=x-w/2,r=x+w/2,f=z-length/2,b=z+length/2;
         Quad(new V3(l,y,f),new V3(l,y,b),new V3(x,y+rise,b),new V3(x,y+rise,f),color);
         Quad(new V3(x,y+rise,f),new V3(x,y+rise,b),new V3(r,y,b),new V3(r,y,f),Shade(color,.74));
-        Tri(new V3(l,y,f),new V3(x,y+rise,f),new V3(r,y,f),Shade(color,.82));
+        if(!lowDetail)Tri(new V3(l,y,f),new V3(x,y+rise,f),new V3(r,y,f),Shade(color,.82));
         Tri(new V3(r,y,b),new V3(x,y+rise,b),new V3(l,y,b),Shade(color,.82));
     }
     void HipRoof(double x,double y,double z,double w,double length,double rise,int color) {
@@ -206,13 +209,15 @@ public sealed class HanoiCity {
         V3 direction=(b-a).Unit,axis=Math.Abs(direction.Y)>.9?new V3(1,0,0):new V3(0,1,0);
         V3 u=V3.Cross(direction,axis).Unit*(thickness/2),v=V3.Cross(direction,u.Unit)*(thickness/2);
         V3[] points={u+v,u-v,(u+v)*-1,v-u};
+        if(lowDetail) {Quad(a+u,b+u,b-u,a-u,color);Quad(a+v,b+v,b-v,a-v,Shade(color,.85));return;}
         for(int i=0;i<4;i++)Quad(a+points[i],b+points[i],b+points[(i+1)%4],a+points[(i+1)%4],Shade(color,.8+i*.06));
     }
     void Disc(double x,double y,double z,double rx,double rz,int color,int sides=24) {
+        if(lowDetail)sides=Math.Max(6,sides/2);
         for(int i=0;i<sides;i++) {double a=i*Math.PI*2/sides,b=(i+1)*Math.PI*2/sides;Tri(new V3(x,y,z),new V3(x+Math.Cos(a)*rx,y,z+Math.Sin(a)*rz),new V3(x+Math.Cos(b)*rx,y,z+Math.Sin(b)*rz),color);}
     }
     void Road(World world,V3 a,V3 b,double width,int color=0x666358) {
-        double length=(b-a).Length;int steps=Math.Max(1,(int)(length/15));V3 side=V3.Cross((b-a).Unit,new V3(0,1,0))*(width/2);
+        double length=(b-a).Length;int steps=Math.Max(1,(int)(length/(lowDetail?55:15)));V3 side=V3.Cross((b-a).Unit,new V3(0,1,0))*(width/2);
         for(int i=0;i<steps;i++) {
             V3 p=a+(b-a)*((double)i/steps),q=a+(b-a)*((double)(i+1)/steps);
             V3 p0=p+side,p1=p-side,q0=q+side,q1=q-side;
@@ -229,10 +234,10 @@ public sealed class HanoiCity {
         // One dark shop opening and shutters, enough to read as narrow tube houses.
         double front=z+length/2+.015;
         Quad(new V3(x-width*.22,y+.3,front),new V3(x+width*.22,y+.3,front),new V3(x+width*.22,y+2.6,front),new V3(x-width*.22,y+2.6,front),0x494b3d);
-        if(height>6)Quad(new V3(x-1,y+4.4,front),new V3(x+1,y+4.4,front),new V3(x+1,y+5.8,front),new V3(x-1,y+5.8,front),0x586550);
+        if(!lowDetail&&height>6)Quad(new V3(x-1,y+4.4,front),new V3(x+1,y+4.4,front),new V3(x+1,y+5.8,front),new V3(x-1,y+5.8,front),0x586550);
     }
     void Build(World world,int level) {
-        detail=level;chunks=new List<Chunk>();BuildCount++;
+        detail=level;int cacheKey=level;level%=3;chunks=new List<Chunk>();BuildCount++;
         if(world.Repeating)LoopGround(world);
         // Fixed, low-relief city ground extends beyond the nearby terrain grid.
         for(int z=-1200;!world.Repeating&&z<400;z+=160)for(int x=-640;x<640;x+=160) {
@@ -263,7 +268,7 @@ public sealed class HanoiCity {
         LongBien(world);
         WartimeDetails(world);
         if(world.Repeating)SealChunks();
-        cachedLevels[level]=chunks;
+        cachedLevels[cacheKey]=chunks;
     }
     void Waterways(World world) {
         if(!world.Repeating)Begin("Red River and sandy banks",RiverCenter(-450),-450,820,true);
@@ -277,8 +282,8 @@ public sealed class HanoiCity {
         Disc(LakeX,.77,LakeZ,LakeRadiusX+5,LakeRadiusZ+5,0xa6aa86,48);
         Disc(LakeX,.80,LakeZ,LakeRadiusX,LakeRadiusZ,0x527e79,48);
         // Narrow, tree-lined lakeside path, rather than modern waterfront towers.
-        for(int i=0;i<48;i++) {
-            double p=i*Math.PI/24,q=(i+1)*Math.PI/24;
+        for(int i=0;i<48;i+=lowDetail?2:1) {
+            double p=i*Math.PI/24,q=(i+(lowDetail?2:1))*Math.PI/24;
             Quad(new V3(LakeX+Math.Cos(p)*(LakeRadiusX+3),.84,LakeZ+Math.Sin(p)*(LakeRadiusZ+3)),new V3(LakeX+Math.Cos(q)*(LakeRadiusX+3),.84,LakeZ+Math.Sin(q)*(LakeRadiusZ+3)),new V3(LakeX+Math.Cos(q)*(LakeRadiusX+5),.84,LakeZ+Math.Sin(q)*(LakeRadiusZ+5)),new V3(LakeX+Math.Cos(p)*(LakeRadiusX+5),.84,LakeZ+Math.Sin(p)*(LakeRadiusZ+5)),0xaaa48e);
             if(i%3==0)Tree(world,LakeX+Math.Cos(p)*(LakeRadiusX+9),LakeZ+Math.Sin(p)*(LakeRadiusZ+9));
         }
@@ -335,7 +340,7 @@ public sealed class HanoiCity {
             Beam(new V3(x+21,12,BridgeZ-4),new V3(x+21,12,BridgeZ+4),.28,0x636953);
         }
         for(int side=-1;side<=1;side+=2)Beam(new V3(start,4.45,BridgeZ+side*1.1),new V3(start+210,4.45,BridgeZ+side*1.1),.18,0x373e3b);
-        for(int i=0;i<70;i++)Box(start+i*3,4.36,BridgeZ,.35,.12,3.3,0x665d49);
+        for(int i=0;i<70;i+=lowDetail?5:1)Box(start+i*3,4.36,BridgeZ,.35,.12,3.3,0x665d49);
         Road(world,new V3(start-110,0,BridgeZ),new V3(start,0,BridgeZ),8);
     }
     void WartimeDetails(World world) {

@@ -1,0 +1,211 @@
+{
+  "description": "Windows .NET Framework CPU software renderer, seed 1337, complexity 18. Four route phases, 4 warmups and 25 measured frames per pose; medians. No active combat actors. Before captured before optimization. Timings do not measure FPGA execution or electrical power.",
+  "full_detail_640_images_match_before": true,
+  "reports": {
+    "before": {
+      "backend": "desktop-software/v1 (not RasterIX)",
+      "frames_per_pose": 25,
+      "poses": [
+        {
+          "frame_ms": 17.697200000000002,
+          "geometry_ms": 1.4694,
+          "name": "route-0m",
+          "raster_ms": 16.0568,
+          "triangles": 15178,
+          "vertices": 28109
+        },
+        {
+          "frame_ms": 12.6434,
+          "geometry_ms": 0.7130000000000001,
+          "name": "route-495m",
+          "raster_ms": 11.9879,
+          "triangles": 9374,
+          "vertices": 17952
+        },
+        {
+          "frame_ms": 5.905600000000001,
+          "geometry_ms": 0.40590000000000004,
+          "name": "route-990m",
+          "raster_ms": 5.4692,
+          "triangles": 4902,
+          "vertices": 9523
+        },
+        {
+          "frame_ms": 10.6583,
+          "geometry_ms": 1.1174,
+          "name": "route-1485m",
+          "raster_ms": 9.5397,
+          "triangles": 11712,
+          "vertices": 21787
+        }
+      ],
+      "width": 640,
+      "height": 400,
+      "quality": "full"
+    },
+    "full_320": {
+      "backend": "desktop-software/v1 (not RasterIX)",
+      "frames_per_pose": 25,
+      "height": 240,
+      "poses": [
+        {
+          "frame_ms": 10.318900000000001,
+          "geometry_ms": 0.8853000000000001,
+          "name": "route-0m",
+          "raster_ms": 9.3162,
+          "triangles": 14686,
+          "vertices": 27240
+        },
+        {
+          "frame_ms": 6.8607000000000005,
+          "geometry_ms": 0.5221,
+          "name": "route-495m",
+          "raster_ms": 6.3329,
+          "triangles": 8894,
+          "vertices": 17085
+        },
+        {
+          "frame_ms": 3.3044000000000002,
+          "geometry_ms": 0.27790000000000004,
+          "name": "route-990m",
+          "raster_ms": 3.0198,
+          "triangles": 4716,
+          "vertices": 9182
+        },
+        {
+          "frame_ms": 6.688000000000001,
+          "geometry_ms": 0.6362,
+          "name": "route-1485m",
+          "raster_ms": 6.042000000000001,
+          "triangles": 11632,
+          "vertices": 21655
+        }
+      ],
+      "quality": "full",
+      "width": 320
+    },
+    "full_640": {
+      "backend": "desktop-software/v1 (not RasterIX)",
+      "frames_per_pose": 25,
+      "height": 400,
+      "poses": [
+        {
+          "frame_ms": 16.9375,
+          "geometry_ms": 0.8608,
+          "name": "route-0m",
+          "raster_ms": 16.075300000000002,
+          "triangles": 15178,
+          "vertices": 28109
+        },
+        {
+          "frame_ms": 12.3199,
+          "geometry_ms": 0.5452,
+          "name": "route-495m",
+          "raster_ms": 11.7806,
+          "triangles": 9374,
+          "vertices": 17952
+        },
+        {
+          "frame_ms": 5.7991,
+          "geometry_ms": 0.2919,
+          "name": "route-990m",
+          "raster_ms": 5.477600000000001,
+          "triangles": 4902,
+          "vertices": 9523
+        },
+        {
+          "frame_ms": 10.1827,
+          "geometry_ms": 0.6521,
+          "name": "route-1485m",
+          "raster_ms": 9.5046,
+          "triangles": 11712,
+          "vertices": 21787
+        }
+      ],
+      "quality": "full",
+      "width": 640
+    },
+    "low_320": {
+      "backend": "desktop-software/v1 (not RasterIX)",
+      "frames_per_pose": 25,
+      "height": 240,
+      "poses": [
+        {
+          "frame_ms": 4.6096,
+          "geometry_ms": 0.26080000000000003,
+          "name": "route-0m",
+          "raster_ms": 4.3475,
+          "triangles": 4443,
+          "vertices": 8109
+        },
+        {
+          "frame_ms": 4.0469,
+          "geometry_ms": 0.23900000000000002,
+          "name": "route-495m",
+          "raster_ms": 3.7936,
+          "triangles": 3953,
+          "vertices": 7430
+        },
+        {
+          "frame_ms": 1.2214,
+          "geometry_ms": 0.0483,
+          "name": "route-990m",
+          "raster_ms": 1.1713,
+          "triangles": 565,
+          "vertices": 1234
+        },
+        {
+          "frame_ms": 2.3817,
+          "geometry_ms": 0.1501,
+          "name": "route-1485m",
+          "raster_ms": 2.2304,
+          "triangles": 2858,
+          "vertices": 5152
+        }
+      ],
+      "quality": "low",
+      "width": 320
+    },
+    "low_320_hud": {
+      "backend": "desktop-software/v1 (not RasterIX)",
+      "frames_per_pose": 25,
+      "height": 240,
+      "poses": [
+        {
+          "frame_ms": 5.1515,
+          "geometry_ms": 0.2757,
+          "name": "route-0m",
+          "raster_ms": 4.8707,
+          "triangles": 5083,
+          "vertices": 9389
+        },
+        {
+          "frame_ms": 4.5924000000000005,
+          "geometry_ms": 0.2675,
+          "name": "route-495m",
+          "raster_ms": 4.3156,
+          "triangles": 4611,
+          "vertices": 8746
+        },
+        {
+          "frame_ms": 1.7696,
+          "geometry_ms": 0.08120000000000001,
+          "name": "route-990m",
+          "raster_ms": 1.6832,
+          "triangles": 1229,
+          "vertices": 2562
+        },
+        {
+          "frame_ms": 2.9835000000000003,
+          "geometry_ms": 0.188,
+          "name": "route-1485m",
+          "raster_ms": 2.7875,
+          "triangles": 3526,
+          "vertices": 6488
+        }
+      ],
+      "quality": "low",
+      "width": 320
+    }
+  }
+}

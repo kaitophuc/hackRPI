@@ -10,10 +10,10 @@ using System.Windows.Forms;
 
 namespace Flighting {
 public sealed class Options {
-    public int Width=640,Height=400,Scene=6,Complexity=18,Ticks=600,Port;
+    public int Width=320,Height=240,Scene=6,Complexity=18,Ticks=600,Port,Fps=30;
     public uint Seed=1337;
     public bool Headless,SelfTest,Suite,Scripted,Wire,NoHud,Realtime,Help,TicksExplicit,DesktopSmoke;
-    public string Backend="software",Record,Replay,Out="frame.ppm",Capture,RenderCapture,CompareA,CompareB,AccelerometerUrl;
+    public string Quality="low",Backend="software",Record,Replay,Out="frame.ppm",Capture,RenderCapture,CompareA,CompareB,AccelerometerUrl;
     public int Tolerance=8,Radius=1;public double AllowedFraction=.01;
     public static Options Parse(string[] args) {
         Options o=new Options();
@@ -25,6 +25,7 @@ public sealed class Options {
                 if(i+1>=args.Length)throw new ArgumentException("Missing value for "+a);v=args[++i];
                 switch(a) {
                     case "--width":o.Width=Int32.Parse(v);break;case "--height":o.Height=Int32.Parse(v);break;
+                    case "--quality":o.Quality=v;break;case "--fps":o.Fps=Int32.Parse(v);break;
                     case "--scene":o.Scene=Int32.Parse(v);break;case "--complexity":o.Complexity=Int32.Parse(v);break;
                     case "--ticks":o.Ticks=Int32.Parse(v);o.TicksExplicit=true;break;case "--seed":o.Seed=UInt32.Parse(v);break;
                     case "--backend":o.Backend=v;break;case "--record":o.Record=v;break;case "--replay":o.Replay=v;break;
@@ -39,6 +40,8 @@ public sealed class Options {
             }
         }
         if(o.Width<64||o.Width>1920||o.Height<64||o.Height>1080||o.Scene<1||o.Scene>7||o.Complexity<4||o.Complexity>48||o.Ticks<0||o.Port<0||o.Port>65535||o.Tolerance<0||o.Tolerance>255||o.Radius<0||o.Radius>2||o.AllowedFraction<0||o.AllowedFraction>1)throw new ArgumentException("Options outside documented bounds");
+        if(o.Quality!="low"&&o.Quality!="full")throw new ArgumentException("--quality must be low or full");
+        if(o.Fps<1||o.Fps>60)throw new ArgumentException("--fps must be between 1 and 60");
         if(o.Backend!="software"&&o.Backend!="rasterix")throw Log.Unsupported("backend "+o.Backend);
         if(o.Record!=null&&o.Replay!=null)throw new ArgumentException("--record and --replay are exclusive");
         if(o.Port!=0&&o.Replay!=null)throw new ArgumentException("UDP and replay inputs are exclusive");
@@ -59,6 +62,9 @@ public sealed class Session : IDisposable {
     public readonly EndlessRun Run;
     public bool Paused,Finished;public InputState LastInput=InputState.Neutral();
     public Frame LastFrame;public int[] LastPixels;
+    readonly Frame renderFrame=new Frame();
+    readonly Stopwatch renderWatch=new Stopwatch();
+    public long RenderedFrames {get;private set;}
     public Session(Options options) {
         Options=options;
         if(options.Replay!=null)Reader=new Replay(options.Replay,0,false);
@@ -94,12 +100,13 @@ public sealed class Session : IDisposable {
         LastFrame=null;LastPixels=null;Paused=false;Finished=false;if(Writer!=null)Writer.RestartRecording();
     }
     public void Render() {
-        Stopwatch watch=Stopwatch.StartNew();Metrics.Status=Finished?"REPLAY COMPLETE":Reader!=null?"DETERMINISTIC REPLAY":Writer!=null?"RECORDING INPUT":"FLIGHT LAB / LIVE";
+        Stopwatch watch=renderWatch;watch.Restart();Metrics.Status=Finished?"REPLAY COMPLETE":Reader!=null?"DETERMINISTIC REPLAY":Writer!=null?"RECORDING INPUT":"FLIGHT LAB / LIVE";
         if(Sensor!=null)Metrics.Status=Sensor.Ready?"MMA7660 / LIVE TILT":"CLICK CALIBRATE / PLAY";
-        LastFrame=Scenes.Build(Options.Scene,Options.Width,Options.Height,Options.Complexity,World,Aircraft,Metrics,Paused,Options.Wire,!Options.NoHud,CombatEnabled?Combat:null);
+        LastFrame=Scenes.Build(Options.Scene,Options.Width,Options.Height,Options.Complexity,World,Aircraft,Metrics,Paused,Options.Wire,!Options.NoHud,CombatEnabled?Combat:null,Options.Quality=="low",renderFrame);
         Metrics.GeometryMs=watch.Elapsed.TotalMilliseconds;watch.Restart();LastPixels=Renderer.Render(LastFrame);Metrics.SubmissionMs=watch.Elapsed.TotalMilliseconds;
         watch.Restart();Renderer.Deliver();Metrics.DeliveryMs=watch.Elapsed.TotalMilliseconds;
         Metrics.Triangles=LastFrame.Triangles;Metrics.DrawCalls=LastFrame.Draws.Count;Metrics.TextureBytes=Renderer.TextureBytes;Metrics.Dropped=Clock.DroppedSeconds;
+        RenderedFrames++;
     }
     public void Capture(string directory) {if(LastFrame==null)Render();FrameIO.Capture(directory,LastFrame,LastPixels,World,Aircraft,LastInput,Renderer.Name,CombatEnabled?Combat:null,Run);Log.Write("CAPTURE "+Path.GetFullPath(directory));}
     public void Dispose() {if(Reader!=null)Reader.Dispose();if(Writer!=null)Writer.Dispose();if(Remote!=null)Remote.Dispose();if(Sensor!=null)Sensor.Dispose();Renderer.Dispose();}
@@ -148,7 +155,7 @@ public static class Program {
                 session.Render();
             } else {
                 quit=false;Console.CancelKeyPress+=Cancel;
-                Stopwatch elapsed=Stopwatch.StartNew();double previous=0;
+                Stopwatch elapsed=Stopwatch.StartNew();double previous=0;FramePacer renderPacer=new FramePacer();
                 try {
                     while(!quit&&(target==0||(session.Aircraft.Tick<target&&!session.Combat.GameOver))&&!session.Finished) {
                         double now=elapsed.Elapsed.TotalSeconds,delta=now-previous;previous=now;
@@ -159,11 +166,13 @@ public static class Program {
                         for(int i=0;i<due&&(target==0||session.Aircraft.Tick<target);i++) {
                             input=session.Input(input,elapsed.ElapsedMilliseconds);if(session.Finished)break;session.Step(input);
                         }
-                        session.Metrics.SimulationMs=sim.Elapsed.TotalMilliseconds;session.Render();Thread.Sleep(1);
+                        session.Metrics.SimulationMs=sim.Elapsed.TotalMilliseconds;
+                        if(renderPacer.Due(now,1.0/o.Fps))session.Render();
+                        Thread.Sleep(1);
                     }
                 } finally {Console.CancelKeyPress-=Cancel;}
             }
-            if(session.LastFrame==null)session.Render();
+            session.Render();
             FrameIO.WritePpm(o.Out,o.Width,o.Height,session.LastPixels);
             if(o.Capture!=null)session.Capture(o.Capture);
             string state=String.Join(",",Array.ConvertAll(session.Aircraft.State(),x=>x.ToString("R",CultureInfo.InvariantCulture)));
@@ -192,7 +201,8 @@ public static class Program {
     public const string Help=@"FLIGHTING SIMULATOR GAME / contract v1 PROPOSED
 No arguments: desktop flight window (Windows build).
 --backend software|rasterix    Explicit renderer; RasterIX requires GPU-team bridge
---scene 1..7 --width 640 --height 400 --complexity 4..48 --seed 1337
+--scene 1..7 --width 320 --height 240 --complexity 4..48 --seed 1337
+--quality low|full --fps 1..60  Default: low detail, 30 FPS; simulation stays 60 Hz
 --headless --ticks 600 --scripted --out frame.ppm
 --record path.csv | --replay path.csv
 --accelerometer http://127.0.0.1:8765/  Desktop tilt controls; C calibrates

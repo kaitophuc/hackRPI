@@ -9,7 +9,7 @@ public sealed class PerformanceRow {
     public string name;public double geometry_ms,raster_ms,frame_ms;public int triangles,vertices;
 }
 public sealed class PerformanceReport {
-    public string backend;public int frames_per_pose;public PerformanceRow[] poses;
+    public string backend,quality;public int width,height,frames_per_pose;public PerformanceRow[] poses;
 }
 public static class PerformanceProbe {
     static double Median(double[] samples) {Array.Sort(samples);return samples[samples.Length/2];}
@@ -18,7 +18,13 @@ public static class PerformanceProbe {
         string output=args.Length>0?args[0]:"performance";Directory.CreateDirectory(output);
         const int frames=25;
         PerformanceReport report=new PerformanceReport {frames_per_pose=frames,poses=new PerformanceRow[4]};
-        using(Session session=new Session(new Options {Width=640,Height=400,Complexity=18,NoHud=true})) {
+        Options options=new Options {NoHud=true};
+        if(args.Length>1)options.Quality=args[1];
+        if(args.Length>2)options.Width=Int32.Parse(args[2]);
+        if(args.Length>3)options.Height=Int32.Parse(args[3]);
+        if(args.Length>4)options.NoHud=args[4]!="hud";
+        report.quality=options.Quality;report.width=options.Width;report.height=options.Height;
+        using(Session session=new Session(options)) {
             report.backend=session.Renderer.Name;
             V3[] points={new V3(0,50,130),new V3(-85,65,-120),new V3(160,60,-360),new V3(20,65,-800)};
             double[] headings={0,.6,1.4,Math.PI};
@@ -37,7 +43,7 @@ public static class PerformanceProbe {
                 }
                 int vertices=0;foreach(Draw draw in session.LastFrame.Draws)vertices+=draw.Vertices.Count;
                 report.poses[pose]=new PerformanceRow {name=session.Run!=null?"route-"+distance[pose]+"m":"pose-"+pose,geometry_ms=Median(geometry),raster_ms=Median(raster),frame_ms=Median(total),triangles=session.LastFrame.Triangles,vertices=vertices};
-                FrameIO.WritePpm(Path.Combine(output,"pose-"+pose+".ppm"),640,400,session.LastPixels);
+                FrameIO.WritePpm(Path.Combine(output,"pose-"+pose+".ppm"),options.Width,options.Height,session.LastPixels);
                 Console.WriteLine("pose {0}: prep {1:F2}ms, raster {2:F2}ms, total {3:F2}ms, {4} triangles, {5} vertices",pose,Median(geometry),Median(raster),Median(total),session.LastFrame.Triangles,vertices);
             }
         }

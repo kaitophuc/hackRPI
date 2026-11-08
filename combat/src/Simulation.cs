@@ -9,6 +9,17 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 
 namespace Flighting {
+// Keep the render deadline separate from the last timer callback. A 16 ms
+// host timer cannot divide evenly into 30 FPS; resetting after each callback
+// would accidentally cap gameplay near 20 FPS instead.
+public sealed class FramePacer {
+    double next=-1;
+    public bool Due(double now,double interval,bool force=false) {
+        if(!force&&now+1e-9<next)return false;
+        next=force||next<0||now-next>interval?now+interval:next+interval;
+        return true;
+    }
+}
 [DataContract]
 public sealed class InputState {
     [DataMember(IsRequired=true)] public int version=1;

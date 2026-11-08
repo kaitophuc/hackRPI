@@ -1,48 +1,55 @@
-# Endless-run scenery and rendering cost
+# 320x240 performance profile
 
-New games use an automatic forward run with a fixed camera. One cached **1760 × 1980 metre** Hanoi sequence is split into nine **220 metre** sections. A fixed **11-slot** pool scrolls these sections past the plane and reuses them ahead; side-to-side free-roam tile copies are not submitted. Distance grows separately while the plane and combat actors stay near the camera. Ground queries share the scrolling phase, and source meshes are generated once per detail variant.
+The game defaults to **320x240**, low-detail geometry and **30 FPS rendering**. Simulation, sensor processing and combat remain fixed at **60 Hz**. The 11-slot endless route still recycles nine cached sections of one Hanoi sequence. The Windows game runs with the same controls, calibration button, scoring, enemies, collision rules and replay format.
 
-The plane models, calibration, shooting, enemy AI, health, scoring, 60 Hz simulation and default 640 × 400 framebuffer remain. Tilt now dodges horizontally/vertically within the fixed view; the plane cannot turn the forward route. Large diagnostic panels are omitted from the playable dodge area.
+## Work reduced
 
-## Current endless-run measurements
+- Simplify ground patches, roads, bridge sleepers, truss beams and circular landmark details. Keep the Hanoi landmarks, roof shapes and color palette. In the fixed-camera runner, omit building faces the camera cannot see. Legacy free-flight modes keep their existing meshes.
+- Cache simplified player/enemy meshes. Enemies beyond 100 metres use a smaller silhouette mesh; close enemies retain canopy, propeller and painted wing markings. Cull invisible enemies, shots and bursts before transforming them.
+- Use one camera-facing quad per tracer and four burst spokes. Projectile movement, hit detection and damage are unchanged.
+- Reuse frame, draw, vertex and index buffers. Compile the pixel font once, combine matching glyph runs vertically and share the four vertices of each HUD rectangle. A compact 320x240 HUD keeps health, kills, enemy markers, aiming, distance and the clickable Replay action readable.
+- Keep gameplay at five or fewer draw batches. The native framebuffer has **70% fewer pixels** than 640x400. Rendering runs at 30 FPS, paused rendering at 5 FPS and unfocused rendering at 2 FPS. A deadline scheduler avoids drifting to 20 FPS on a 16 ms desktop timer; slow frames do not trigger render catch-up bursts.
 
-At route distances 0, 495, 990 and 1485 metres, the current fixed-camera run measured **17.67, 12.69, 5.89 and 10.67 ms** per frame (mean of pose medians **11.73 ms**). Same CPU renderer, resolution, complexity and sampling method as below. These route views differ from the previous free-flight views, so this is a current measurement, not a direct percentage comparison. Raw results are in `tests/endless-performance-results.json`.
+## Measurements on this PC
 
-## Changes that reduce work
+Windows, installed .NET Framework, **CPU software renderer**, seed 1337, complexity 18. Each of four route phases received four warmup renders and 25 measured renders; entries are pose medians. HUD and active combat actors are excluded from the first comparison.
 
-- Cache the terrain and city meshes once per detail variant instead of generating a moving ground grid every frame.
-- Share identical vertices, split the river into smaller culling chunks, and submit only camera-visible neighboring sections.
-- Draw opaque chunks near to far so existing depth rejects hidden fragments earlier.
-- Reuse software clipping buffers and per-vertex screen coordinates; avoid wireframe calculations during normal play.
-- Restrict large triangles to conservative scanline spans and pack constant palette colors once per triangle. Exact edge, depth, gradient and texture behavior is retained.
-- Limit redraws to 5 Hz while paused and 2 Hz while unfocused. Active rendering is capped at 60 Hz; simulation remains fixed at 60 Hz and independent of rendering.
+| Route distance | Previous 640x400 full | New 320x240 low | Triangles before -> after |
+| --- | ---: | ---: | ---: |
+| 0 m | 17.70 ms | 4.61 ms | 15,178 -> 4,443 |
+| 495 m | 12.64 ms | 4.05 ms | 9,374 -> 3,953 |
+| 990 m | 5.91 ms | 1.22 ms | 4,902 -> 565 |
+| 1485 m | 10.66 ms | 2.38 ms | 11,712 -> 2,858 |
+| Mean of pose medians | **11.73 ms** | **3.06 ms** | **71.3% fewer triangles** |
 
-## Earlier renderer optimization comparison
+The combined default changes reduce measured CPU frame time by about **74%**. At the **same 320x240 resolution**, low detail submits **70.4% fewer triangles** than full detail, separating geometry savings from resolution savings. With the compact HUD enabled, the four low-profile poses measured **5.15, 4.59, 1.77 and 2.98 ms**. These are PC timings, not FPGA timings or power measurements.
 
-Windows, installed .NET Framework 4.x, **CPU software renderer**, 640 × 400, complexity 18, HUD disabled. Each of four camera poses was warmed up for four frames, then measured for 25 frames. Entries are median full frame costs at that pose, including scene preparation and rendering.
+Raw baseline, full/low equal-resolution and HUD results are in [low-power-performance-results.json](../tests/low-power-performance-results.json). Full-detail 640x400 route images still match the four pre-change reference images byte for byte. Earlier optimization evidence remains in [performance-results.json](../tests/performance-results.json) and [endless-performance-results.json](../tests/endless-performance-results.json).
 
-| View | Before | After |
-| --- | ---: | ---: |
-| Starting city approach | 39.14 ms | 19.77 ms |
-| Lake / quarter turn | 31.05 ms | 15.33 ms |
-| River-side heading | 36.92 ms | 10.73 ms |
-| Reverse heading | 32.64 ms | 18.81 ms |
-| Mean of these medians | **34.94 ms** | **16.16 ms** |
-
-That is **53.8% less frame time** in this comparison, with **44.5% fewer submitted vertices** and **11.2% fewer triangles** across the four views. Timings vary with camera position and system load. These measurements compare the original fixed-map build with the optimized repeating-map build. They measure CPU rendering cost; GPU electrical power, RasterIX and FPGA performance were not measured.
-
-The captured results are in [`tests/performance-results.json`](../tests/performance-results.json). Close the game, then measure the current build without opening a game window by running from `hackRPI`:
+Run from `hackRPI` with the game closed:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File combat/tests/benchmark.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File combat/tests/benchmark.ps1 -Quality full -Width 320 -Height 240 -OutputDirectory combat/captures/performance/full
+powershell -NoProfile -ExecutionPolicy Bypass -File combat/tests/benchmark.ps1 -Hud -OutputDirectory combat/captures/performance/hud
 ```
+
+The benchmark writes four PPM images and `results.json`; timings vary with system load.
+
+## Play and compare
+
+```powershell
+python play_combat.py --serial COM3
+python play_combat.py --serial COM3 --quality full --fps 60
+```
+
+Both launch at 320x240 and use the existing USB bridge. Direct desktop options also support `--width 640 --height 400 --quality full --fps 60`. Quality changes only rendering; rendering cadence cannot change the deterministic simulation.
 
 ## Verification
 
-- 363 core checks, including the 11-slot pool over 80 section boundaries, fixed camera/corridor bounds, continuous scrolling, restart, sensor dodge mapping and legacy modes.
-- Seven frozen original scene captures reproduced byte for byte by the optimized renderer.
-- Ninety-six varied flat, gradient, textured, clipped and wireframe triangle frames matched the original renderer byte for byte.
-- Full combat/replay/desktop suite: the endless-run 1200-tick fire/dodge example ends with 4 kills and 35 HP; idle aircraft reaches game over at tick 1257. A straight-flight comparison preserves legacy damage, kills, cooldown and RNG behavior under the frame conversion.
-- Live COM3 accelerometer: calibration button, advancing combat, enemy spawning, firing and focus safety pass.
+- 421 core checks cover 320x240 corridor corners, profile-independent gameplay, native HUD hit bounds, frame pacing, complete-route buffer/cache reuse and legacy recordings.
+- A busy scene with four fighters, 192 projectiles and 16 bursts stays below 9,000 triangles including HUD over 36 route phases, with at most five batches. This is a tested scene budget, not a hard limit that drops gameplay actors.
+- Full executable validation covers capture reproduction, combat, keyboard/mouse input, letterboxed Replay clicks, record/replay identity and the real UDP watchdog. With the original enemy firing rate and half-speed enemy bullets, the 1,200-tick fire/dodge example ends at 4 kills and 100 HP; idle flight reaches game over at tick 3972.
+- Live COM3/MMA7660 calibration, firing, advancing endless-run ticks, visible PLAYING feedback and focus safety pass at 320x240.
 
-New recordings use format 6 for the endless run. Formats 1–5 retain their original movement and environments. Captures embed runner state and complete frame geometry, and reproduce independently of map generation.
+Recordings remain format 6; formats 1-5 keep their previous environments and controls. Captures serialize complete geometry synchronously. `Session.LastFrame` and its geometry are reusable buffers valid until the next render; serialize a capture before retaining it across renders.

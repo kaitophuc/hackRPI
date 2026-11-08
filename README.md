@@ -17,7 +17,7 @@ Hold **F** or the **left mouse button** to fire. **WASD** or the **arrow keys** 
 
 The existing browser Escape Run is still available with `python server.py` at **http://127.0.0.1:8765**. Closing combat stops a sensor server created by its launcher; a previously running server stays open.
 
-The combat game now plays as an endless forward run. The plane stays near a fixed camera while an 11-slot pool scrolls and recycles nine cached Hanoi sections ahead. Tilt moves the plane across the corridor; it does not turn the route. A distance counter tracks progress. Hidden chunks are culled; rendering slows to 5 frames/second while paused and 2 while unfocused. Simulation remains 60 ticks/second. The current renderer runs on the CPU. See [combat/docs/PERFORMANCE.md](combat/docs/PERFORMANCE.md) for measurements.
+The combat game plays as an endless forward run at **320×240**, with **30 FPS rendering and 60 Hz simulation**. The plane stays near a fixed camera while an 11-slot pool recycles nine cached Hanoi sections. Low-detail meshes, distance-based enemy detail, hidden-object culling, reusable geometry buffers and a compact pixel HUD reduce rendering work. Calibration, controls and combat behavior remain the same. Rendering slows to 5 FPS while paused and 2 FPS while unfocused. The PC version remains playable; use `python play_combat.py --quality full --fps 60` for full detail. See [combat/docs/PERFORMANCE.md](combat/docs/PERFORMANCE.md) for measured costs and options.
 
 Build and test the combat source with `powershell -NoProfile -ExecutionPolicy Bypass -File combat/build.ps1 -Test`. See [combat/README.md](combat/README.md) for the desktop game's other modes and diagnostics.
 

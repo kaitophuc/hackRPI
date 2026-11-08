@@ -1,4 +1,4 @@
-param([string]$OutputDirectory)
+param([string]$OutputDirectory, [ValidateSet('low','full')][string]$Quality='low', [int]$Width=320, [int]$Height=240, [switch]$Hud)
 $ErrorActionPreference = 'Stop'
 $combatRoot = Split-Path -Parent $PSScriptRoot
 if (-not $OutputDirectory) { $OutputDirectory = Join-Path $combatRoot 'captures\performance\current' }
@@ -11,5 +11,5 @@ $probeExe = Join-Path $combatRoot 'dist\PerformanceProbe.exe'
 $probeSource = Join-Path $PSScriptRoot 'PerformanceProbe.cs'
 & $compiler /nologo /r:System.Runtime.Serialization.dll ("/r:" + $gameExe) ("/out:" + $probeExe) $probeSource
 if ($LASTEXITCODE -ne 0) { throw 'Benchmark compilation failed' }
-& $probeExe $OutputDirectory
+& $probeExe $OutputDirectory $Quality $Width $Height $(if($Hud) {'hud'} else {'no-hud'})
 if ($LASTEXITCODE -ne 0) { throw 'Benchmark failed' }

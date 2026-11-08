@@ -16,7 +16,8 @@ public sealed class MainForm : Form {
     readonly HashSet<Keys> keys=new HashSet<Keys>();
     double previous,throttle=.55;long sequence;
     bool manualPause,focusPause,hasFocus,mouseFiring;
-    double lastRender=-1;bool renderedPause,renderedGameOver,renderedWire;int renderedScene=-1;
+    readonly FramePacer renderPacer=new FramePacer();
+    bool renderedPause,renderedGameOver,renderedWire;int renderedScene=-1;
     Bitmap bitmap;
     StatusStrip sensorStrip;
     ToolStripStatusLabel sensorStatus;
@@ -124,16 +125,16 @@ public sealed class MainForm : Form {
             int steps=session.Clock.Advance(delta,session.Paused);Stopwatch watch=Stopwatch.StartNew();
             for(int i=0;i<steps;i++) {input=session.Input(local,elapsed.ElapsedMilliseconds);if(session.Finished)break;session.Step(input);}
             session.Metrics.SimulationMs=watch.Elapsed.TotalMilliseconds;
-            double renderInterval=RenderInterval(session.Paused,hasFocus);
+            double renderInterval=RenderInterval(session.Paused,hasFocus,session.Options.Fps);
             bool changed=session.LastFrame==null||renderedPause!=session.Paused||renderedGameOver!=session.Combat.GameOver||renderedScene!=session.Options.Scene||renderedWire!=session.Options.Wire;
-            if(!changed&&lastRender>=0&&now-lastRender<renderInterval)return;
-            session.Render();lastRender=now;renderedPause=session.Paused;renderedGameOver=session.Combat.GameOver;renderedScene=session.Options.Scene;renderedWire=session.Options.Wire;
+            if(!renderPacer.Due(now,renderInterval,changed))return;
+            session.Render();renderedPause=session.Paused;renderedGameOver=session.Combat.GameOver;renderedScene=session.Options.Scene;renderedWire=session.Options.Wire;
             watch.Restart();BitmapData data=bitmap.LockBits(new Rectangle(0,0,bitmap.Width,bitmap.Height),ImageLockMode.WriteOnly,PixelFormat.Format32bppArgb);
             try {Marshal.Copy(session.LastPixels,0,data.Scan0,session.LastPixels.Length);}finally {bitmap.UnlockBits(data);}
             session.Metrics.DeliveryMs+=watch.Elapsed.TotalMilliseconds;Invalidate();
         } catch(Exception ex) {timer.Stop();Log.Write(ex.ToString());MessageBox.Show(this,ex.Message,"Flighting renderer error",MessageBoxButtons.OK,MessageBoxIcon.Error);Close();}
     }
-    public static double RenderInterval(bool paused,bool focused) {return !focused?.5:paused?.2:1.0/60;}
+    public static double RenderInterval(bool paused,bool focused,int fps=30) {return !focused?.5:paused?.2:1.0/fps;}
     protected override void OnPaint(PaintEventArgs e) {
         base.OnPaint(e);Stopwatch watch=Stopwatch.StartNew();
         Rectangle view=GameBounds;
@@ -153,7 +154,8 @@ public sealed class MainForm : Form {
         int w=(int)(bitmap.Width*scale),h=(int)(bitmap.Height*scale);
         if(w<=0||h<=0)return false;
         double x=(point.X-view.Left-(view.Width-w)/2)*640.0/w,y=(point.Y-view.Top-(view.Height-h)/2)*400.0/h;
-        return session.Options.Scene==6&&session.Combat.GameOver&&Scenes.ReplayHit(x,y);
+        bool compact=session.World.Endless&&session.Options.Height<=240;
+        return session.Options.Scene==6&&session.Combat.GameOver&&(compact?Scenes.CompactReplayHit(x/2,y*.6):Scenes.ReplayHit(x,y));
     }
     protected override void OnMouseDown(MouseEventArgs e) {
         base.OnMouseDown(e);if(e.Button!=MouseButtons.Left||!GameBounds.Contains(e.Location))return;
@@ -205,9 +207,9 @@ public sealed class MainForm : Form {
             window.OnKeyDown(window,new KeyEventArgs(Keys.N));
             if(session.Aircraft.Tick!=tick+1)throw new Exception("Desktop single step failed");
             window.Tick(window,EventArgs.Empty);
-            Frame pausedFrame=session.LastFrame;
+            long pausedFrames=session.RenderedFrames;
             window.Tick(window,EventArgs.Empty);
-            if(!Object.ReferenceEquals(pausedFrame,session.LastFrame))throw new Exception("Paused ticks must reuse the frame between idle redraws");
+            if(pausedFrames!=session.RenderedFrames)throw new Exception("Paused ticks must reuse the frame between idle redraws");
             using(Bitmap preview=new Bitmap(window.Width,window.Height)) {
                 window.DrawToBitmap(preview,new Rectangle(0,0,preview.Width,preview.Height));preview.Save(output,ImageFormat.Png);
             }

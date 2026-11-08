@@ -15,6 +15,7 @@ public static class SelfTests {
             SensorTests.Run(Assert);
             SceneryTests.Run(Assert);
             RunnerTests.Run(Assert);
+            OptimizationTests.Run(Assert);
             InputGate gate=new InputGate();InputState p=new InputState {session="test",sequence=7,sender_ms=50,roll=1,throttle=.8};
             Assert(gate.Accept(p,100),"fresh input accepted");Assert(!gate.Accept(p,101),"duplicate sequence rejected");
             Assert(gate.Read(600).roll==1,"input live at watchdog boundary");Assert(!gate.Read(601).connected&&gate.Read(601).throttle==0,"stale input neutral and disconnected");

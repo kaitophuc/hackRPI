@@ -71,6 +71,8 @@ def main():
     parser.add_argument("--port", type=int, default=8765, help="Local sensor server port")
     parser.add_argument("--build", action="store_true", help="Force rebuilding the desktop game")
     parser.add_argument("--build-only", action="store_true", help="Build without opening the game")
+    parser.add_argument("--quality", choices=("low", "full"), default="low", help="Scenery and aircraft detail")
+    parser.add_argument("--fps", type=int, choices=range(1, 61), default=30, metavar="1..60", help="Render cap; simulation remains 60 Hz")
     args = parser.parse_args()
     if os.name != "nt":
         parser.error("The combat desktop game requires Windows and .NET Framework 4.x.")
@@ -84,7 +86,7 @@ def main():
         base, owned = ensure_bridge(args.port, args.serial)
         print("Hold the sensor in your normal grip, then click CALIBRATE & PLAY at the top of the game.", flush=True)
         print("Auto-forward endless flight: tilt to dodge sideways/up/down. Hold F or left mouse to fire.", flush=True)
-        game = subprocess.Popen([str(executable), "--accelerometer", base + "/"], cwd=GAME)
+        game = subprocess.Popen([str(executable), "--accelerometer", base + "/", "--quality", args.quality, "--fps", str(args.fps)], cwd=GAME)
         return game.wait()
     except KeyboardInterrupt:
         if game and game.poll() is None:

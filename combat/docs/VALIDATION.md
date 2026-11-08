@@ -41,9 +41,9 @@ Recorded 2026-11-07. Environment: Windows, installed .NET Framework 4.x compiler
 | Native frame delivery / streaming | Separate timing boundary defined | Not exercised | Not measured |
 | Interactive human flight session | Not performed | Not performed | Not performed |
 
-The core self-test executable passes **363 checks**. Coverage includes flight/rendering/combat, noisy accelerometer calibration, deterministic cached scenery, periodic ground/water, seam continuity, bounded cache size, actor continuity, adjustable density and environment selection. The desktop smoke test exercises keyboard/mouse firing, release/focus safety, game over, letterboxed replay-button hit testing and Enter restart. `tests/validate.py` additionally runs black-box executable checks, 600-tick image/state/combat identity, old/new replay environment selection, the repeatable 1200-tick shooting/dodging flight, actual idle death under enemy fire, wireframe, expected error paths and real UDP timeout/resume. The optimized renderer reproduced seven original scene captures and 96 varied triangle frames byte for byte. See `tests/validation-results.json` for executable/replay checksums and final aircraft/combat state, and `tests/endless-performance-results.json` for current timing evidence. Expected negative tests print resource/unsupported errors intentionally.
+The core self-test executable passes **421 checks**. Coverage includes flight/rendering/combat, noisy accelerometer calibration, deterministic cached scenery, periodic ground/water, seam continuity, bounded cache size, actor continuity, adjustable density and environment selection. The desktop smoke test exercises keyboard/mouse firing, release/focus safety, game over, letterboxed replay-button hit testing and Enter restart. `tests/validate.py` additionally runs black-box executable checks, 600-tick image/state/combat identity, old/new replay environment selection, the repeatable 1200-tick shooting/dodging flight, actual idle death under enemy fire, wireframe, expected error paths and real UDP timeout/resume. The optimized renderer reproduced seven original scene captures and 96 varied triangle frames byte for byte. See `captures/validation/validation-results.json` for executable/replay checksums and final aircraft/combat state, and `tests/endless-performance-results.json` for current timing evidence. Expected negative tests print resource/unsupported errors intentionally.
 
-`captures/suite/` contains one frame bundle for each diagnostic. Scenes use tick 90 except scene 5, which uses tick 15 to capture a visible near-plane crossing. Each scene restarts from the standard initial aircraft state with seed 1337. Captures and smoke screenshots are supplied for inspection; they are not board evidence.
+`captures/suite/` contains one frame bundle for each diagnostic. Scenes use tick 90 except scene 5, which uses tick 15 to capture a visible near-plane crossing. Each scene restarts from the standard initial aircraft state with seed 1337. Captures and smoke screenshots are generated locally for inspection; they are not board evidence.
 
 ## Re-run
 
@@ -53,7 +53,7 @@ python tests\validate.py
 .\dist\FlightingSimulatorGame.exe --suite --capture captures\suite
 ```
 
-Python is optional for black-box orchestration; the EXE's built-in tests and game do not require it. Validation writes new captures/replay files beneath the project or OS temporary directory. A failed assertion or process returns nonzero. Socket restrictions are reported as UNTESTED, never a pass; loopback sockets worked in the recorded run.
+Python is optional for black-box orchestration; the EXE's built-in tests and game do not require it. Validation writes its generated reports, replays and screenshots beneath the ignored `captures/validation/` directory; core test scratch data uses the OS temporary directory. Bundled replay examples under `tests/` are kept unchanged. A failed assertion or process returns nonzero. Socket restrictions are reported as UNTESTED, never a pass; loopback sockets worked in the recorded run.
 
 ## Pending acceptance
 

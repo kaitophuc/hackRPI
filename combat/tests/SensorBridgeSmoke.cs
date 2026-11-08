@@ -15,7 +15,7 @@ public static class SensorBridgeSmoke {
     public static int Main(string[] args) {
         try {
             Options options=new Options {AccelerometerUrl=args.Length==0?"http://127.0.0.1:8765/":args[0],Width=128,Height=96,Complexity=4};
-            if(args.Length>1) {options.Width=640;options.Height=400;}
+            if(args.Length>1) {options.Width=320;options.Height=240;}
             using(Session session=new Session(options)) {
                 Wait(()=>session.Sensor.Fresh,8000,"No fresh hardware samples: "+session.Sensor.Status);
                 if(!session.Sensor.Calibrate())throw new Exception("Could not begin sensor calibration");

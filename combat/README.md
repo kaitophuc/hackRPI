@@ -18,15 +18,16 @@ To verify real hardware, run `python server.py`, leave the sensor still, and run
 
 A runnable desktop flight-development lab with seven diagnostic scenes, a portable fixed-step simulation, and a selectable native RasterIX bridge interface. The graphics/input contract is **proposed**, awaiting GPU-team approval. The bundled desktop renderer is an original CPU software rasterizer; it is not RasterIX and makes no FPGA performance claim.
 
-## Run the delivered Windows executable
+## Build and run on Windows
 
-Open `dist/FlightingSimulatorGame.exe`, or run from this directory:
+Build from source after cloning the repository, then open the game from this directory:
 
 ```powershell
+.\build.cmd
 .\dist\FlightingSimulatorGame.exe
 ```
 
-Requires Windows with .NET Framework 4.x (tested using the installed Framework compiler/runtime). No asset downloads, Python packages, FPGA, or network access are needed for keyboard play. Render resolution defaults to 640×400 and is scaled into a resizable window. `--width` and `--height` change the internal resolution; `--complexity 4..48` selects cached scenery detail and view distance (or the terrain grid size for legacy recordings). The window preserves the framebuffer aspect ratio.
+Requires Windows with .NET Framework 4.x (tested using the installed Framework compiler/runtime). No asset downloads, Python packages, FPGA, or network access are needed for keyboard play. Render resolution defaults to 320×240 and is scaled into a resizable window. `--width` and `--height` change the internal resolution; `--complexity 4..48` selects cached scenery detail and view distance (or the terrain grid size for legacy recordings). The window preserves the framebuffer aspect ratio. Build output and generated captures stay local and are excluded from Git.
 
 | Control | Action |
 | --- | --- |
@@ -52,6 +53,8 @@ New games use a fixed camera and automatic forward progression. The plane remain
 
 Scene 6 runs an endless forward-flight combat game. The player starts with **100 HP**. Gray WWII-style enemy fighters with red markings approach in waves, aim at the current flight path, and fire visible red/orange projectiles. Each incoming hit deals **5–10 HP** of damage. Dodge sideways or vertically; bullets do not home after being fired. At most four enemy fighters are active at once.
 
+Enemies use their original firing rate: about **1.4–1.9 seconds between shots**, with staggered first shots. Enemy bullets travel at **half their original speed**; player bullet speed and firing rate are unchanged.
+
 Hold **F or the left mouse button** to fire golden tracers along the nose/aim marker. A single hit destroys an enemy, produces a brief hit burst and adds one kill. Fire is rate-limited with unlimited ammunition. Player and enemy shots use swept collision to avoid tunneling through an aircraft between fixed ticks. Player collision is intentionally forgiving; there is no ramming damage.
 
 The HUD shows health, kills, hostiles and distance travelled. At zero HP, flight, scenery and combat stop. Click **REPLAY** or press **Enter** to restore 100 HP, reset distance/scenery, clear actors and begin a new round. The replay button handles the scaled/letterboxed viewport. During recording it starts a fresh recording file; recorded playback restarts at tick zero.
@@ -65,6 +68,8 @@ Diagnostics 1–5 and 7 remain isolated from combat. Pausing or losing focus als
 ```
 
 ## Hanoi setting
+
+The default performance profile renders at **320×240 and 30 FPS** while simulation and control processing stay at **60 Hz**. Low-detail city and aircraft meshes preserve the setting, plane silhouette, palette and combat rules. The HUD uses native pixel text at this resolution. `--quality full` restores detailed geometry; `--fps 60` raises the render cap. The Windows version supports both profiles. For the earlier desktop presentation, use `--quality full --width 640 --height 400 --fps 60`. See [PERFORMANCE.md](docs/PERFORMANCE.md) for measurements.
 
 The default flight scene now flies over a simple **Hanoi-inspired city, circa 1972**: tiled-roof Old Quarter neighbourhoods, Hoan Kiem Lake with Turtle Tower, Ngoc Son Temple and the red The Huc footbridge, and Long Bien's railway trusses across the Red River. A few street shelters, damaged roofs and rail-side crater marks suggest the wartime period. Distances and architecture are compressed for gameplay; this is not an exact historical reconstruction.
 

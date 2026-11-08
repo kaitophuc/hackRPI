@@ -68,9 +68,10 @@ public sealed class CombatState {
             enemy.Body.Position.Y=Math.Max(world.Height(enemy.Body.Position.X,enemy.Body.Position.Z)+5,enemy.Body.Position.Y);
             if(--enemy.FireCooldown<=0&&!enemy.Passing&&distance<230&&Shots.Count<MaxShots) {
                 // Lead the current flight path once; projectiles never home after firing.
-                V3 target=player.Position+playerVelocity*(distance/155.0);
+                V3 target=player.Position+playerVelocity*(distance/77.5);
                 V3 muzzle=enemy.Body.Position+direction*3;
-                Shots.Add(new Projectile {Position=muzzle,Velocity=(target-muzzle).Unit*125+direction*38,Hostile=true,Damage=5+(int)(Next()%6)});
+                // Halve the complete enemy bullet velocity, including inherited motion.
+                Shots.Add(new Projectile {Position=muzzle,Velocity=((target-muzzle).Unit*125+direction*38)*.5,Hostile=true,Damage=5+(int)(Next()%6)});
                 enemy.FireCooldown=85+(int)(Next()%30);
             }
         }

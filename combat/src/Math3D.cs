@@ -76,6 +76,16 @@ public sealed class Frame {
     public bool Wireframe; public Camera Camera;
     public List<Draw> Draws=new List<Draw>();
     public Dictionary<string,Texture> Textures=new Dictionary<string,Texture>();
+    readonly List<Draw> pool=new List<Draw>();
+    // A Session owns its transient frame. Captures must serialize it before the
+    // next Render; backing geometry buffers retain their capacity across frames.
+    public void Reset() {Draws.Clear();Textures.Clear();Clear=unchecked((int)0xff101d30);}
+    public Draw AddDraw(string name) {
+        int slot=Draws.Count;
+        while(slot>=pool.Count)pool.Add(new Draw());
+        Draw draw=pool[slot];draw.Name=name;draw.Vertices.Clear();draw.Indices.Clear();draw.Depth=true;draw.Cull=true;draw.Texture=null;
+        Draws.Add(draw);return draw;
+    }
     public int Triangles { get { int n=0;foreach(Draw d in Draws)n+=d.Indices.Count/3;return n; } }
 }
 public interface IRenderer : IDisposable {
