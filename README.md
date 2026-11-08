@@ -14,6 +14,11 @@ GPU/platform sources are copied into `fpga/`; the game bridge and service
 scripts are in `combat/board/` and `combat/native/`. See
 [the board guide](combat/docs/DE10_GAME.md) for deployment, tests and limits.
 
+For a complete known-good FPGA/game backup, including the actual bitstream,
+native renderer, Mono runtime and pinned GPU source, use the
+[fresh-clone recovery guide](recovery/README.md). The recovery tag is
+`de10-known-good-16fps`.
+
 
 ## Plane combat with the Arduino accelerometer (Windows)
 

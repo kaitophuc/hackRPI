@@ -13,6 +13,9 @@ See the [game/board guide](../combat/docs/DE10_GAME.md),
 [checkpoint evidence](../combat/reports/evidence/2026-11-08/README.md).
 The standalone cube and pattern paths remain available as diagnostic tools.
 
+The [recovery backup](../recovery/README.md) includes the accepted FPGA SOF,
+matching game/native/Mono runtimes and pinned upstream source directly in Git.
+
 The selected renderer is **SpinalVoodoo**, pinned in
 [dependencies.lock.json](dependencies.lock.json). Its native ARM Glide stack,
 framebuffer readback and Avalon interfaces offer the shortest credible 3D port.

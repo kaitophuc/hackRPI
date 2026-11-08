@@ -5,3 +5,5 @@
 fpga/hardware/** -text -whitespace
 fpga/patches/** -text -whitespace
 fpga/licenses/** -text -whitespace
+recovery/known-good-16fps/*.sof binary
+recovery/known-good-16fps/*.tar.gz binary
