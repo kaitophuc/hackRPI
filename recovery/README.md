@@ -145,3 +145,17 @@ recovery using the exact tested SOF from a new synthesis result.
 No SSH credentials, host trust file, browser sessions, sensor recordings or
 machine-specific runtime logs are included. The existing CPU/FPGA image mismatch
 and the unmet 27 FPS target are preserved limitations of this baseline.
+
+## Recovery validation
+
+The [verification summary](verification/summary.json) records a clean GitHub
+clone, 428 C# checks on Windows and ARM, a successful native source build,
+and byte-identical regeneration of all 12 accepted Verilog/ROM files.
+The [13 source-build image comparisons](verification/source-pixels.json)
+have zero differing bytes. Both the saved runtime and the source-built queued
+game passed live Arduino/calibration/rendering/pause checks. The exact accepted
+executable and native library were restored after testing.
+
+Packaging reused the previously accepted SOF; it did not rerun Quartus synthesis
+or reprogram the FPGA. The recovery guide documents the reviewed programming
+and warm-reset sequence.

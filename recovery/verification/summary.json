@@ -1,0 +1,42 @@
+{
+  "validation_date": "2026-11-08",
+  "baseline_source_commit": "a0d3a3d834dbc5be2c7387b8332ee4caf03b39eb",
+  "github_clone_verified": true,
+  "all_saved_artifact_hashes_verified": true,
+  "windows_clean_clone_headless_checks": 428,
+  "arm_private_runtime_headless_checks": 428,
+  "arm_native_source_build_passed": true,
+  "regenerated_rtl_and_rom_files": 12,
+  "regenerated_files_byte_identical": true,
+  "generated_verilog_sha256": "bb2d5d4e5aa997f451bdb373093f55594cc6f2344f71ba9cc90dd12f5f32954c",
+  "source_pixel_comparisons": 13,
+  "source_pixel_differences": 0,
+  "game_smokes": {
+    "restored-game-smoke": {
+      "sensor_fresh": true,
+      "calibration_passed": true,
+      "hardware_frames": true,
+      "advanced_ticks": 207,
+      "focus_loss_paused": true
+    },
+    "source-built-game-smoke": {
+      "sensor_fresh": true,
+      "calibration_passed": true,
+      "hardware_frames": true,
+      "advanced_ticks": 209,
+      "focus_loss_paused": true
+    }
+  },
+  "portable_stop_helper_checked_in_ram_install": true,
+  "missing_legacy_diagnostic_directory_check_passed": true,
+  "accepted_runtime_restored_after_tests": true,
+  "final_game_error": null,
+  "final_sensor_fresh": true,
+  "new_fpga_programming_performed": false,
+  "new_quartus_synthesis_performed": false,
+  "notes": [
+    "The previously accepted SOF is included byte for byte. FPGA reprogramming and full Quartus synthesis were not repeated for this recovery packaging task.",
+    "These checks verify restoration and source rebuilds. No new displayed-FPS claim is made.",
+    "The board Linux SD image and installed development tools remain prerequisites."
+  ]
+}
