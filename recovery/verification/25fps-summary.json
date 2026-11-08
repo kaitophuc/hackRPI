@@ -174,7 +174,17 @@
     "note": "Only the generated Git-hash comment differs; logic and eleven ROMs are identical."
   },
   "software_unchanged_from_16fps_backup": true,
-  "fresh_online_clone_validation": "pending",
+  "fresh_online_clone_validation": {
+    "passed": true,
+    "validated_commit": "fb350aeb686e342d06e1a649687b38ca5ca524e7",
+    "artifact_hash_verification": true,
+    "windows_source_compile_checks": 428,
+    "prepared_scala_sources_matching_regenerated_tree": 60,
+    "dependency_declarations_identical": true,
+    "arm_saved_runtime_install_and_startup": true,
+    "arm_target": "/dev/shm/hackrpi-recovery-25fps",
+    "normal_game_services_not_restarted": true
+  },
   "unselected_pair_experiment": "Synthesis stopped at user request; never programmed",
   "original_cpu_fpga_reference_mismatch": "Still documented; sampled optimization regression gates have zero additional differences"
 }

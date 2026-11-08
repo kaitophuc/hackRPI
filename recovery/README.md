@@ -169,3 +169,9 @@ Its game/native/Mono payloads are identical to the earlier verified software.
 The new core is reproduced from the bundled source and complete patch; the
 generator's Git-hash comment may differ, while the logic and all eleven ROMs match.
 The later depth-pairing experiment was stopped and was never programmed.
+
+The 25 FPS package passed a fresh online-clone check: all saved hashes matched,
+the C# source compiled and passed 428 checks, and all 60 prepared Scala sources
+matched the freshly regenerated source tree. The saved runtime was installed
+and started successfully in an ARM RAM directory, with the exact selected game
+and native-library hashes. The normal game service continued running.
