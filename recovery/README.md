@@ -38,10 +38,13 @@ python recovery/recover.py install --start
 `build-game` compiles and self-tests the checked-in C# source. `install` restores
 the exact accepted executable and native library, private Mono runtime, MMIO
 support, USB reader, web server, and launch scripts. It verifies the transfer,
-stops an existing owned game before replacing files, runs the ARM self-tests,
+stops an existing owned game before replacing files, checks the ARM runtime starts,
 audits DDR ownership, enables the reviewed DDR ports, and starts the service.
 The native renderer is already built, so this path needs no driver compilation
 or downloads from Mono/SpinalVoodoo servers.
+
+For the full CPU test suite on ARM, add `--self-test` to `install`. That suite
+takes several minutes on the board; it is optional during a quick recovery.
 
 Open **http://169.254.170.29:8081/** and press Play / Resume. For Arduino controls,
 hold the normal grip and use Calibrate & Play. All saved assets are checked

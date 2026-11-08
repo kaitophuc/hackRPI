@@ -212,7 +212,7 @@ def install(args):
     script += 'mkdir -p ' + args.target + '\ncd ' + args.target + '\n'
     script += 'if test -f combat/board/stop_service.py; then python combat/board/stop_service.py; fi\n'
     script += 'tar -xzf ' + temporary + '\nrm -f ' + temporary + '\n'
-    script += 'sh combat/board/run_game.sh --self-test\n'
+    script += 'sh combat/board/run_game.sh ' + ('--self-test' if args.self_test else '--help') + '\n'
     if args.rebuild_native:
         script += 'sh fpga/software/build_mmio.sh\nsh fpga/software/spinal/build_native.sh\nsh combat/board/build_native.sh\n'
         script += 'sha256sum combat/dist/libflighting_spinal_bridge.so\n'
@@ -261,6 +261,7 @@ def main():
     deploy.add_argument('--host', default='169.254.170.29')
     deploy.add_argument('--target', default='/root/hackrpi')
     deploy.add_argument('--rebuild-native', action='store_true')
+    deploy.add_argument('--self-test', action='store_true', help='Run the full CPU test suite on ARM; this takes several minutes')
     deploy.add_argument('--start', action='store_true')
     fpga = commands.add_parser('program', help='Stop services, restore accepted SOF through JTAG, warm-reset HPS')
     fpga.add_argument('--host', default='169.254.170.29')
